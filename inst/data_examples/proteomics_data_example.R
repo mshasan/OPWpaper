@@ -1,5 +1,3 @@
-setwd("U:/Documents/My Research (UGA)/Multiple Hypoetheses/Article-1")
-
 library(IHW)
 library(IHWpaper)
 library(OPWeight)   # proposed library
