@@ -20,7 +20,7 @@
 #' \url{www.stat.cmu.edu/~roeder/publications/statsci.pdf}
 #' @examples
 #' # generate test statistics
-#' testStat <- rnorm(100000,2,1)
+#' testStat <- rnorm(100000, 2, 1)
 #'
 #' # Compute wiehgt
 #' weight = rw_weight(testStat=testStat, gamma=.05, alpha=.05, group=10, tail=2)
