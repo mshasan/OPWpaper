@@ -1,5 +1,8 @@
 export(ranksProb_compare)
 export(rw_weight)
+export(ranksProb_byEffect)
+export(weight_byEffect_bin)
+export(weight_byEffect_cont)
 import(stats)
 import(OPWeight)
 importFrom(tibble, tibble)
