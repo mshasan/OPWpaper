@@ -16,6 +16,6 @@ source("http://bioconductor.org/biocLite.R")
 biocLite(c("genefilter","DESeq2","qvalue","Biobase",
             "BiocParallel","airway","pasilla", "BiocStyle"))
 # finally install this package
-install_github("mshasan/OPWpaper1")
+install_github("mshasan/OPWpaper")
 ```
 
