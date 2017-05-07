@@ -45,7 +45,7 @@
 #output:-----------
 # P(rank | effect = ey) for the alternaive case,
 # because we need only alterantive case to compute weight
-#-----------------------------------------------------------------------------------------------------
+#===============================================================================
 
 ranksProb_byEffect <- function(i, null, m, nrep = 10000, filterEffectVec)
 {

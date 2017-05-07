@@ -16,6 +16,7 @@ Depends:
 License: Artistic-2.0
 LazyData: true
 Imports:
+    mvnfast,
     stats, 
     tibble
 Suggests:

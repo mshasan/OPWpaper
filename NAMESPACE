@@ -1,12 +1,14 @@
 export(ranksProb_compare)
 export(rw_weight)
 export(ranksProb_byEffect)
+export(runif_by_mean)
+export(test_by_block)
 export(weight_byEffect_bin)
 export(weight_byEffect_cont)
 import(stats)
 import(OPWeight)
 importFrom(tibble, tibble)
-
+importFrom(mvnfast, rmvn)
 
 
 
