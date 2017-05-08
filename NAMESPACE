@@ -1,3 +1,4 @@
+export(fwerPowerFdrPower_by_effect)
 export(ranksProb_compare)
 export(rw_weight)
 export(ranksProb_byEffect)
