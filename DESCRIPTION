@@ -16,7 +16,9 @@ Depends:
 License: Artistic-2.0
 LazyData: true
 Imports:
+    IHW,
     mvnfast,
+    qvalue,
     stats, 
     tibble
 Suggests:
