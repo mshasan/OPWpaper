@@ -1,4 +1,8 @@
-# this codes are for parallel computing
+# This codes are for parallel computing.
+# It is better to use four seperate files for four parts and include cluster
+# or parallel computing information with each files. To avaoid verbose, I
+# kept all four parts in the same file.
+
 library(snow)
 library(mvnfast)	# fast generate multi variate normal
 library("IHW")		# independent hypotheis weight
@@ -28,7 +32,7 @@ clusterExport(cl, "simuVal")
 
 
 
-
+# part - I
 #------------start: continuous section-----------------------
 datWeight_cont <- read.csv("weight_byEffect_cont_m10000.csv", h = TRUE)
 clusterExport(cl, "datWeight_cont")
@@ -140,7 +144,7 @@ save.image("simu_fwerPowerFdrPower_cont.RData")
 
 
 
-
+# part - II
 FwerPowerFdrPower2a2 <- parSapply(cl, 1:length(filterEffectVec), fwerPowerFdrPower_by_effect, simu=simuVal, null=.5, corr=  0, cv= 1,
                                   alpha=.05, groupSize=100, effectType = "continuous", filterEffectVec=filterEffectVec,
                                   datWeightByNull=datWeight_cont[,11:20])
@@ -174,7 +178,7 @@ save.image("simu_fwerPowerFdrPower_missVar_cont.RData")
 
 
 
-
+# part - III
 #------------start: binary section-----------------------
 datWeight_bin <- read.csv("weight_byEffect_bin_m10000.csv", h = TRUE)
 clusterExport(cl, "datWeight_bin")
@@ -286,7 +290,7 @@ save.image("simu_fwerPowerFdrPower_bin.RData")
 
 
 
-
+# part - IV
 FwerPowerFdrPower2a2 <- parSapply(cl, 1:length(filterEffectVec), fwerPowerFdrPower_by_effect, simu=simuVal, null=.5, corr=  0, cv= 1,
                                   alpha=.05, groupSize=100, effectType = "binary", filterEffectVec=filterEffectVec,
                                   datWeightByNull=datWeight_bin[,11:20])
