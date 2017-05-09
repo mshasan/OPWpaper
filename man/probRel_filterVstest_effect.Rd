@@ -48,7 +48,7 @@ prob1 <- sapply(ranks, prob_rank_givenEffect, et = 2, ey = 2,
                                            m0 = 90, m1 = 10)
 
 matplot(1:100, cbind(prob_test0, prob_test1, prob0, prob1),
-                     type = "l", xlab = "ranks", ylab = "prob(rank | effect)")
+                     type = "l", xlab = "ranks", ylab = "p(rank | effect)")
 legend("topright", legend = c("prob_test0", "prob_test1", "prob0", "prob1"),
                        col = 1:4, lty = 1:4, lwd = 2)
 
