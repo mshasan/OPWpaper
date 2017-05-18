@@ -67,7 +67,7 @@
 probRel_filterVstest_effect <- function(r, rho, H0, ed, m0, m1)
     {
         mean_ey = rho*ed
-        sd_ey = sqrt(1 - rho^2)
+        sd_ey = sqrt(1 - rho*rho)
         ey_val = rnorm(100, mean_ey, sd_ey)
 
         prob_condition_ey <- function(ey)

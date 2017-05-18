@@ -45,6 +45,7 @@
 # pi_hat = estiamte pi parameter
 # effect_hat = estiamte effect size
 # theta = vector of the effect size
+# cr_val = critical value
 # findc = find log-constant of the formula so that average weight equals to 1
 # weight_k = calculate weight
 # weight_k_smooth = smoothing weight by smotthing parameter gamma
@@ -61,7 +62,7 @@ rw_weight <- function(testStat, gamma, alpha, group=5L, tail=2L)
     testGroup <- rep(1:group, each = groupSize)
     testMeans <- tapply(testStat, testGroup, mean)
     testSd <- tapply(testStat, testGroup, sd)
-    pi_hat <- testMeans^2/(testMeans^2 + testSd^2 - 1)
+    pi_hat <- testMeans*testMeans/(testMeans*testMeans + testSd*testSd - 1)
     effect_hat <- testMeans/pi_hat
     effect_hat[pi_hat <= 1/groupSize] <- 0
 
@@ -69,7 +70,8 @@ rw_weight <- function(testStat, gamma, alpha, group=5L, tail=2L)
     }
     else{
         theta = as.vector(effect_hat)
-        c0 = qnorm(alpha/(tail*m), lower.tail = FALSE)^2/2
+        cr_val = qnorm(alpha/(tail*m), lower.tail = FALSE)
+        c0 = cr_val*cr_val/2
 
         findc = function(thet, alpha, c0, m)
         {

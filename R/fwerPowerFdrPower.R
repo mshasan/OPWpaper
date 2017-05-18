@@ -46,13 +46,13 @@
 #'                    datByNull = ranksProb_byEffect)
 #'
 #' simuVal = 3  # in actual case use at least simVal = 1000
-#' result <- sapply(1:length(filterEffectVec), fwerPowerFdrPower_by_effect, simu = simuVal,
+#' result <- sapply(1:length(filterEffectVec), fwerPowerFdrPower, simu = simuVal,
 #'              null = .5, corr = 0, cv = 0, alpha = .05, groupSize = 100,
 #'              effectType = "continuous", filterEffectVec = filterEffectVec,
 #'              datWeightByNull = weightByEffect)
 #'
 #===============================================================================
-#----------------------fwerPowerFdrPower_by_effect----------------------------
+#----------------------fwerPowerFdrPower----------------------------
 # function to compute Simulated FWER, POWER, and FDR by effect size
 #
 # inpout:----------------
@@ -92,7 +92,7 @@
 #
 #===============================================================================
 
-fwerPowerFdrPower_by_effect <- function(i, simu, null, corr = 0, cv = 0, alpha = .05,
+fwerPowerFdrPower <- function(i, simu, null, corr = 0, cv = 0, alpha = .05,
                                         groupSize = 100, effectType = c("continuous", "binary"),
                                         filterEffectVec, datWeightByNull)
     {

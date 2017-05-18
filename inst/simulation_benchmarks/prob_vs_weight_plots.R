@@ -51,8 +51,8 @@ porb_weight_plots <- function(ey_index, null_index, m, ey, null, prob, weight)
 }
 
 m = 10000
-ranksProb <- read.csv("ranksProb_byEffect_m10000.csv", h=T)
-ranksWeight <- read.csv("Weight_byEffect_cont_m10000.csv",h=T)
+ranksProb <- read.csv(".../ranksProb_byEffect_m10000.csv", h=T)
+ranksWeight <- read.csv(".../Weight_byEffect_cont_m10000.csv",h=T)
 
 #ey_index <- c(6, 16, 26, 36)  # ey = 1
 #ey_index <- c(7, 17, 27, 37)  # ey = 2

@@ -1,5 +1,5 @@
 export(probRel_filterVstest_effect)
-export(fwerPowerFdrPower_by_effect)
+export(fwerPowerFdrPower)
 export(ranksProb_compare)
 export(rw_weight)
 export(ranksProb_byEffect)

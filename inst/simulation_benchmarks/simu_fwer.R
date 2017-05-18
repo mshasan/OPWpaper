@@ -31,6 +31,8 @@ save.image("smu_fwer.RData")
 
 
 
+# this code is to load saved workspace from parallel computing
+load(".../smu_fwer.RData")
 
 
 fwer_by_alpha <- matrix(apply(fwer_mat, 1, mean), nrow = 4, byrow = FALSE)

@@ -67,7 +67,7 @@ save.image("simu_prob_rank_givenEffect.RData")
 
 
 # this code is to load saved workspace from parallel computing
-load("U:/Documents/My Research (UGA)/Multiple Hypoetheses/Article-1/simu_prob_rank_givenEffect.RDATA")
+load(".../simu_prob_rank_givenEffect.RDATA")
 
 
 
