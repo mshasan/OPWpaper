@@ -1,12 +1,15 @@
-#' @title Compute sum of normal cummulative values for different constant
+#' @title Find sum of weights for c, function of LaGrange multiplier
 #'
-#' @description Compute sum of normal cummulative values for the different constant, c.
-#'  This constant c is defined in the paper Roeder and Waserman (2009).
+#' @description Compute sum of weights for a given value of c, the function of
+#' LaGrange multiplier
 #'
-#' @param c a constant value
+#' @param c a constant function of LaGrange multiplier
+#' @param m number of hypothesis tests
+#' @param gamma smooting parameter
 #' @param alpha Significance level
-#' @param thet effect size
-#' @param m number of hypothesis tests
+#' @param group number of groups
+#' @param tail right-tailed or two-tailed hypothesis test. default is right-tailed test
+#' @param effect_hat estimated effect size
 #'
 #' @details
 #' NOne
@@ -20,56 +23,25 @@
 #' \url{www.stat.cmu.edu/~roeder/publications/statsci.pdf}
 #'
 #' @examples
-#' cc = seq(.1, 1, .005)
-#' tot <- sapply(cc, fun_c, alpha = .05, thet = .3, m = 100)
-#===============================================================================
-
-fun_c <- function(c, alpha = .05, thet, m)
-{
-    cdf_sum <- sum((m/alpha)*pnorm((thet/2 + c/thet), lower.tail = FALSE))
-    return(cdf_sum)
-}
-
-#===============================================================================
-
-#' @title Compute constant, c, which makes the sum of weights equal to
-#' the number of tests
-#'
-#' @description Compute constant, c, which makes the sum of weights equal to
-#' the number of tests
-#'
-#' @param thet effect size
-#' @param alpha significance level
-#' @param c0 square of the tests' critical value
-#' @param m number of hypothesis tests
-#'
-#' @details
-#' NOne
-#' @author Mohamad S. Hasan, \email{mshasan@uga.edu}
-#'
-#' @export
-#'
-#' @references Roeder, Kathryn, and Larry Wasserman. "Genome-wide significance
-#' levels and weighted hypothesis testing." Statistical science: a review journal
-#' of the Institute of Mathematical Statistics 24.4 (2009): 398.
-#' \url{www.stat.cmu.edu/~roeder/publications/statsci.pdf}
-#'
-#' @examples
-#' theta = seq(0, 3, .5)
-#' c <- sapply(theta, findc, alpha = .05, c0 = 1, m = 100)
+#' cc = seq(-10, 10, .05)
+#' et <- seq(0, 3, .5)
+#' wgtSum_by_c <- sapply(cc, weightSum_by_c, m = 10000, effect_hat = et)
 #'
 #===============================================================================
 
-findc = function(thet, alpha = .05, c0, m)
-{
-    cc = seq(.1, c0, .005)
-    tot <- sapply(cc, fun_c, alpha = alpha, thet = thet, m = m)
+weightSum_by_c <- function(c, m, gamma = .05,  alpha = .05, group = 5L,
+                                  tail = 1L, effect_hat)
+    {
+        groupSize <- m/group
 
-    cout = cc[min(abs(tot - m)) == abs(tot - m)]
-    coutAdj = ifelse(length(cout) > 1, sample(cout, 1), cout)
+        weight_per_c <- tail*(m/alpha)*pnorm((effect_hat/2 + c/effect_hat),
+                                                 lower.tail = FALSE)
+        wgt_smooth_c <- (1 - gamma)*weight_per_c + gamma*sum(weight_per_c)/group
+        wgt_per_test_c <- rep(wgt_smooth_c, each = groupSize)
+        sumWeight_per_c <- sum(wgt_per_test_c, na.rm = TRUE)
 
-    return(coutAdj)
-}
+        return(sumWeight_per_c)
+    }
 
 #===============================================================================
 
@@ -77,12 +49,13 @@ findc = function(thet, alpha = .05, c0, m)
 #'
 #' @description Compute weights by splitting test statistics raked by the filter statistics.
 #'  This method is taken Roeder and Waserman (2009) paper.
-#' @param pvalue a vector of pvalues of the test statistics
-#' @param filter a vector of filter statistics
+#' @param pvalue a vector of ordered pvalues by the filter statistics
 #' @param gamma smooting parameter
 #' @param alpha Significance level
 #' @param group number of groups
 #' @param tail right-tailed or two-tailed hypothesis test. default is right-tailed test
+#' @param c_interval interval between the \code{c} values of a sequence. Note that,
+#' \code{c} is a function of LaGrange multiplier, necessary to normalize the weight
 #'
 #' @details
 #' NOne
@@ -108,14 +81,15 @@ findc = function(thet, alpha = .05, c0, m)
 #' pvals = 1 - pnorm(tests)                        # pvalue
 #'
 #' # Compute wiehgt
-#' weight = roeder_wasserman_weight(pvalue = pvals, filter = filters)
+#' Data <- tibble(tests, pvals, filters)
+#' OD <- Data[order(Data$filters, decreasing = TRUE), ]
+#'
+#' weight = roeder_wasserman_weight(pvalue = OD$pvals)
 #'
 #' # plot the weight
 #' plot(weight)
 #'
 #' # compute number of rejections
-#' Data <- tibble(tests, pvals, filters)
-#' OD <- Data[order(Data$filters, decreasing = TRUE), ]
 #' alpha = .05
 #' rwd <- sum(OD$pvals <= alpha*weight/m)
 #' bon <- sum(pvals <= alpha/m)
@@ -124,11 +98,13 @@ findc = function(thet, alpha = .05, c0, m)
 # Function to estiamte weight from data by using Roeder-Waserman algorithm
 
 # Input:-----
-# tests = test statistics
+# pvalue = a vector of ordered pvalues by the filter statistics
 # gamma = smooting parameter
 # alpha = Significance level
-# group = number of group
-# tail = one-tailed or two-tailed hypothesis test
+# group = number of groups
+# tail = right-tailed or two-tailed hypothesis test. default is right-tailed test
+#m c_interval = interval between the \code{c} values of a sequence. Note that,
+# \code{c} is a function of LaGrange multiplier, necessary to normalize the weight
 
 # internal parameters:-----
 # testGroup = patitioning 'm' tests into groups
@@ -136,27 +112,22 @@ findc = function(thet, alpha = .05, c0, m)
 # testSd = calculate standard deviation of each group
 # pi_hat = estiamte pi parameter
 # effect_hat = estiamte effect size
-# theta = vector of the effect size
-# cr_val = critical value
-# findc = find log-constant of the formula so that average weight equals to 1
-# weight_k = calculate weight
-# weight_k_smooth = smoothing weight by smotthing parameter gamma
-# weight_tests = distribute weight over all tests
-# normWeight.w = little adjustment to obtain sum of weight equals to m
+# wgtSum_by_c = sum of the weights per c
+# c_Out = optimal c value
+# wgt_per_grp = calculate weight per group
+# weight.out = final weight
+# sumWeight = sum of the weights
 
 # output:-----
-# normWeight.w = normalized weight
+# norm_wgt = normalized weight
 #-------------------------------------------------------------------------------
 
-roeder_wasserman_weight <- function(pvalue, filter, gamma = .05, alpha = .05,
-                                    group = 5L, tail = 1L)
+roeder_wasserman_weight <- function(pvalue, gamma = .05, alpha = .05,
+                                    group = 5L, tail = 1L, c_interval = .01)
     {
         m = length(pvalue)
-        tests <- qnorm(pvalue/tail, lower.tail = FALSE)
-
-        Data <- tibble(tests, pvalue, filter)
-        OD <- Data[order(Data$filter, decreasing = TRUE), ]
-        rankedtests <- OD$tests
+        # ordered pvalues, thus ordered tests------------
+        rankedtests <- qnorm(pvalue/tail, lower.tail = FALSE)
 
         groupSize <- m/group
         testGroup <- rep(1:group, each = groupSize)
@@ -169,32 +140,28 @@ roeder_wasserman_weight <- function(pvalue, filter, gamma = .05, alpha = .05,
         effect_hat[pi_hat <= 1/groupSize] <- 0
 
         if(sum(effect_hat, na.rm = TRUE) == 0){
-            normWeight.w <- rep(1, m)
+            norm_wgt <- rep(1, m)
         } else {
-            theta = effect_hat
-            cr_val = qnorm(alpha/(tail*m), lower.tail = FALSE)
-            c0 = cr_val*cr_val/2
+            c <- seq(-10, 10, c_interval)
+            wgtSum_by_c <- sapply(c, weightSum_by_c, m, gamma = .05,  alpha = .05,
+                                     group = 5L, tail = 1L, effect_hat)
 
-            c <- sapply(theta, findc, alpha = alpha, c0 = c0, m = m)
-            wgt_per_grp <- (m/alpha)*pnorm((effect_hat/2 + c/effect_hat),
-                                           lower.tail = FALSE)
+            c_out <- c[min(abs(wgtSum_by_c - m)) == abs(wgtSum_by_c - m)]
+            c_out <- ifelse(length(c_out) > 1, -1, c_out)
+            weight.out <- tail*(m/alpha)*pnorm((effect_hat/2 + c_out/effect_hat),
+                                                               lower.tail = FALSE)
 
-            wgt_smooth <- (1 - gamma)*wgt_per_grp + gamma*sum(wgt_per_grp)/group
-            wgt_per_test <- rep(wgt_smooth, each = groupSize)
+            wgt_smooth_cOut <- (1 - gamma)*weight.out + gamma*sum(weight.out)/group
+            wgt_per_test_cOut <- rep(wgt_smooth_cOut, each = groupSize)
+            sumWeight <- sum(wgt_per_test_cOut, na.rm = TRUE)
 
-            norm_wgt <- wgt_per_test/sum(wgt_per_test)*m
+            norm_wgt <- if(sumWeight == 0) {
+                            rep(1, m)
+                        } else {
+                            wgt_per_test_cOut/sumWeight*m
+                        }
         }
 
         return(norm_wgt)
     }
-
-
-
-
-
-
-
-
-
-
 

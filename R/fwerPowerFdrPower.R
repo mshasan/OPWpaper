@@ -133,8 +133,7 @@ fwerPowerFdrPower <- function(i, simu, null, corr = 0, cv = 0, alpha = .05,
                 dat = tibble(test, pval, et, filter)
                 OD = dat[order(dat$filter, decreasing = TRUE), ]
 
-                weight_rdw <- roeder_wasserman_weight(pvalue = pval, filter = filter,
-                                        gamma = .05, alpha = alpha, group = 5L, tail = 1L)
+                weight_rdw <- roeder_wasserman_weight(pvalue = OD$pval, alpha = alpha)
                 ihw_fwer <- ihw(OD$pval, OD$filter, alpha = alpha, adjustment_type = "bonferroni")
                 ihw_fdr <-  ihw(OD$pval, OD$filter, alpha = alpha, adjustment_type = "BH")
 

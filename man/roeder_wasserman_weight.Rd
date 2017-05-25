@@ -4,13 +4,11 @@
 \alias{roeder_wasserman_weight}
 \title{Weight from the Roeder and Wasserman (2009) paper}
 \usage{
-roeder_wasserman_weight(pvalue, filter, gamma = 0.05, alpha = 0.05,
-  group = 5L, tail = 1L)
+roeder_wasserman_weight(pvalue, gamma = 0.05, alpha = 0.05, group = 5L,
+  tail = 1L, c_interval = 0.01)
 }
 \arguments{
-\item{pvalue}{a vector of pvalues of the test statistics}
-
-\item{filter}{a vector of filter statistics}
+\item{pvalue}{a vector of ordered pvalues by the filter statistics}
 
 \item{gamma}{smooting parameter}
 
@@ -19,6 +17,9 @@ roeder_wasserman_weight(pvalue, filter, gamma = 0.05, alpha = 0.05,
 \item{group}{number of groups}
 
 \item{tail}{right-tailed or two-tailed hypothesis test. default is right-tailed test}
+
+\item{c_interval}{interval between the \code{c} values of a sequence. Note that,
+\code{c} is a function of LaGrange multiplier, necessary to normalize the weight}
 }
 \value{
 \code{weight} normalized weights of the tests
@@ -41,14 +42,15 @@ tests = rnorm(m, mean = H * filters)            # Z-score
 pvals = 1 - pnorm(tests)                        # pvalue
 
 # Compute wiehgt
-weight = roeder_wasserman_weight(pvalue = pvals, filter = filters)
+Data <- tibble(tests, pvals, filters)
+OD <- Data[order(Data$filters, decreasing = TRUE), ]
+
+weight = roeder_wasserman_weight(pvalue = OD$pvals)
 
 # plot the weight
 plot(weight)
 
 # compute number of rejections
-Data <- tibble(tests, pvals, filters)
-OD <- Data[order(Data$filters, decreasing = TRUE), ]
 alpha = .05
 rwd <- sum(OD$pvals <= alpha*weight/m)
 bon <- sum(pvals <= alpha/m)
