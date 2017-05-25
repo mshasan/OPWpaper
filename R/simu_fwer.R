@@ -85,9 +85,9 @@ simu_fwer <- function(s, m, alphaVec)
             ey_bin = model$coef[[1]] + model$coef[[2]]*et_bin
             ey_cont = model$coef[[1]] + model$coef[[2]]*et_cont
 
-            prob_bin <-vapply(1:m, prob_rank_givenEffect, 1, et = ey_bin,
+            prob_bin <-sapply(1:m, prob_rank_givenEffect, et = ey_bin,
                               ey = ey_bin,m0 = m0, m1 = m1)
-            prob_cont <-vapply(1:m, prob_rank_givenEffect, 1, et = ey_cont,
+            prob_cont <-sapply(1:m, prob_rank_givenEffect, et = ey_cont,
                                ey = ey_cont, m0 = m0, m1 = m1)
 
             w_bin <- weight_binary(alpha = alpha, et = et_bin, m = m, m1 = m1,

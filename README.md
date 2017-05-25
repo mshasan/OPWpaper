@@ -13,3 +13,5 @@ install_github("mshasan/OPWeight")
 install_github("mshasan/OPWpaper")
 ```
 
+[![Travis-CI Build Status](https://travis-ci.org/mshasan/OPWpaper.svg?branch=master)](https://travis-ci.org/mshasan/OPWpaper)
+ * Turn on travis for your repo at https://travis-ci.org/mshasan/OPWpaper
