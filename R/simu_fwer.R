@@ -67,7 +67,7 @@ simu_fwer <- function(s, m, alphaVec)
 
             dat = tibble(test, pval, filter)
 
-            OD = dat[order(dat$filter, decreasing=T), ]
+            OD = dat[order(dat$filter, decreasing=TRUE), ]
             odered.pvalue = OD$pval
 
             nullprop = qvalue(pval)$pi0
@@ -77,7 +77,7 @@ simu_fwer <- function(s, m, alphaVec)
             model = lm(filter ~ test)
 
             test_effect <- if(m1 == 0) {0
-                           } else {sort(test, decreasing = T)[1:m1]}
+                           } else {sort(test, decreasing = TRUE)[1:m1]}
 
             et_bin = median(test_effect, na.rm = TRUE)
             et_cont = mean(test_effect, na.rm = TRUE)
@@ -91,9 +91,9 @@ simu_fwer <- function(s, m, alphaVec)
                                ey = ey_cont, m0 = m0, m1 = m1)
 
             w_bin <- weight_binary(alpha = alpha, et = et_bin, m = m, m1 = m1,
-                            tail = 1, delInterval = .0001, prob = prob_bin)
+                            tail = 1, delInterval = .0001, ranksProb = prob_bin)
             w_cont = weight_continuous(alpha = alpha, et = et_cont, m = m,
-                            tail = 1, delInterval = .0001 , prob = prob_cont)
+                            tail = 1, delInterval = .0001 , ranksProb = prob_cont)
 
             ihw_fwer <- ihw(dat$pval, dat$filter, alpha = alpha,
                                             adjustment_type = "bonferroni")
