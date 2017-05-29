@@ -4,12 +4,12 @@
 \alias{runif_by_mean}
 \title{Generate uniform random numbers for a fixed mean}
 \usage{
-runif_by_mean(n, mean)
+runif_by_mean(mean, n)
 }
 \arguments{
-\item{n}{number of observations to be generated}
-
 \item{mean}{mean of the random numbers}
+
+\item{n}{number of observations to be generated}
 }
 \value{
 a vector of random numbers
@@ -22,7 +22,7 @@ Sometime it is necessary to generate random numbers with a prespecified
 mean from the uniform distribution. This function will fullfill the goal
 }
 \examples{
-x = runif_by_mean(n = 100, mean = 3)
+x = runif_by_mean(mean = 3, n = 100)
 summary(x)
 
 }

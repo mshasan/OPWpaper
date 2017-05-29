@@ -16,7 +16,7 @@
 #'
 #' @return a vector of random numbers
 #' @examples
-#' x = runif_by_mean(n = 100, mean = 3)
+#' x = runif_by_mean(mean = 3, n = 100)
 #' summary(x)
 #'
 #===============================================================================
@@ -33,7 +33,7 @@
 # a vector of random numbers
 #===============================================================================
 
-runif_by_mean <- function(n, mean)
+runif_by_mean <- function(mean, n)
     {
         sd = mean/2
         uni_rv <- mean + sd*scale(runif(n, 0, 1))
