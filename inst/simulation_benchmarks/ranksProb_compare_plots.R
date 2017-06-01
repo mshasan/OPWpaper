@@ -1,128 +1,95 @@
-library(snow)
-library(OPWpaper)
-
-
-cl <- makeCluster(10, type = "MPI")		# start zcluster
-
-#================================start of parrallelcomputing====================
-# this data are generated using parallel cmputing system
-# null test size = c(20, 50, 75, 90, 99)
-sampleSize = 1000000 #( use atleast 1,000,000)
-clusterExport(cl, "sampleSize")
-effect <- c(0, 1, 2)
-
-# continuous cases==================================================================
-prob_20_0_cont = parLapply(cl, effect, ranksProb_compare, e.one = 0, m0=20, m1=80, sampleSize = sampleSize, effectType = "continuous")
-prob_20_1_cont = parLapply(cl, effect, ranksProb_compare, e.one = 1, m0=20, m1=80, sampleSize = sampleSize, effectType = "continuous")
-prob_20_2_cont = parLapply(cl, effect, ranksProb_compare, e.one = 2, m0=20, m1=80, sampleSize = sampleSize, effectType = "continuous")
-
-prob_50_0_cont = parLapply(cl, effect, ranksProb_compare, e.one = 0, m0=50, m1=50, sampleSize = sampleSize, effectType = "continuous")
-prob_50_1_cont = parLapply(cl, effect, ranksProb_compare, e.one = 1, m0=50, m1=50, sampleSize = sampleSize, effectType = "continuous")
-prob_50_2_cont = parLapply(cl, effect, ranksProb_compare, e.one = 2, m0=50, m1=50, sampleSize = sampleSize, effectType = "continuous")
-
-prob_75_0_cont = parLapply(cl, effect, ranksProb_compare, e.one = 0, m0=75, m1=25, sampleSize = sampleSize, effectType = "continuous")
-prob_75_1_cont = parLapply(cl, effect, ranksProb_compare, e.one = 1, m0=75, m1=25, sampleSize = sampleSize, effectType = "continuous")
-prob_75_2_cont = parLapply(cl, effect, ranksProb_compare, e.one = 2, m0=75, m1=25, sampleSize = sampleSize, effectType = "continuous")
-
-prob_90_0_cont = parLapply(cl, effect, ranksProb_compare, e.one = 0, m0=90, m1=10, sampleSize = sampleSize, effectType = "continuous")
-prob_90_1_cont = parLapply(cl, effect, ranksProb_compare, e.one = 1, m0=90, m1=10, sampleSize = sampleSize, effectType = "continuous")
-prob_90_2_cont = parLapply(cl, effect, ranksProb_compare, e.one = 2, m0=90, m1=10, sampleSize = sampleSize, effectType = "continuous")
-
-prob_99_0_cont = parLapply(cl, effect, ranksProb_compare, e.one = 0, m0=99, m1=1, sampleSize = sampleSize, effectType = "continuous")
-prob_99_1_cont = parLapply(cl, effect, ranksProb_compare, e.one = 1, m0=99, m1=1, sampleSize = sampleSize, effectType = "continuous")
-prob_99_2_cont = parLapply(cl, effect, ranksProb_compare, e.one = 2, m0=99, m1=1, sampleSize = sampleSize, effectType = "continuous")
-
-
-# binary cases==================================================================
-prob_20_0_bin = parLapply(cl, effect, ranksProb_compare, e.one = 0, m0=20, m1=80, sampleSize = sampleSize, effectType = "binary")
-prob_20_1_bin = parLapply(cl, effect, ranksProb_compare, e.one = 1, m0=20, m1=80, sampleSize = sampleSize, effectType = "binary")
-prob_20_2_bin = parLapply(cl, effect, ranksProb_compare, e.one = 2, m0=20, m1=80, sampleSize = sampleSize, effectType = "binary")
-
-prob_50_0_bin = parLapply(cl, effect, ranksProb_compare, e.one = 0, m0=50, m1=50, sampleSize = sampleSize, effectType = "binary")
-prob_50_1_bin = parLapply(cl, effect, ranksProb_compare, e.one = 1, m0=50, m1=50, sampleSize = sampleSize, effectType = "binary")
-prob_50_2_bin = parLapply(cl, effect, ranksProb_compare, e.one = 2, m0=50, m1=50, sampleSize = sampleSize, effectType = "binary")
-
-prob_75_0_bin = parLapply(cl, effect, ranksProb_compare, e.one = 0, m0=75, m1=25, sampleSize = sampleSize, effectType = "binary")
-prob_75_1_bin = parLapply(cl, effect, ranksProb_compare, e.one = 1, m0=75, m1=25, sampleSize = sampleSize, effectType = "binary")
-prob_75_2_bin = parLapply(cl, effect, ranksProb_compare, e.one = 2, m0=75, m1=25, sampleSize = sampleSize, effectType = "binary")
-
-prob_90_0_bin = parLapply(cl, effect, ranksProb_compare, e.one = 0, m0=90, m1=10, sampleSize = sampleSize, effectType = "binary")
-prob_90_1_bin = parLapply(cl, effect, ranksProb_compare, e.one = 1, m0=90, m1=10, sampleSize = sampleSize, effectType = "binary")
-prob_90_2_bin = parLapply(cl, effect, ranksProb_compare, e.one = 2, m0=90, m1=10, sampleSize = sampleSize, effectType = "binary")
-
-prob_99_0_bin = parLapply(cl, effect, ranksProb_compare, e.one = 0, m0=99, m1=1, sampleSize = sampleSize, effectType = "binary")
-prob_99_1_bin = parLapply(cl, effect, ranksProb_compare, e.one = 1, m0=99, m1=1, sampleSize = sampleSize, effectType = "binary")
-prob_99_2_bin = parLapply(cl, effect, ranksProb_compare, e.one = 2, m0=99, m1=1, sampleSize = sampleSize, effectType = "binary")
-
-
-
-stopCluster(cl)
-
-
-#------------------------------------------------------------
-# save the workspace to the file .RData in the cwd
-save.image("simu_prob_rank_givenEffect.RData")
-
-#===========================end of parallel computing===========================
-
+# for plots load "simu_prob_rank_givenEffect.RData" and use the following codes
 
 # this code is to load saved workspace from parallel computing
 load(".../simu_prob_rank_givenEffect.RDATA")
 
 
-
-#=======================probability plot for the supplementry materials=========
-
-# Function to plots from the parallel computing outputs=========================
-# probability plols for the supplementry materials
-
-ranksProb_plots <- function(m0, effectType = c("binary", "continuous"))
-{
-    effType <- ifelse(effectType == "binary", "_bin", "_cont")
-    prow <- list()
-    for(j in 1:3)
-    {
-        e.one <- j-1
-        # make text into varriable name
-        probData_com <- eval(parse(text=paste0("prob_",m0,"_",e.one, effType)))
-        g <- list()
-        for(i in 1:3)
-        {
-            probData <- probData_com[[i]]
-            colnames(probData) <- c("ranks", "SH0","SH1","EH0","EH1","AH0","AH1")
-            dat <- melt(probData, id.var = "ranks")
-
-            ey_val <- ifelse(effectType == "binary", i-1,
-                             ifelse(i==1, 0, paste0("U(",i-2,", ", i-1,")")))
-            eySm <- ifelse(effectType == "binary", "ey = ", "ey ~ ")
-
-            g[[i]] = ggplot(dat, aes(x = ranks, y = value, group = variable,
-                                     colour = variable)) +
-                geom_line(aes(linetype = variable), size = 1.5) +
-                labs(x = "ranks", y = "p(rank | effect)",
-                     title = paste0(eySm, ey_val, ", e.one = ", e.one)) +
-                theme(legend.title = element_blank())
-        }
-
-        # extract the legend from one of the plots
-        legend <- get_legend(g[[1]] + theme(legend.direction="horizontal",
-                                            legend.position="bottom"))
-
-        # arrange the three plots in a single row
-        prow[[j]] <- plot_grid(g[[1]] + theme(legend.position="none"),
-                               g[[2]] + theme(legend.position="none"),
-                               g[[3]] + theme(legend.position="none"),
-                               align = 'hv', nrow = 1)
-    }
-
-    effType2 <- ifelse(effectType == "binary", "Binary: m0 = ", "Continuous: m0 = ")
-    plots = grid.arrange(prow[[1]], prow[[2]], prow[[3]], legend, ncol=1,
-                         heights=c(7,7,7,1), top= paste(effType2, m0, ", m1 = ", 100-m0))
-    return(list(plots))
-}
+library(ggplot2)
+library(grid)
+library(gridExtra)      # for multiplots in the same page
+library(reshape2)       # library for the melt function
+library(cowplot)        # plot_grid function
 
 
-# applying plot function========================================================
+#=======================ranks probability plot for the main article===================
+# probability plols for the main article----------------------
+#prob_50_0_cont           # to get (ey=0, and e.one = 0)
+#prob_50_1_cont           # to get (ey~U(0, 1) and ey~U(1, 2) for e.one = 1)
+#prob_50_2_cont           # ey~U(0, 1) and e.one = 2
+
+dat00 <- prob_50_0_cont[[1]]
+colnames(dat00) <- c("ranks", "SH0","SH1","EH0","EH1","AH0","AH1")
+dat00 <- melt(dat00, id.var="ranks")
+
+dat01 <- prob_50_1_cont[[2]]
+colnames(dat01) <- c("ranks", "SH0","SH1","EH0","EH1","AH0","AH1")
+dat01 <- melt(dat01, id.var="ranks")
+
+dat12 <- prob_50_1_cont[[3]]
+colnames(dat12) <- c("ranks", "SH0","SH1","EH0","EH1","AH0","AH1")
+dat12 <- melt(dat12, id.var="ranks")
+
+dat02 <- prob_50_2_cont[[2]]
+colnames(dat02) <- c("ranks", "SH0","SH1","EH0","EH1","AH0","AH1")
+dat02 <- melt(dat02,id.var="ranks")
+
+
+p00 <- ggplot(dat00, aes(x = ranks, y = value, group = variable,
+                         colour = variable)) +
+    geom_line(aes(linetype = variable), size = 1.5) +
+    labs(x = "Ranks", y = "p(rank | effect)", title = "ey = 0, e.one = 0") +
+    theme(legend.position="none") +
+    annotate("text", x=50, y=.011, label="P(rank | effect = 0)")
+
+
+p01 <- ggplot(dat01, aes(x = ranks, y = value, group = variable,
+                         colour = variable)) +
+    geom_line(aes(linetype = variable), size = 1.5) +
+    labs(x = "Ranks", y = "p(rank | effect)", title = "ey ~ U(0, 1), e.one = 1") +
+    theme(legend.position="none") +
+    annotate("text", x = c(50, 50), y = c(.005, .018),
+             label = c(paste(sprintf('\u2190'),"P(rank | effect = 0)"),
+                       paste("P(rank | effect = e.one)", sprintf('\u2192'))))
+
+p12 <- ggplot(dat12, aes(x = ranks, y = value, group = variable,
+                         colour = variable)) +
+    geom_line(aes(linetype = variable), size = 1.5) +
+    labs(x = "Ranks", y = "p(rank | effect)", title = "ey ~ U(1, 2), e.one = 1") +
+    theme(legend.position="none") +
+    annotate("text", x = c(60, 40), y=c(.001, .02),
+             label = c(paste(sprintf('\u2190'),"P(rank | effect = 0)"),
+                       paste("P(rank | effect = e.one)", sprintf('\u2192'))))
+
+p02 <- ggplot(dat02, aes(x = ranks, y = value, group = variable,
+                         colour = variable)) +
+    geom_line(aes(linetype = variable), size = 1.5) +
+    labs(x = "Ranks", y = "p(rank | effect)", title = "ey ~ U(0, 1), e.one = 2") +
+    theme(legend.title = element_blank(), legend.position="bottom") +
+    annotate("text", x = c(50, 40), y=c(.04, .15),
+             label = c("P(rank | effect = 0)",paste(sprintf('\u2190'),"P(rank | effect = e.one)")))
+
+
+# extract the legend from one of the plots
+legend_art <- get_legend(p02 + theme(legend.direction="horizontal",
+                                     legend.position="bottom"))
+
+p02 = p02 +    theme(legend.position="none")
+
+
+p = plot_grid(p00, p01, p12, p02, nrow = 2, labels = letters[1:4], align = 'hv')
+# now add the title
+title <- ggdraw() + draw_label("Continuous: m0 = 50, m1 = 50")
+plot_grid(title, p, legend_art, ncol = 1, rel_heights=c(0.1, 1, .1))
+
+#==========================end==================================================
+
+
+
+
+
+#=================ranks probability plot for the supplementry materials=========
+
+# apply nulSize values one at a time to see the plots
 nullSize <- c(20, 50, 75, 90, 99)
 cont_probs_plots <- lapply(nullSize, ranksProb_plots, effectType = "continuous")
 bin_probs_plots <- lapply(99, ranksProb_plots, effectType = "binary")

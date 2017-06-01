@@ -1,18 +1,20 @@
 library(snow)
-library(qvalue)
-library(tibble)
-library(IHW)
+library("IHW")		# independent hypotheis weight
+library(tibble)     # tibble data frame
 library(OPWeight)
 library(OPWpaper)
 
+# for parallel computing---------------
 
-cl <- makeCluster(15, type = "MPI")		# start zcluster
+cl <- makeCluster(10, type = "MPI")		# start zcluster
 
-
-clusterExport(cl, "qvalue")
-clusterExport(cl, "tibble")
-clusterExport(cl, "ihw")
+clusterExport(cl,"ihw")
+clusterExport(cl,"adj_pvalues")
 clusterExport(cl,"rejections")
+clusterExport(cl,"tibble")
+clusterExport(cl, "simu_fwer")
+
+
 
 
 
@@ -31,7 +33,7 @@ save.image("smu_fwer.RData")
 
 
 
-# this code is to load saved workspace from parallel computing
+# this code is to load saved workspace from parallel computing and plot
 load(".../smu_fwer.RData")
 
 

@@ -4,11 +4,13 @@
 \alias{fwerPowerFdrPower}
 \title{Simulate FWER, POWER, FDR, and POWER}
 \usage{
-fwerPowerFdrPower(simu, null, corr = 0, cv = 0, alpha = 0.05,
-  groupSize = 100, effectType = c("continuous", "binary"), ey_vec,
+fwerPowerFdrPower(i, simu, null, corr = 0, cv = 0, alpha = 0.05,
+  groupSize = 100, effectType = c("continuous", "binary"), filterEffectVec,
   datWeightByNull)
 }
 \arguments{
+\item{i}{i-th filter effect}
+
 \item{simu}{number of replications}
 
 \item{null}{proportion of the true null hypothesis}
@@ -23,7 +25,7 @@ fwerPowerFdrPower(simu, null, corr = 0, cv = 0, alpha = 0.05,
 
 \item{effectType}{type of effect sizes, c("continuous", "binary")}
 
-\item{ey_vec}{a vector of different effect size}
+\item{filterEffectVec}{a vector of different effect size}
 
 \item{datWeightByNull}{a matrix of weights, each column corresponds to a effect size}
 }
@@ -43,21 +45,23 @@ effect sizes
 }
 \examples{
 # vector of effect sizes
-ey_vec <- c(1, 1.5, 2)
+filterEffectVec <- c(1, 1.5, 2)
 
 # compute probability matrix
-ranksProb_byEffect <- sapply(1:length(ey_vec), ranksProb_byEffect,
-             null = .9, m = 100, filterEffectVec = ey_vec)
+ranksProb_byEffect <- sapply(1:length(filterEffectVec), ranksProb_byEffect,
+             null = .9, m = 100, filterEffectVec = filterEffectVec)
 
 # compute weights
-weightByEffect <- sapply(1:length(ey_vec), weight_byEffect_cont,
+weightByEffect <- sapply(1:length(filterEffectVec), weight_byEffect_cont,
                    alpha = .05, null = .9, m = 100, delInterval = .0001,
-                   filterEffectVec = ey_vec, datByNull = ranksProb_byEffect)
+                   filterEffectVec = filterEffectVec,
+                   datByNull = ranksProb_byEffect)
 
 simuVal = 3  # in actual case use at least simVal = 1000
-result <- sapply(1:simuVal, fwerPowerFdrPower, null = .5, corr = 0, cv = 0,
-               alpha = .05, groupSize = 100, effectType = "continuous",
-               ey_vec = ey_vec, datWeightByNull = weightByEffect)
+result <- sapply(1:length(filterEffectVec), fwerPowerFdrPower, simu = simuVal,
+             null = .5, corr = 0, cv = 0, alpha = .05, groupSize = 100,
+             effectType = "continuous", filterEffectVec = filterEffectVec,
+             datWeightByNull = weightByEffect)
 
 }
 \references{

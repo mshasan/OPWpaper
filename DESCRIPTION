@@ -16,21 +16,21 @@ Depends:
 License: Artistic-2.0
 LazyData: true
 Imports:
+    cowplot,
+    ggplot2,
     IHW,
     mvnfast,
     qvalue,
+    reshape2,
     stats,
     tibble
 Suggests:
     BiocStyle,
-    cowplot,
     DESeq2,
     devtools,
-    ggplot2,
     gridExtra,
     knitr,
     rmarkdown,
-    reshape2
 VignetteBuilder: knitr
 biocViews:
     MultipleComparison,
