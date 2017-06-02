@@ -40,7 +40,7 @@ the function.
 # ranksProb <- read.csv("ranksProb_byEffect_m10000.csv", h=T)
 # ranksWeight <- read.csv("Weight_byEffect_cont_m10000.csv",h=T)
 # ranksWeight <- t(t(ranksWeight)/colSums(ranksWeight)*m)
-# porb_weight_plots(ey_index = c(7, 17, 27, 37), null_index = c(26, 27, 28),
+# prob_weight_plots(ey_index = c(7, 17, 27, 37), null_index = c(26, 27, 28),
 #         m = 10000, ey = 2, null = 50, prob = ranksProb, weight = ranksWeight)
 
 }

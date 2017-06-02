@@ -44,26 +44,13 @@ prob_weight_plots <- function(ey_index, null_index, m, ey, null, prob, weight)
         names(prob_by_null) <- c("ranks", "20%", "50%", "75%", "90%")
         prob_by_null_melt <- melt(prob_by_null, id.var = "ranks",
                                   variable.name = "null prop.")
+
         prob_plot = ggplot(prob_by_null_melt, aes(x = prob_by_null_melt$ranks,
                     y = prob_by_null_melt$value, group = prob_by_null_melt$`null prop.`,
                     colour = prob_by_null_melt$`null prop.`)) +
             geom_line(aes(linetype = prob_by_null_melt$`null prop.`), size = 1.5) +
-            labs(x = "Ranks", y = "p(rank | effect)", title = paste0("et = ey = ", ey))
-
-        prob_plot + scale_shape_discrete(name  ="Payer",
-                                  breaks=c("Female", "Male"),
-                                  labels=c("Woman", "Man"))
-
-
-        weight_by_null = data.frame(ranks, weight[ , ey_index])
-        names(weight_by_null) <- c("ranks", "20%", "50%", "75%", "90%")
-        weight_by_null_melt <- melt(weight_by_null, id.var = "ranks",
-                                    variable.name = "null prop.")
-        weight_plot = ggplot(weight_by_null_melt, aes(x = weight_by_null_melt$ranks,
-                      y = log(weight_by_null_melt$value), group = weight_by_null_melt$`null prop.`,
-                      colour = weight_by_null_melt$`null prop.`)) +
-            geom_line(aes(linetype = weight_by_null_melt$`null prop.`), size = 1.5) +
-            labs(x = "Ranks", y = "log(weight)", title = paste0("et = ey = ", ey))
+            labs(x = "Ranks", y = "p(rank | effect)", title = paste0("et = ey = ", ey))+
+            theme(legend.position="none")
 
 
         prob_by_effect <- data.frame(ranks, prob[ , null_index])
@@ -71,10 +58,24 @@ prob_weight_plots <- function(ey_index, null_index, m, ey, null, prob, weight)
         prob_by_effect_melt <- melt(prob_by_effect, id.var = "ranks",
                                     variable.name = "effect size")
         prob_plot_by_effect = ggplot(prob_by_effect_melt, aes(x = prob_by_effect_melt$ranks,
-                              y = prob_by_effect_melt$value, group = prob_by_effect_melt$`effect size`,
-                              colour = prob_by_effect_melt$`effect size`)) +
+                    y = prob_by_effect_melt$value, group = prob_by_effect_melt$`effect size`,
+                        colour = prob_by_effect_melt$`effect size`)) +
             geom_line(aes(linetype = prob_by_effect_melt$`effect size`), size = 1.5) +
-            labs(x = "Ranks", y = "p(rank | effect)", title = paste0("null = ", null, "%"))
+            labs(x = "Ranks", y = "p(rank | effect)", title = paste0("null = ", null, "%"))+
+            theme(legend.position="none")
+
+
+        weight_by_null = data.frame(ranks, weight[ , ey_index])
+        names(weight_by_null) <- c("ranks", "20%", "50%", "75%", "90%")
+        weight_by_null_melt <- melt(weight_by_null, id.var = "ranks",
+                                    variable.name = "null prop.")
+        weight_plot = ggplot(weight_by_null_melt, aes(x = weight_by_null_melt$ranks,
+                      y = weight_by_null_melt$value, group = weight_by_null_melt$`null prop.`,
+                      colour = weight_by_null_melt$`null prop.`)) +
+            geom_line(size = 1.5) +
+            labs(x = "Ranks", y = "log(weight)", color = "null prop.")+
+            theme(legend.direction = "horizontal", legend.position = "bottom")
+
 
 
         weight_by_effect <- data.frame(ranks, weight[ , null_index])
@@ -82,22 +83,21 @@ prob_weight_plots <- function(ey_index, null_index, m, ey, null, prob, weight)
         weight_by_effect_melt <- melt(weight_by_effect, id.var = "ranks",
                                       variable.name = "effect size")
         weight_plot_by_effect = ggplot(weight_by_effect_melt, aes(x = weight_by_effect_melt$ranks,
-                                y = log(weight_by_effect_melt$value),
+                                y = weight_by_effect_melt$value,
                                 group = weight_by_effect_melt$`effect size`,
                                 colour = weight_by_effect_melt$`effect size`)) +
-            geom_line(aes(linetype = weight_by_effect_melt$`effect size`), size = 1.5) +
-            labs(x = "Ranks", y = "log(weight)", title = paste0("null = ", null, "%"))
+            geom_line(size = 1.5) +
+            labs(x = "Ranks", y = "log(weight)", color = "effect size (ey)")+
+            theme(legend.direction = "horizontal", legend.position = "bottom")
 
 
-        pp <- plot_grid(prob_plot, weight_plot, prob_plot_by_effect, weight_plot_by_effect,
-                        nrow = 2, labels = c("a", "", "b"), align = 'hv')
+        pp <- plot_grid(prob_plot, prob_plot_by_effect, weight_plot, weight_plot_by_effect,
+                        nrow = 2, labels = c("a", "b"), align = 'v')
         title <- ggdraw() + draw_label("Continuous: probability and weight vs. rank")
-        plots = plot_grid(title, pp, ncol = 1, rel_heights=c(.1, 1), align = 'hv')
+        plots = plot_grid(title, pp, ncol = 1, rel_heights=c(.1, 1))
 
         return(plots)
 
 }
 
 
-#' prob_weight_plots(ey_index = c(7, 17, 27, 37), null_index = c(26, 27, 28),
-#'          m = 10000, ey = 2, null = 50, prob = ranksProb, weight = ranksWeight)

@@ -27,9 +27,9 @@ and apply for different \code{m0}.
 }
 \examples{
 # just an example
-# load(".../simu_prob_rank_givenEffect.RDATA")
+# load("simu_prob_rank_givenEffect.RDATA")
 # nullSize <- 90
-# lapply(nullSize, ranksProb_plots, effectType = "continuous")
+# lapply(nullSize, ranksProb_compare_plots, effectType = "continuous")
 
 }
 \references{
