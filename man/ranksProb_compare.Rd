@@ -43,16 +43,17 @@ probability of rank of a null test
 }
 \examples{
 # use sample size at least 100,000 for better result
-sampleSize = 1000
-probData <- ranksProb_compare(ey = 1, e.one = 2, m0 = 90, m1 = 10,
-                         sampleSize = sampleSize, effectType = "binary")
+# This is just an example
+# sampleSize = 1000
+# probData <- ranksProb_compare(ey = 1, e.one = 2, m0 = 90, m1 = 10,
+#                         sampleSize = sampleSize, effectType = "binary")
 
 # plots------------
-colnames(probData) <- c("ranks", "SH0","SH1","EH0","EH1","AH0","AH1")
-matplot(probData[, 1], probData[, 2:5], type = "l", lty = 1:6, col =1:6,
-lwd = 2, xlab = "ranks", ylab = "P(rank | effect)")
-legend("topright", legend = c("SH0","SH1","EH0","EH1","AH0","AH1"),
-                lty = 1:6, col =1:6, lwd = 2)
+# colnames(probData) <- c("ranks", "SH0","SH1","EH0","EH1","AH0","AH1")
+# matplot(probData[, 1], probData[, 2:5], type = "l", lty = 1:6, col =1:6,
+# lwd = 2, xlab = "ranks", ylab = "P(rank | effect)")
+# legend("topright", legend = c("SH0","SH1","EH0","EH1","AH0","AH1"),
+#               lty = 1:6, col =1:6, lwd = 2)
 
 }
 \references{

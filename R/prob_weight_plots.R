@@ -73,7 +73,7 @@ prob_weight_plots <- function(ey_index, null_index, m, ey, null, prob, weight)
                       y = weight_by_null_melt$value, group = weight_by_null_melt$`null prop.`,
                       colour = weight_by_null_melt$`null prop.`)) +
             geom_line(size = 1.5) +
-            labs(x = "Ranks", y = "log(weight)", color = "null prop.")+
+            labs(x = "Ranks", y = "Weight", color = "null prop.")+
             theme(legend.direction = "horizontal", legend.position = "bottom")
 
 
@@ -87,7 +87,7 @@ prob_weight_plots <- function(ey_index, null_index, m, ey, null, prob, weight)
                                 group = weight_by_effect_melt$`effect size`,
                                 colour = weight_by_effect_melt$`effect size`)) +
             geom_line(size = 1.5) +
-            labs(x = "Ranks", y = "log(weight)", color = "effect size (ey)")+
+            labs(x = "Ranks", y = "Weight", color = "effect size (ey)")+
             theme(legend.direction = "horizontal", legend.position = "bottom")
 
 
