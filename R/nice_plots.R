@@ -157,7 +157,7 @@ nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE,
         }
 
 
-        plt = plt + geom_line(aes(linetype = dat$variable), size = 1.5) +
+        plt = plt + geom_line(aes(linetype = dat_melt$variable), size = 1.5) +
             labs(x = x_lab, y = y_lab, title = if(low_eff_plot == FALSE){titl}) +
             theme(legend.position = "none",
                   axis.title.x = element_text(size = rel(.8)),
