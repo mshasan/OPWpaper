@@ -1,3 +1,5 @@
+setwd("U:/Documents/My Research (UGA)/Multiple Hypoetheses/Article-1")
+
 library(IHW)
 library(IHWpaper)
 library(OPWeight)   # proposed library
@@ -19,50 +21,76 @@ proteomics_df$test = qnorm(proteomics_df$pvalue, lower.tail = F)
 names(proteomics_df)
 
 
-tests = proteomics_df$test
-pvals = proteomics_df$pvalue
-filters = proteomics_df$X..peptides
+pval = proteomics_df$pvalue
+test = qnorm(pval, lower.tail = FALSE)
+test[which(!is.finite(test))] <- NA
+filter = proteomics_df$X..peptides
 
-Data <- tibble(test=tests, pval=pvals, filter=filters)	# data of filter covariate and pvlaues
+
+Data <- tibble(test, pval, filter)	# data of filter covariate and pvlaues
 
 
-# summary statistics plots of the data
-#---------------------------------------------
+bc2 <- boxcox(filter ~ test)
+trans2 <- bc2$x[which.max(bc2$y)]
+model_prot <- lm(filter^trans2 ~ test)
+
+
+# summary statistics of the data
+#------------------------------------
 barlines <- "#1F3552"
 
 hist_test <- ggplot(Data, aes(x = Data$test)) +
-    geom_histogram(aes(y = ..density..), binwidth = 1,
-                   colour = barlines, fill = "#4271AE") +
-    labs(x = "test statistics")
-
-hist_pval <- ggplot(Data, aes(x = Data$pval)) +
-    geom_histogram(aes(y = ..density..),
-                   colour = barlines, fill = "#4281AE")+
-    labs(x = "pvalues")
+        geom_histogram(aes(y = ..density..), binwidth = 1,
+	  colour = barlines, fill = "#4271AE") +
+		labs(x = "Test statistics")
 
 hist_filter <- ggplot(Data, aes(x = Data$filter)) +
-    geom_histogram(aes(y = ..density..),
-                   colour = barlines, fill = "#4274AE") +
-    labs(x = "filter statistics")
+        geom_histogram(aes(y = ..density..),
+	  colour = barlines, fill = "#4274AE") +
+		labs(x = "Filter statistics")
 
-test_filter <- ggplot(Data, aes(x = Data$test, y = Data$filter)) +
-    geom_point() + labs(x = "test statstics", y = "filter statistics")
-#scale_x_continuous(limits = c(0, 25000), breaks=seq(0, 25000, 10000))
+hist_pval <- ggplot(Data, aes(x = Data$pval)) +
+        geom_histogram(aes(y = ..density..),
+	  colour = barlines, fill = "#4281AE")+
+		labs(x = "P-values")
 
 pval_filter <- ggplot(Data, aes(x = rank(-Data$filter), y = -log10(pval))) +
-    geom_point()+
-    labs(x = "ranks of filters", y = "-log(pvalue)")
-#scale_x_continuous(limits = c(0, 25000), breaks=seq(0, 25000, 10000))
+		geom_point()+
+		labs(x = "Ranks of filters", y = "-log(pvalue)")
 
 p_ecdf <- ggplot(Data, aes(x = pval)) +
-    stat_ecdf(geom = "step")+
-    labs(x = "pvalues", title="empirical cumulative distribution")+
-    theme(plot.title = element_text(size = rel(.7)))
+			stat_ecdf(geom = "step")+
+			labs(x = "P-values", title="empirical cumulative distribution")+
+			theme(plot.title = element_text(size = rel(.7)))
 
 
-sum_plots <- grid.arrange(hist_test,  hist_pval, hist_filter, test_filter , pval_filter, p_ecdf,
-             ncol = 3, heights = c(7, 7), top = "Airway: data summary")
-sum_plots
+
+qqplot.data <- function (vec) # argument: vector of numbers
+{
+  # following four lines from base R's qqline()
+  y <- quantile(vec[!is.na(vec)], c(0.25, 0.75))
+  x <- qnorm(c(0.25, 0.75))
+  slope <- diff(y)/diff(x)
+  int <- y[1L] - slope * x[1L]
+
+  d <- data.frame(resids = vec)
+
+  ggplot(d, aes(sample = resids)) + stat_qq() +
+	geom_abline(slope = slope, intercept = int, col="red")+
+	labs(x = "Normal quantiles", y = "Fitted values",
+	title = expression(paste("Model: ", filter^(-1.414), " ~ ", beta[0] + beta[1]*test)))+
+	theme(plot.title = element_text(size = rel(.7)))
+
+}
+
+qqplot <- qqplot.data(model_prot$fit)
+
+p_prot = plot_grid(hist_test, hist_filter, hist_pval, pval_filter, p_ecdf, qqplot,
+                  ncol = 3, labels = letters[1:6], align = 'hv')
+title_prot <- ggdraw() + draw_label("Proteomics: data summary")
+plot_grid(title_prot, p_prot, ncol = 1, rel_heights=c(.1, 1))
+
+
 
 
 # applying proposed methods------------
@@ -70,9 +98,10 @@ n_rej_cont <- NULL
 n_rej_bin <- NULL
 for(alphaVal in seq(.05, .1, length = 5))
     {
-    res_cont = opw(pvalue = pvals, filter = filters, test = tests, effectType = "continuous",
+    set.seed(123)
+    res_cont = opw(pvalue = pval, filter = filter, effectType = "continuous",
                     alpha = alphaVal, method = "BH")
-    res_bin = opw(pvalue = pvals, filter = filters, test = tests, effectType = "binary",
+    res_bin = opw(pvalue = pval, filter = filter, effectType = "binary",
               alpha = alphaVal, method = "BH")
     n_rej_cont <- c(n_rej_cont, res_cont$rejections)
     n_rej_bin <- c(n_rej_bin, res_bin$rejections)
@@ -95,7 +124,8 @@ rej_mat_prot_FDR2 <- melt(rej_mat_prot_FDR, id.var = "alpha")
 p_fdr_prot <- ggplot(rej_mat_prot_FDR2, aes(x = alpha, y = value, group = variable,
                                             colour = variable)) +
     geom_line(aes(linetype = variable), size = 1.5) +
-    labs(x = "alpha", y = "discoveries", title = "Proteomics data") +
+    labs(x = expression(bold(paste("Nominal ",alpha))),
+	   y = "Discoveries", title = "Proteomics data") +
     theme(legend.title = element_blank(), legend.position="bottom")
 
 p_fdr_prot
