@@ -11,7 +11,8 @@
 #' @param null the proportion of the true null if power or FDR/FWER is plotted against the effect sizes
 #' @param cv the value of the coefficient of variation if power is plotted against effect sizes
 #' @param ey the value of the effect size if power is plotted against the proportion of the true null
-#' @param figure = types of figure will be plotted c("nullPropVsPower", "effectVsFPFP")
+#' @param cor the value of the correlation if the figure is for the ranks probability
+#' @param figure types of figure will be plotted c("ranksProb", "nullPropVsPower", "effectVsFPFP", "CV")
 #'
 #' @details
 #' \code{OPWeight} package proposed methods to compute the probabilities
@@ -72,7 +73,8 @@
 # null = the proportion of the true null if power or FDR/FWER is plotted against the effect sizes
 # cv = the value of the coefficient of variation if power is plotted against effect sizes
 # ey = the value of the effect size if power is plotted against the proportion of the true null
-# figure = types of figure will be plotted c("nullPropVsPower", "effectVsFPFP")
+# cor = the value of the correlation if the figure is for the ranks probability
+# figure = types of figure will be plotted c("ranksProb", "nullPropVsPower", "effectVsFPFP", "CV")
 #
 # internal parameters:-----
 # x_axis = variable name of the x-axis
@@ -100,11 +102,19 @@
 #===============================================================================
 # function to generate nice plots------------
 
-nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE,
-                       low_eff_plot = FALSE, null = NULL, cv = NULL, ey = NULL,
-                       figure = c("nullPropVsPower", "effectVsFPFP"))
+nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE, low_eff_plot = FALSE,
+                       null = NULL, cv = NULL, ey = NULL, cor = NULL,
+                       figure = c("ranksProb", "nullPropVsPower", "effectVsFPFP", "CV"))
     {
-        if(figure == "nullPropVsPower"){
+        # configure data sets-------------
+        if(figure == "ranksProb"){
+
+            x_axis = "ranks"
+            x_lab = "Ranks"
+            y_lab = "p(ranks | effect)"
+            dat <- data.frame(x_vec, y_matrix)
+
+        } else if(figure == "nullPropVsPower"){
 
             x_axis <- "nullProp"
             x_lab = "Prop. of null"
@@ -134,8 +144,15 @@ nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE,
        }
 
 
-        colnames(dat) <- c(x_axis, "PRO", "BH", "RDW", "IHW")
+        # label the columns--------
+        if(figure == "ranksProb"){
+            colnames(dat) <- c(x_axis, "FH0","FH1","TH0","TH1")
+        } else {
+            colnames(dat) <- c(x_axis, "PRO", "BH", "RDW", "IHW")
+        }
 
+
+        # initial plot with melted data-------------
         if(low_eff_plot == FALSE){
             dat_melt <- melt(dat, id.var = x_axis)
             plt <- ggplot(dat_melt, aes(x = dat_melt[,1], y = dat_melt$value,
@@ -148,15 +165,20 @@ nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE,
                                         group = dat_melt$variable, col = dat_melt$variable))
         }
 
-        if(is.null(cv) & figure != "nullPropVsPower"){
-            titl <- paste0("null = ", null, "%")
-        } else if(is.null(cv) & figure == "nullPropVsPower"){
+
+        # fixed the tilte of the plot---------------
+        if(figure == "ranksProb"){
+            titl <- paste0("cor = ", cor)
+        } else if(figure == "nullPropVsPower"){
             titl <- paste0("ey = ", ey)
+        } else if(figure == "effectVsFPFP"){
+            titl <- paste0("null = ", null, "%")
         } else {
             titl <- paste0("cv = ", cv)
         }
 
 
+        # final plot with titles and labels----------
         plt = plt + geom_line(aes(linetype = dat_melt$variable), size = 1.5) +
             labs(x = x_lab, y = y_lab, title = if(low_eff_plot == FALSE){titl}) +
             theme(legend.position = "none",

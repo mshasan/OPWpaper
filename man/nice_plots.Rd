@@ -5,8 +5,8 @@
 \title{Funciton to plot nice plots}
 \usage{
 nice_plots(x_vec, y_matrix, fdr = TRUE, power = TRUE,
-  low_eff_plot = FALSE, null = NULL, cv = NULL, ey = NULL,
-  figure = c("nullPropVsPower", "effectVsFPFP"))
+  low_eff_plot = FALSE, null = NULL, cv = NULL, ey = NULL, cor = NULL,
+  figure = c("ranksProb", "nullPropVsPower", "effectVsFPFP", "CV"))
 }
 \arguments{
 \item{x_vec}{a vector of values corresponds to x-axis}
@@ -25,7 +25,9 @@ nice_plots(x_vec, y_matrix, fdr = TRUE, power = TRUE,
 
 \item{ey}{the value of the effect size if power is plotted against the proportion of the true null}
 
-\item{figure}{= types of figure will be plotted c("nullPropVsPower", "effectVsFPFP")}
+\item{cor}{the value of the correlation if the figure is for the ranks probability}
+
+\item{figure}{types of figure will be plotted c("ranksProb", "nullPropVsPower", "effectVsFPFP", "CV")}
 }
 \value{
 \code{Data}
