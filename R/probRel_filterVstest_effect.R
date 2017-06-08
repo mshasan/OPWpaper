@@ -9,6 +9,7 @@
 #' @param ed mean effect size of the test statistics
 #' @param m0 number of the true null hypothesis
 #' @param m1 number of the true alternative hypothesis
+#' @param n_ey number of fiter-effects to be generated
 #'
 #' @details Compute the relationship between filter and test effect sizes interms of
 #' the probability of the rank of the tes given the test effect sizes. The weight
@@ -52,6 +53,7 @@
 # ed = mean effect size of the test statistics
 # m0 = number of the true null hypothesis
 # m1 = number of the true alternative hypothesis
+# n_ey = number of fiter-effect to be generated
 #
 # internal parameters:----------
 # mean_ey = conditional mean of the filter effect
@@ -64,11 +66,11 @@
 # prob = probability of the rank given the mean test effect
 #===============================================================================
 
-probRel_filterVstest_effect <- function(r, rho, H0, ed, m0, m1)
+probRel_filterVstest_effect <- function(r, rho, H0, ed, m0, m1, n_ey = 100)
     {
         mean_ey = rho*ed
         sd_ey = sqrt(1 - rho*rho)
-        ey_val = rnorm(100, mean_ey, sd_ey)
+        ey_val = rnorm(n_ey, mean_ey, sd_ey)
 
         prob_condition_ey <- function(ey)
             {

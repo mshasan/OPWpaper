@@ -4,7 +4,7 @@
 \alias{probRel_filterVstest_effect}
 \title{Relationship between filter and test effect sizes}
 \usage{
-probRel_filterVstest_effect(r, rho, H0, ed, m0, m1)
+probRel_filterVstest_effect(r, rho, H0, ed, m0, m1, n_ey = 100)
 }
 \arguments{
 \item{r}{rank of the test statistics}
@@ -18,6 +18,8 @@ probRel_filterVstest_effect(r, rho, H0, ed, m0, m1)
 \item{m0}{number of the true null hypothesis}
 
 \item{m1}{number of the true alternative hypothesis}
+
+\item{n_ey}{number of fiter-effects to be generated}
 }
 \value{
 \code{prob} probability of the rank given the mean test effect
