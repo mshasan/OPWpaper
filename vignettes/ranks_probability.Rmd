@@ -4,6 +4,7 @@ author: "Mohamad Shakil Hasan"
 date: "`r doc_date()`"
 package: "`r pkg_ver('OPWpaper')`"
 output: BiocStyle::html_document
+#bibliography: bibliography.bib
 vignette: >
   %\VignetteIndexEntry{"Ranks probability"}
   %\VignetteEngine{knitr::rmarkdown}
@@ -11,24 +12,29 @@ vignette: >
 ---
 
 ```{r setup, echo = FALSE}
+knitr::opts_chunk$set(fig.width = 8, fig.height = 8)
 knitr::opts_chunk$set(tidy = FALSE, cache = TRUE, autodep = TRUE)
 ```
 
 Below we generate the necessary plots to demonstrate the ranks probability for both the continuous effects and the binary effects.
 
-```{r loadLib}
+Load necessary libraries
+
+```{r loadLib, message=FALSE, warning=FALSE}
 library(OPWeight)       # library for the proposed method
-library(OPWpaper)
+library(OPWpaper)       
 library(ggplot2)
 library(reshape2)       # library for the melt function
 library(cowplot)        # plot_grid function
 ```
 
 # Ranks proabbility comparison
+Load data stored in `r Biocpkg("OPWpaper")` 
 
-```{r load_ranks_data}
-ranks_dat <- system.file("simulation_benchmarks/results_files/simu_prob_rank_givenEffect.RDATA", package = "OPWpaper")
-load(ranks_dat)
+```{r load_ranksProb_data}
+ranksProb_dat <- system.file("simulations/results/simu_prob_rank_givenEffect.RDATA", 
+                         package = "OPWpaper")
+load(ranksProb_dat)
 ```
 
 To verify the proposed ranks probability, we conducted simulations. Figure 1 shows the ranks probability of a test from three different approaches: 1) Simulation approach and 2) Exact numerical solution and 3) Normal approximation of the proposed method. All plots of the simulation suggest nearly perfect alignment with the proposed (exact and approximate) methods. 
@@ -99,24 +105,29 @@ title <- ggdraw() + draw_label("Continuous: m0 = 50, m1 = 50")
 plot_grid(title, p, legend_art, ncol = 1, rel_heights=c(0.1, 1, .1))
 ```
 
-Figure 1: Ranks probability, $p(r_i \mid \varepsilon_i)$, for the continuous effects for three different scenarios. For these plots, We assumed that there are $m = 100$ tests of which $m_0 = 50$ are true nulls and $m_1 = 50$ are true alternatives. Each plot consists of six curves, SH0, SH1, EH0, EH1, AH0, and AH1, where the first letter represents the method (S = simulated, E = exact, and A = approximate), and H0 and H1 represent the hypothesis type.
+Figure 1: Ranks probability, $p(r_i \mid \varepsilon_i)$, for the continuous effects for three different scenarios. For these plots, we assumed that there are $m = 100$ tests of which $m_0 = 50$ are true nulls and $m_1 = 50$ are true alternatives. Each plot consists of six curves, SH0, SH1, EH0, EH1, AH0, and AH1, where the first letter represents the method (S = simulated, E = exact, and A = approximate), and H0 and H1 represent the hypothesis type.
 
 
 # Ranks probability for the continuous effects
+To perform the simulations, we generated $10,000,000$ samples; each sample is composed of $m = 100$ test statistics from the normal distribution for a particular combination of the effect sizes $\{0\}\times Uniform(a,b)$, where $\{0\}$ represents the effect size of the null model, and $Uniform(a,b)$ represents the effect sizes of the alternative models. We consider the combination of $a = \{0,1 \}$ and $b = \{1,2\}$, respectively. For each sample, we assumed that there are $m=100$ hypotheses tests of which $m_0=\{20,50,75,90,99\}$ tests are from the null, and $m_1=\{80,50,25,10,1\}$ tests are from the alternative models, respectively. For example, if we are interested in testing the hypothesis $H_0: \varepsilon_i = 0$ vs. $H_1: \varepsilon_i > 0; \varepsilon_i  \sim uniform(0,1); i = 1,...,100$, and we assumed that $50$ tests are from the null, and $50$ tests are from the alternative models, then the simulation parameters will be $a=0,b=1,m=100,m_0=50$ and $m_1=50$. That is, $50$ test statistics are from the normal distribution (null model) with mean $0$ (effect size 0) and standard deviation $1$, and the remaining $50$ test statistics are from the normal distribution (alternative model) with mean $uniorm(0,1)$ and standard deviation $1$. 
+
+The following plots shows the ranks probabilities for the different combination of the true null and the alternative hypotheses.
 
 ```{r continuous_effects}
-nullSize <- c(20, 50, 75, 90, 99)
+nullSize <- c(20, 50, 75, 90, 99)    # proportion of the true null tests
 lapply(nullSize, ranksProb_compare_plots, effectType = "continuous")
 ```
 
 # Ranks probability for the binary effects
+Consider the similar set-up described for the continuous effects case. In addition, we considered the combination of the effect sizes $\{0\} \times \{0,1,2\}$, where $\{0\}$ represent the effect size of the null model and $\{0,1,2\}$ represents the effect sizes of the alternative models. Note that, for the binary case the alternative effects are the same.
 
 ```{r binary_effects}
 nullSize <- c(20, 50, 75, 90, 99)
 lapply(nullSize, ranksProb_compare_plots, effectType = "binary")
 ```
 
-
+# References
+I will include later
 
 
 

@@ -1,5 +1,0 @@
-loadLib	library
-load_ranks_data	load	system.file
-ranks_Compare_Plots	[[	aes	annotate	c	colnames<-	draw_label	element_blank	geom_line	get_legend	ggdraw	ggplot	labs	letters	melt	paste	plot_grid	prob_50_0_cont	prob_50_1_cont	prob_50_2_cont	ranks	sprintf	theme	value	variable
-continuous_effects	c	lapply	ranksProb_compare_plots
-binary_effects	c	lapply	ranksProb_compare_plots

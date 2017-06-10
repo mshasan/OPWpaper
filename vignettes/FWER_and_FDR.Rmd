@@ -1,0 +1,243 @@
+---
+title: "FWER and FDR"
+author: "Mohamad Shakil Hasan"
+date: "`r doc_date()`"
+package: "`r pkg_ver('OPWpaper')`"
+output: BiocStyle::html_document
+#bibliography: bibliography.bib
+vignette: >
+  %\VignetteIndexEntry{"FWER and FDR"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(fig.width = 8.5, fig.height = 4)
+knitr::opts_chunk$set(tidy = FALSE, cache = TRUE, autodep = TRUE)
+```
+
+Below we generate the necessary plots to demonstrate that the proposed method controls the Family Wise Error Rate (FWER) and the False Discovery Rate (FDR).
+
+Load necessary libraries
+
+```{r loadLib, message=FALSE, warning=FALSE}
+library(OPWeight)       # library for the proposed method
+library(OPWpaper)       
+library(ggplot2)
+library(reshape2)       # library for the melt function
+library(cowplot)        # plot_grid function
+```
+
+Load data stored in `r Biocpkg("OPWpaper")` 
+
+```{r load_fwer_data}
+fwer_dat <- system.file("simulation_benchmarks/results_files/simu_fwer.RDATA", package = "OPWpaper")
+load(fwer_dat)
+```
+
+# FWER when all tests are from the true null models
+This simulation is conducted to verify that the proposed method controls the Family Wise Error Rate (FWER). To conduct this simulation, we assumed that all test statistics are from the true null models.
+
+```{r fwer}
+fwer_by_alpha <- matrix(apply(fwer_mat, 1, mean), nrow = 4, byrow = FALSE)
+
+alphaVal = seq(.01, .1, .02)
+datError <- data.frame(alphaVal, t(fwer_by_alpha))
+colnames(datError) <- c("alpha","BON","PRO_bin","PRO_cont", "IHW")
+datError2 <- melt(datError, id.var="alpha")
+
+ggplot(datError2, aes(x = alpha, y = value, col=variable)) +
+    geom_line(size=1.5) +
+    geom_abline(linetype="dashed") +
+    xlab(expression(bold(paste("Nominal ",alpha)))) +
+    ylab("FWER")+
+    scale_x_continuous(limits = c(0.01,0.1), breaks=seq(0.01,0.09,length=5)) +
+    #ylim(0,0.9) +
+    theme(legend.title = element_blank())+
+    theme(axis.title = element_text(face="bold"))+
+    theme(panel.background = element_rect(fill = 'white', colour = 'black'))
+```
+Figure 1: The FWER for the different significance levels of $\alpha$. In the legend, the representation is: BON = bonferroni, PRO_bin = proposed binary, PRO_cont = proposed continuous, and IHW = Independent Hypothesis Weighting. 
+
+# Continuous effects
+This part show the FWER and FDR control when the effect sizes are continuous.
+Load the required RDATA
+
+```{r load_fwerPowerFdrPower_cont_data}
+fwer_fdr_byEffect_cont <- system.file("simulation_benchmarks/results_files/simu_fwerPowerFdrPower_cont.RDATA",                                         package = "OPWpaper")
+load(fwer_fdr_byEffect_cont)
+```
+
+Extract legend to use for the following plots
+
+```{r legend}
+# this part is for legend------------------------------------------------------
+ey_vec <- c(seq(0, 1, .2), 2, 3, 5, 8)
+
+dat_99 <- data.frame(ey_vec, t(FwerPowerFdrPower5e1[13:16,]))
+colnames(dat_99) <- c("effectSize", "PRO", "BH", "RDW", "IHW")
+dat_99_par <- melt(dat_99[1:6,], id.var = "effectSize")
+
+p_99_par <- ggplot(dat_99_par, aes(x = effectSize, y = value,group = variable, col=variable)) +
+    geom_line(aes(linetype = variable), size = 1.5) +
+    labs(x = "ey", y = "power", title = "null = 99%") +
+    theme(legend.title = element_blank())
+
+legend <- get_legend(p_99_par + theme(legend.direction = "horizontal", legend.position = "bottom"))
+```
+
+## FWER for the different effect sizes
+This simulation is conducted to see the FWER control for the different effect sizes. The simulation procedures are divided into three groups based on the proportion of the true null hypothesis. Three groups are composed of $50\%,90\%,$ and $99\%$ true null tests. For each group of simulations, we considered mean effect sizes =$\{et=ey$ or $et \sim Normal(ey,CV.ey)\}$, where $et,ey,$ and $CV$ refers to the mean test-effect, mean filter-effect, and coefficient of variations. For the mean effects we considered a vector of $\{.2,.4,.6,.8,1,2,3,5,8\}$ and $CV = 1/2$. We compare the proposed method (PRO) with three other methods which are Bonferroni (BON), Roeder and Wasserman (RDW), and Independent Hypotheis Weighting (IHW).  
+
+Plot to observe the Family Wise Error Rate (FWER) for the different effect sizes
+
+```{r fwer_ey_equals_et}
+# plots FWER et = ey (i.e cv =0)
+#-------------------------------------------------
+p_.5_eq_fwer <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e1, fdr = FALSE, power = FALSE, null = 50, figure = "effectVsFPFP")
+p_.9_eq_fwer <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e1, fdr = FALSE, power = FALSE, null = 90, figure = "effectVsFPFP")
+p_.99_eq_fwer<- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower5e1, fdr = FALSE, power = FALSE, null = 99, figure = "effectVsFPFP")
+
+p_eq_fwer = plot_grid(p_.5_eq_fwer, p_.9_eq_fwer, p_.99_eq_fwer, ncol = 3, labels = letters[1:3], align = 'hv')
+title <- ggdraw() + draw_label(expression(paste("FWER: et = ey, ", alpha, " = .05")))
+plot_grid(title, p_eq_fwer, legend, ncol = 1, rel_heights=c(.1, .5, .1))
+```
+
+Figure 2: The FWER of four methods for the different mean effects when the mean test-effect ($et$) is equal to mean filter-effect ($ey$). Three columns are based on three groups composed of $50\%,90\%$, and $99\%$ true null hypothesis. 
+
+
+```{r fwer_ey_notequals_et}
+# plots FWER et ~ Normal(ey, ey/2) (i.e cv = 1/2)
+#-------------------------------------------------
+p_.5_uneq_fwer <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e2, fdr = FALSE, power = FALSE, null = 50, figure = "effectVsFPFP")
+p_.9_uneq_fwer <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e2, fdr = FALSE, power = FALSE, null = 90, figure = "effectVsFPFP")
+p_.99_uneq_fwer<- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower5e2, fdr = FALSE, power = FALSE, null = 99, figure = "effectVsFPFP")
+
+p_uneq_fwer = plot_grid(p_.5_uneq_fwer, p_.9_uneq_fwer, p_.99_uneq_fwer, ncol = 3, labels = letters[1:3], align = 'hv')
+title <- ggdraw() + draw_label(expression(paste("FWER: et ~ Normal(ey, ey/2), ", alpha, " = .05")))
+plot_grid(title, p_uneq_fwer, legend, ncol = 1, rel_heights=c(.1, .5, .1))
+```
+
+Figure 3: The FWER when the mean test effect ($et$) is not equal to mean filter effect ($ey$); rather $et \sim Normal(ey, CV.ey )$, where $CV =1/2$.  
+
+
+## FDR for the different effect sizes
+Plot to observe the False Discovery Rate (FDR) for the different effect sizes. For this simulation, we kept the same set-up described in the FWER section. We compare the proposed method (PRO) with three other methods which are Benjamini and Hochberg (BH), Roeder and Wasserman (RDW), and Independent Hypotheis Weighting (IHW).
+
+```{r fdr_ey_equals_et}
+# plots FDR et = ey (i.e cv =0)
+#-------------------------------------------------
+p_.5_eq_fdr <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e1, fdr = TRUE, power = FALSE, null = 50, figure = "effectVsFPFP")
+p_.9_eq_fdr <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e1, fdr = TRUE, power = FALSE, null = 90, figure = "effectVsFPFP")
+p_.99_eq_fdr<- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower5e1, fdr = TRUE, power = FALSE, null = 99, figure = "effectVsFPFP")
+
+p_eq_fdr = plot_grid(p_.5_eq_fdr, p_.9_eq_fdr, p_.99_eq_fdr, ncol = 3, labels = letters[1:3], align = 'hv')
+title <- ggdraw() + draw_label(expression(paste("FDR: et = ey, ", alpha, " = .05")))
+plot_grid(title, p_eq_fdr, legend, ncol = 1, rel_heights=c(.1, .5, .1))
+```
+
+Figure 4: The FDR when the mean test effect ($et$) is equal to mean filter effect ($ey$)$.  
+
+
+```{r fdr_ey_notequals_et}
+# plots FDR et ~ Normal(ey, ey/2) (i.e cv = 1/2)
+#-------------------------------------------------
+p_.5_uneq_fdr <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e2, fdr = TRUE, power = FALSE, null = 50, figure = "effectVsFPFP")
+p_.9_uneq_fdr <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e2, fdr = TRUE, power = FALSE, null = 90, figure = "effectVsFPFP")
+p_.99_uneq_fdr<- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower5e2, fdr = TRUE, power = FALSE, null = 99, figure = "effectVsFPFP")
+
+p_uneq_fdr = plot_grid(p_.5_uneq_fdr, p_.9_uneq_fdr, p_.99_uneq_fdr, ncol = 3, labels = letters[1:3], align = 'hv')
+title <- ggdraw() + draw_label(expression(paste("FDR: et ~ Normal(ey, ey/2), ", alpha, " = .05")))
+plot_grid(title, p_uneq_fdr, legend, ncol = 1, rel_heights=c(.1, .5, .1))
+```
+
+Figure 5: The FDR when the mean test effect ($et$) is not equal to mean filter effect ($ey$); rather $et \sim Normal(ey, CV.ey )$, where $CV =1/2$.  
+
+
+
+# Binary effects
+This part show the FWER and FDR control when the effect sizes are binary, i.e., there are two types of effect sizes: 1) very small close to zero and 3) large far from zero.
+
+```{r load_fwerPowerFdrPower_bin_data}
+#rm(list=ls())
+fwer_fdr_byEffect_bin <- system.file("simulation_benchmarks/results_files/simu_fwerPowerFdrPower_bin.RDATA", 
+                                         package = "OPWpaper")
+load(fwer_fdr_byEffect_bin)
+```
+
+
+## FWER for the different effect sizes
+Consider the same set-up described in the continuous section except alternative effects are fixed and same vlaue.   
+
+Plot to observe the Family Wise Error Rate (FWER) for the different effect sizes
+
+```{r fwer_ey_equals_et2}
+# plots FWER et = ey (i.e cv =0)
+#-------------------------------------------------
+p_.5_eq_fwer <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e1, fdr = FALSE, power = FALSE, null = 50, figure = "effectVsFPFP")
+p_.9_eq_fwer <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e1, fdr = FALSE, power = FALSE, null = 90, figure = "effectVsFPFP")
+p_.99_eq_fwer<- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower5e1, fdr = FALSE, power = FALSE, null = 99, figure = "effectVsFPFP")
+
+p_eq_fwer = plot_grid(p_.5_eq_fwer, p_.9_eq_fwer, p_.99_eq_fwer, ncol = 3, labels = letters[1:3], align = 'hv')
+title <- ggdraw() + draw_label(expression(paste("FWER: et = ey, ", alpha, " = .05")))
+plot_grid(title, p_eq_fwer, legend, ncol = 1, rel_heights=c(.1, .5, .1))
+```
+
+Figure 6: The FWER of four methods for the different mean effects when the mean test-effect ($et$) is equal to mean filter-effect ($ey$). 
+
+
+```{r fwer_ey_notequals_et2}
+# plots FWER et ~ Normal(ey, ey/2) (i.e cv = 1/2)
+#-------------------------------------------------
+p_.5_uneq_fwer <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e2, fdr = FALSE, power = FALSE, null = 50, figure = "effectVsFPFP")
+p_.9_uneq_fwer <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e2, fdr = FALSE, power = FALSE, null = 90, figure = "effectVsFPFP")
+p_.99_uneq_fwer<- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower5e2, fdr = FALSE, power = FALSE, null = 99, figure = "effectVsFPFP")
+
+p_uneq_fwer = plot_grid(p_.5_uneq_fwer, p_.9_uneq_fwer, p_.99_uneq_fwer, ncol = 3, labels = letters[1:3], align = 'hv')
+title <- ggdraw() + draw_label(expression(paste("FWER: et ~ Normal(ey, ey/2), ", alpha, " = .05")))
+plot_grid(title, p_uneq_fwer, legend, ncol = 1, rel_heights=c(.1, .5, .1))
+```
+
+Figure 7: The FWER when the mean test effect ($et$) is not equal to mean filter effect ($ey$); rather $et \sim Normal(ey, CV.ey )$, where $CV =1/2$.  
+
+
+## FDR for the different effect sizes
+Plot to observe the False Discovery Rate (FDR) for the different effect sizes. For this simulation, we kept the same set-up described in the FWER section.
+
+```{r fdr_ey_equals_et2}
+# plots FDR et = ey (i.e cv =0)
+#-------------------------------------------------
+p_.5_eq_fdr <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e1, fdr = TRUE, power = FALSE, null = 50, figure = "effectVsFPFP")
+p_.9_eq_fdr <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e1, fdr = TRUE, power = FALSE, null = 90, figure = "effectVsFPFP")
+p_.99_eq_fdr<- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower5e1, fdr = TRUE, power = FALSE, null = 99, figure = "effectVsFPFP")
+
+p_eq_fdr = plot_grid(p_.5_eq_fdr, p_.9_eq_fdr, p_.99_eq_fdr, ncol = 3, labels = letters[1:3], align = 'hv')
+title <- ggdraw() + draw_label(expression(paste("FDR: et = ey, ", alpha, " = .05")))
+plot_grid(title, p_eq_fdr, legend, ncol = 1, rel_heights=c(.1, .5, .1))
+```
+
+Figure 8: The FDR when the mean test effect ($et$) is equal to mean filter effect ($ey$)$.  
+
+
+```{r fdr_ey_notequals_et2}
+# plots FDR et ~ Normal(ey, ey/2) (i.e cv = 1/2)
+#-------------------------------------------------
+p_.5_uneq_fdr <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e2, fdr = TRUE, power = FALSE, null = 50, figure = "effectVsFPFP")
+p_.9_uneq_fdr <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e2, fdr = TRUE, power = FALSE, null = 90, figure = "effectVsFPFP")
+p_.99_uneq_fdr<- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower5e2, fdr = TRUE, power = FALSE, null = 99, figure = "effectVsFPFP")
+
+p_uneq_fdr = plot_grid(p_.5_uneq_fdr, p_.9_uneq_fdr, p_.99_uneq_fdr, ncol = 3, labels = letters[1:3], align = 'hv')
+title <- ggdraw() + draw_label(expression(paste("FDR: et ~ Normal(ey, ey/2), ", alpha, " = .05")))
+plot_grid(title, p_uneq_fdr, legend, ncol = 1, rel_heights=c(.1, .5, .1))
+```
+
+Figure 9: The FDR when the mean test effect ($et$) is not equal to mean filter effect ($ey$); rather $et \sim Normal(ey, CV.ey )$, where $CV =1/2$.  
+
+
+
+
+
+
+
+
+

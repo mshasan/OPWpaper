@@ -1,16 +1,18 @@
 ## ----setup, echo = FALSE-------------------------------------------------
+knitr::opts_chunk$set(fig.width = 8, fig.height = 8)
 knitr::opts_chunk$set(tidy = FALSE, cache = TRUE, autodep = TRUE)
 
-## ----loadLib-------------------------------------------------------------
+## ----loadLib, message=FALSE, warning=FALSE-------------------------------
 library(OPWeight)       # library for the proposed method
-library(OPWpaper)
+library(OPWpaper)       
 library(ggplot2)
 library(reshape2)       # library for the melt function
 library(cowplot)        # plot_grid function
 
 ## ----load_ranks_data-----------------------------------------------------
-ranks_dat <- system.file("simulation_benchmarks/results_files/simu_prob_rank_givenEffect.RDATA", package = "OPWpaper")
-load(ranks_dat)
+ranksProb_dat <- system.file("simulation_benchmarks/results_files/simu_prob_rank_givenEffect.RDATA", 
+                         package = "OPWpaper")
+load(ranksProb_dat)
 
 ## ----ranks_Compare_Plots-------------------------------------------------
 dat00 <- prob_50_0_cont[[1]]
@@ -78,7 +80,7 @@ title <- ggdraw() + draw_label("Continuous: m0 = 50, m1 = 50")
 plot_grid(title, p, legend_art, ncol = 1, rel_heights=c(0.1, 1, .1))
 
 ## ----continuous_effects--------------------------------------------------
-nullSize <- c(20, 50, 75, 90, 99)
+nullSize <- c(20, 50, 75, 90, 99)    # proportion of the true null tests
 lapply(nullSize, ranksProb_compare_plots, effectType = "continuous")
 
 ## ----binary_effects------------------------------------------------------
