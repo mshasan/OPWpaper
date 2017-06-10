@@ -49,9 +49,9 @@ ranksProb_compare_plots <- function(m0, effectType = c("binary", "continuous"))
                                  ifelse(i==1, 0, paste0("U(",i-2,", ", i-1,")")))
                 eySm <- ifelse(effectType == "binary", "ey = ", "ey ~ ")
 
-                g[[i]] = ggplot(dat, aes(x = dat$ranks, y = dat$value, group = dat$variable,
-                                         colour = dat$variable)) +
-                    geom_line(aes(linetype = dat$variable), size = 1.5) +
+                g[[i]] = ggplot(dat, aes(x = ranks, y = value, group = variable,
+                                         colour = variable)) +
+                    geom_line(aes(linetype = variable), size = 1.5) +
                     labs(x = "Ranks", y = "p(rank | effect)", size = 20,
                          subtitle = paste0(eySm, ey_val, ", e.one = ", e.one)) +
                     theme(legend.title = element_blank(),

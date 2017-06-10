@@ -1,0 +1,52 @@
+---
+title: "Power"
+author: "Mohamad Shakil Hasan"
+date: "`r doc_date()`"
+package: "`r pkg_ver('OPWpaper')`"
+output: BiocStyle::html_document
+#bibliography: bibliography.bib
+vignette: >
+  %\VignetteIndexEntry{"Power"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(fig.width = 8.5, fig.height = 8)
+knitr::opts_chunk$set(tidy = FALSE, cache = TRUE, autodep = TRUE)
+```
+
+Below we generate the necessary plots to demonstrate the behaviour of Power of the proposed as well as other methods under different circumstances.
+
+Load necessary libraries
+
+```{r loadLib, message=FALSE, warning=FALSE}
+library(OPWeight)       # library for the proposed method
+library(OPWpaper)       
+library(ggplot2)
+library(reshape2)       # library for the melt function
+library(cowplot)        # plot_grid function
+```
+
+
+# Continuous effects
+# Power vs. effect size
+Load data stored in `r Biocpkg("OPWpaper")` 
+
+```{r load_fwerPowerFdrPower_cont_data}
+power_byEffect_cont <- system.file("simulations/results", package = "OPWpaper")
+setwd(power_byEffect_cont)
+load("simu_fwerPowerFdrPower_cont.RDATA")
+```
+
+
+
+
+
+
+
+
+
+
+
+

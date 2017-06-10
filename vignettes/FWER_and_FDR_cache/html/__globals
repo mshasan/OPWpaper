@@ -1,0 +1,14 @@
+loadLib	library
+load_fwer_data	load	setwd	system.file
+fwer	aes	alpha	apply	c	colnames<-	data.frame	element_blank	element_rect	element_text	expression	fwer_mat	geom_abline	geom_line	ggplot	matrix	mean	melt	scale_x_continuous	seq	t	theme	value	variable	xlab	ylab
+load_fwerPowerFdrPower_cont_data	load	setwd	system.file
+legend	FwerPowerFdrPower5e1	aes	c	colnames<-	data.frame	effectSize	element_blank	geom_line	get_legend	ggplot	labs	melt	seq	t	theme	value	variable
+fwer_ey_equals_et	FwerPowerFdrPower2e1	FwerPowerFdrPower4e1	FwerPowerFdrPower5e1	c	draw_label	expression	ey_vec	ggdraw	legend	letters	nice_plots	plot_grid
+fwer_ey_notequals_et	FwerPowerFdrPower2e2	FwerPowerFdrPower4e2	FwerPowerFdrPower5e2	c	draw_label	expression	ey_vec	ggdraw	legend	letters	nice_plots	plot_grid
+fdr_ey_equals_et	FwerPowerFdrPower2e1	FwerPowerFdrPower4e1	FwerPowerFdrPower5e1	c	draw_label	expression	ey_vec	ggdraw	legend	letters	nice_plots	plot_grid
+fdr_ey_notequals_et	FwerPowerFdrPower2e2	FwerPowerFdrPower4e2	FwerPowerFdrPower5e2	c	draw_label	expression	ey_vec	ggdraw	legend	letters	nice_plots	plot_grid
+load_fwerPowerFdrPower_bin_data	load	setwd	system.file
+fwer_ey_equals_et2	FwerPowerFdrPower2e1	FwerPowerFdrPower4e1	FwerPowerFdrPower5e1	c	draw_label	expression	ey_vec	ggdraw	legend	letters	nice_plots	plot_grid
+fwer_ey_notequals_et2	FwerPowerFdrPower2e2	FwerPowerFdrPower4e2	FwerPowerFdrPower5e2	c	draw_label	expression	ey_vec	ggdraw	legend	letters	nice_plots	plot_grid
+fdr_ey_equals_et2	FwerPowerFdrPower2e1	FwerPowerFdrPower4e1	FwerPowerFdrPower5e1	c	draw_label	expression	ey_vec	ggdraw	legend	letters	nice_plots	plot_grid
+fdr_ey_notequals_et2	FwerPowerFdrPower2e2	FwerPowerFdrPower4e2	FwerPowerFdrPower5e2	c	draw_label	expression	ey_vec	ggdraw	legend	letters	nice_plots	plot_grid

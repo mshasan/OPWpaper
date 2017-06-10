@@ -31,8 +31,9 @@ library(cowplot)        # plot_grid function
 Load data stored in `r Biocpkg("OPWpaper")` 
 
 ```{r load_fwer_data}
-fwer_dat <- system.file("simulation_benchmarks/results_files/simu_fwer.RDATA", package = "OPWpaper")
-load(fwer_dat)
+fwer_dat <- system.file("simulations/results", package = "OPWpaper")
+setwd(fwer_dat)
+load("simu_fwer.RDATA")
 ```
 
 # FWER when all tests are from the true null models
@@ -64,8 +65,9 @@ This part show the FWER and FDR control when the effect sizes are continuous.
 Load the required RDATA
 
 ```{r load_fwerPowerFdrPower_cont_data}
-fwer_fdr_byEffect_cont <- system.file("simulation_benchmarks/results_files/simu_fwerPowerFdrPower_cont.RDATA",                                         package = "OPWpaper")
-load(fwer_fdr_byEffect_cont)
+fwer_fdr_byEffect_cont <- system.file("simulations/results", package = "OPWpaper")
+setwd(fwer_fdr_byEffect_cont)
+load("simu_fwerPowerFdrPower_cont.RDATA")
 ```
 
 Extract legend to use for the following plots
@@ -160,9 +162,9 @@ This part show the FWER and FDR control when the effect sizes are binary, i.e., 
 
 ```{r load_fwerPowerFdrPower_bin_data}
 #rm(list=ls())
-fwer_fdr_byEffect_bin <- system.file("simulation_benchmarks/results_files/simu_fwerPowerFdrPower_bin.RDATA", 
-                                         package = "OPWpaper")
-load(fwer_fdr_byEffect_bin)
+fwer_fdr_byEffect_bin <- system.file("simulations/results", package = "OPWpaper")
+setwd(fwer_fdr_byEffect_bin)
+load("simu_fwerPowerFdrPower_bin.RDATA")
 ```
 
 

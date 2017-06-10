@@ -32,9 +32,9 @@ library(cowplot)        # plot_grid function
 Load data stored in `r Biocpkg("OPWpaper")` 
 
 ```{r load_ranksProb_data}
-ranksProb_dat <- system.file("simulations/results/simu_prob_rank_givenEffect.RDATA", 
-                         package = "OPWpaper")
-load(ranksProb_dat)
+ranksProb_dat <- system.file("simulations/results/", package = "OPWpaper")
+setwd(ranksProb_dat)
+load("simu_prob_rank_givenEffect.RDATA")
 ```
 
 To verify the proposed ranks probability, we conducted simulations. Figure 1 shows the ranks probability of a test from three different approaches: 1) Simulation approach and 2) Exact numerical solution and 3) Normal approximation of the proposed method. All plots of the simulation suggest nearly perfect alignment with the proposed (exact and approximate) methods. 
