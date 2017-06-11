@@ -105,7 +105,7 @@ title <- ggdraw() + draw_label("Continuous: m0 = 50, m1 = 50")
 plot_grid(title, p, legend_art, ncol = 1, rel_heights=c(0.1, 1, .1))
 ```
 
-Figure 1: Ranks probability, $p(r_i \mid \varepsilon_i)$, for the continuous effects for three different scenarios. For these plots, we assumed that there are $m = 100$ tests of which $m_0 = 50$ are true nulls and $m_1 = 50$ are true alternatives. Each plot consists of six curves, SH0, SH1, EH0, EH1, AH0, and AH1, where the first letter represents the method (S = simulated, E = exact, and A = approximate), and H0 and H1 represent the hypothesis type.
+**Figure 1:** Ranks probability, $p(r_i \mid \varepsilon_i)$, for the continuous effects for three different scenarios. For these plots, we assumed that there are $m = 100$ tests of which $m_0 = 50$ are true nulls and $m_1 = 50$ are true alternatives. Each plot consists of six curves, SH0, SH1, EH0, EH1, AH0, and AH1, where the first letter represents the method (S = simulated, E = exact, and A = approximate), and H0 and H1 represent the hypothesis type.
 
 
 # Ranks probability for the continuous effects
@@ -126,8 +126,7 @@ nullSize <- c(20, 50, 75, 90, 99)
 lapply(nullSize, ranksProb_compare_plots, effectType = "binary")
 ```
 
-# References
-I will include later
+
 
 
 

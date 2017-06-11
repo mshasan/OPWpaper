@@ -155,14 +155,15 @@ nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE, low_eff_plot =
         # initial plot with melted data-------------
         if(low_eff_plot == FALSE){
             dat_melt <- melt(dat, id.var = x_axis)
-            plt <- ggplot(dat_melt, aes(x = dat_melt[,1], y = dat_melt$value,
-                                        group = dat_melt$variable, col = dat_melt$variable))
+            plt <- ggplot(dat_melt, aes_string(x = names(dat_melt)[[1]], y = "value",
+                                        group = "variable", col = "variable"))
         } else {
             y_lab <- "log(power)"
             dat <- dat[1:6, ]
+            dat[,2:5] <- log(dat[,2:5])
             dat_melt <- melt(dat, id.var = x_axis)
-            plt <- ggplot(dat_melt, aes(x = dat_melt[,1], y = log(dat_melt$value),
-                                        group = dat_melt$variable, col = dat_melt$variable))
+            plt <- ggplot(dat_melt, aes_string(x = names(dat_melt)[[1]], y = "value",
+                                        group = "variable", col = "variable"))
         }
 
 
@@ -179,7 +180,7 @@ nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE, low_eff_plot =
 
 
         # final plot with titles and labels----------
-        plt = plt + geom_line(aes(linetype = dat_melt$variable), size = 1.5) +
+        plt = plt + geom_line(aes_string(linetype = "variable"), size = 1.5) +
             labs(x = x_lab, y = y_lab, title = if(low_eff_plot == FALSE){titl}) +
             theme(legend.position = "none",
                   axis.title.x = element_text(size = rel(.8)),

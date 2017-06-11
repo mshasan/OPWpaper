@@ -1,0 +1,7 @@
+loadLib	library
+bot_data	load	setwd	system.file
+summary_bot	c	draw_label	ggdraw	hist_filter	hist_pval	hist_test	letters	p_ecdf	plot_grid	pval_filter	qqplot
+result_bot	$	%>%	aes	bh_rejections	c	colnames<-	data.frame	element_blank	expression	geom_line	ggplot	group_by	labs	max	melt	n_rej_bin	n_rej_cont	readRDS	rejections	seq	summarize	system.file	theme	value	variable
+prot_data	load	setwd	system.file
+summary_prot	c	draw_label	ggdraw	hist_filter	hist_pval	hist_test	letters	p_ecdf	plot_grid	pval_filter	qqplot
+result_prot	$	%>%	aes	bh_rejections	c	colnames<-	data.frame	element_blank	expression	geom_line	ggplot	group_by	labs	max	melt	n_rej_bin	n_rej_cont	readRDS	rejections	seq	summarize	system.file	theme	value	variable

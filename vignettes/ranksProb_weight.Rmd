@@ -60,5 +60,4 @@ prob_weight_plots(ey_index = c(6, 16, 26, 36), null_index = c(34, 37, 39),
                                 weight = ranksWeight)
 ```
 
-# References
-I will include later
+

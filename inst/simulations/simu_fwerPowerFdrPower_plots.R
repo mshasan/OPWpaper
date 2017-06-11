@@ -234,6 +234,9 @@ plot_grid(title_main, p_prop, legend, ncol = 1, rel_heights=c(.1, 1, .1))
 
 
 
+
+
+
 # see correaltion effect on Power (i.e cv =0)
 #------------------------------------------------------
 # load data for continuous power----------------
@@ -281,7 +284,6 @@ p = plot_grid(gplots[[3]],gplots[[4]],gplots[[5]],gplots[[6]],gplots[[7]],gplots
               ncol = 3, labels = letters[1:6], align = 'hv')
 title <- ggdraw() + draw_label("Binary: null = 50%, et = ey")
 plot_grid(title, p, legend_corr, ncol = 1, rel_heights=c(.1, 1, .1))
-
 
 
 

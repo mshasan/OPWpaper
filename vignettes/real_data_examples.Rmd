@@ -1,0 +1,154 @@
+---
+title: "Real data examples"
+author: "Mohamad Shakil Hasan"
+date: "`r doc_date()`"
+package: "`r pkg_ver('OPWpaper')`"
+output: BiocStyle::html_document
+bibliography: bibliography.bib
+vignette: >
+  %\VignetteIndexEntry{"Real data examples"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(fig.width = 8.5, fig.height = 7)
+knitr::opts_chunk$set(tidy = FALSE, cache = TRUE, autodep = TRUE)
+```
+
+
+Load the necessary libraries
+
+```{r loadLib, message=FALSE, warning=FALSE}
+library(OPWeight)       # library for the proposed method
+library(OPWpaper)       
+library(ggplot2)
+library(reshape2)       # library for the melt function
+library(cowplot)        # plot_grid function
+library(dplyr)          # for %>%
+```
+
+
+# Data examples
+We performed simple regression with box-cox transformation to obtain the relationship between the test and the filter statistics in which filter statistics were regressed on the test statistics. Then, by applying the model's information, we computed the predicted filter statistics for the median and the mean test statistics. The predicted filter statistics corresponding to the median and the mean were considered as the estimate of the filter effect sizes. Note that, the diagnostic plots suggested that the models did not fit well. A pin-point model diagnosis process can improve the fitness of the model. This leaves a scope of further research, which is beyond our goal. However, the current model information is sufficient for our present purposes, because the proposed method only requires the centers of the test-effect sizes and the corresponding filter-effect size.
+
+
+## Bottomly-RNA-seq data
+1) Filter statistics is not normally distributed; therefore, we applied box-cox transformation in the simple linear regression.
+
+2) Bimodal p-values indicates two-tailed test criteria are necessary because p-values close to 1 be the cases that are significant in the opposite direction. 
+
+3) Low p-values are enriched at high covariates or low ranks of the filter statistics. This indicates that the covariate $basemean$ is correlated to the power under the alternative hypothesis test.
+
+4) The empirical cumulative distribution shows whether the curve is almost linear for the high p-values. 
+
+
+Load data stored in `r Biocpkg("OPWpaper")` 
+
+```{r bot_data}
+bottomly <- system.file("real_data_examples/results", package = "OPWpaper")
+setwd(bottomly)
+load("bottomly_data_example.RDATA")
+```
+
+
+
+```{r summary_bot}
+# summary statistics of the data
+#------------------------------------
+p_bot = plot_grid(hist_test, hist_filter, hist_pval, pval_filter, p_ecdf, qqplot,
+                   ncol = 3, labels = letters[1:6], align = 'hv')
+title_bot <- ggdraw() + draw_label("Bottomly: data summary")
+plot_grid(title_bot, p_bot, ncol = 1, rel_heights=c(.1, 1))
+```
+**Figure 1:** The summary information of the Bottomly-RNA-seq data. (a) Distribution of the test statistics, (b) Distribution of the filter statistics, (c) Distribution of the p-values, (d) negative $log(p-values)$ vs rank of the filter statistics (low index shows better rank), (e) empirical cumulative distribution of the p-values, and (f) the $qqplot$ of the fitted values from the regression model with box-cox transformation.
+
+
+
+```{r result_bot}
+# from IHW paper-------------
+alpha = seq(.05, .1, length = 5)
+bottomly_file <- system.file("real_data_examples/result_files", "RNAseq_benchmark.Rds", package = "IHWpaper")
+rnaseq_data <- readRDS(file=bottomly_file)
+panel_a_data <- group_by(rnaseq_data$alpha_df, alpha) %>% summarize(BH = max(bh_rejections), IHW=max(rejections))
+
+
+# rejected test from different methods-------------
+rej_mat_bot_FDR <- data.frame(n_rej_bin, n_rej_cont, panel_a_data)
+colnames(rej_mat_bot_FDR) <- c("PRO_bin","PRO_cont", "alpha", "BH","IHW")
+rej_mat_bot_FDR2 <- melt(rej_mat_bot_FDR, id.var = "alpha")
+
+p_fdr_bot <- ggplot(rej_mat_bot_FDR2, aes(x = alpha, y = value, group = variable,
+                                            colour = variable)) +
+    geom_line(aes(linetype = variable), size = 1.5) +
+    labs(x = expression(bold(paste("Nominal ",alpha))),
+	 y = "discoveries", title = "Bottomly data") +
+    theme(legend.title = element_blank(), legend.position = "bottom")
+
+p_fdr_bot
+```
+**Figure 2:** The number of rejected null hypotheses across different significance levels of $\alpha$. Here, PRO_bin = Proposed binary, PRO_cont = Proposed continuous, BH = Benjamini-Hochberg [@benjamini1997false], and IHW = Independent Hypothesis Weighting methods [@ignatiadis2016natmeth]. 
+
+
+
+## Proteomics
+1) Filter statistics is not normally distributed; therefore, we applied box-cox transformation in the simple linear regression.
+
+2) Unimodal p-values indicates one-tailed test criteria are necessary. 
+
+3) There is a very weak relationship between high covariate values the rank of the filter statistics. This indicates that the covariate peptide counts is weakly correlated to the power under the alternative hypothesis test. 
+
+
+Load data stored in `r Biocpkg("OPWpaper")` 
+
+```{r prot_data}
+proteomics <- system.file("real_data_examples/results", package = "OPWpaper")
+setwd(proteomics)
+load("proteomics_data_example.RDATA")
+```
+
+
+
+```{r summary_prot}
+# summary statistics of the data
+#------------------------------------
+p_prot = plot_grid(hist_test, hist_filter, hist_pval, pval_filter, p_ecdf, qqplot,
+                  ncol = 3, labels = letters[1:6], align = 'hv')
+title_prot <- ggdraw() + draw_label("Proteomics: data summary")
+plot_grid(title_prot, p_prot, ncol = 1, rel_heights=c(.1, 1))
+```
+**Figure 3:** The summary information of the Proteomics data. (a) Distribution of the test statistics, (b) Distribution of the filter statistics, (c) Distribution of the p-values, (d) negative $log(p-values)$ vs rank of the filter statistics (low index shows better rank), (e) empirical cumulative distribution of the p-values, and (f) the $qqplot$ of the fitted values from the regression model with box-cox transformation.
+
+
+
+```{r result_prot}
+# from IHW paper-------------
+alpha = seq(.05, .1, length = 5)
+proteomics_file <- system.file("real_data_examples/result_files", "proteomics_benchmark.Rds", package = "IHWpaper")
+proteomics_data <- readRDS(file=proteomics_file)
+panel_c_data <- group_by(proteomics_data$alpha_df, alpha) %>%
+    summarize(BH = max(bh_rejections), IHW=max(rejections))
+
+
+# rejected test from different methods-------------
+rej_mat_prot_FDR <- data.frame(n_rej_bin, n_rej_cont, panel_c_data)
+colnames(rej_mat_prot_FDR) <- c("PRO_bin","PRO_cont", "alpha", "BH","IHW")
+rej_mat_prot_FDR2 <- melt(rej_mat_prot_FDR, id.var = "alpha")
+
+p_fdr_prot <- ggplot(rej_mat_prot_FDR2, aes(x = alpha, y = value, group = variable,
+                                            colour = variable)) +
+    geom_line(aes(linetype = variable), size = 1.5) +
+    labs(x = expression(bold(paste("Nominal ",alpha))),
+	   y = "Discoveries", title = "Proteomics data") +
+    theme(legend.title = element_blank(), legend.position="bottom")
+
+p_fdr_prot
+```
+<p style = "text-align: center;"> 
+**Figure 4:** The number of rejected null hypotheses across different significance levels of $\alpha$. 
+</p>
+
+
+# References
+I will include later
+

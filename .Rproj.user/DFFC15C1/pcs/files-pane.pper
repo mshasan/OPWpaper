@@ -1,13 +1,13 @@
 {
-    "path" : "C:/Users/Apu-Jerrica/Google Drive/My R Packages/OPWpaper/vignettes",
+    "path" : "C:/Users/Apu-Jerrica/Google Drive/My R Packages/OPWpaper/R",
     "sortOrder" : [
         {
             "ascending" : true,
-            "columnIndex" : 2
+            "columnIndex" : 3
         },
         {
             "ascending" : false,
-            "columnIndex" : 3
+            "columnIndex" : 2
         },
         {
             "ascending" : false,
