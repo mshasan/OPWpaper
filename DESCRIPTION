@@ -1,7 +1,7 @@
 Package: OPWpaper
 Type: Package
 Title: Reproduce figures and simulations of OPWeight
-Version: 0.99.0
+Version: 0.99.1
 Date: 2017-04-18
 Authors@R: person("Mohamad", "Hasan", email = "shakilmohamad7@gmail.com",
                   role = c("aut", "cre"))
@@ -19,18 +19,23 @@ Imports:
     cowplot,
     ggplot2,
     IHW,
+    MASS,
     mvnfast,
     qvalue,
     reshape2,
     stats,
     tibble
 Suggests:
+    airway,
     BiocStyle,
     DESeq2,
     devtools,
     gridExtra,
     knitr,
+    Matrix,
     rmarkdown,
+    scales,
+    testthat
 VignetteBuilder: knitr
 biocViews:
         ExperimentData,
@@ -38,5 +43,5 @@ biocViews:
         ReproducibleResearch, 
         RNASeqData 
 RoxygenNote: 6.0.1
-URL: https://github.com/mshasan/OPWpapaer
+URL: https://github.com/mshasan/OPWpaper
 Bugreports: https://github.com/mshasan/OPWpaper/issues
