@@ -1,7 +1,7 @@
 Package: OPWpaper
 Type: Package
 Title: Reproduce figures and simulations of OPWeight
-Version: 0.99.1
+Version: 0.99.0
 Date: 2017-04-18
 Authors@R: person("Mohamad", "Hasan", email = "shakilmohamad7@gmail.com",
                   role = c("aut", "cre"))
