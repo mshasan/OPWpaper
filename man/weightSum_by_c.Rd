@@ -22,6 +22,9 @@ weightSum_by_c(c, m, gamma = 0.05, alpha = 0.05, group = 5L, tail = 1L,
 
 \item{effect_hat}{estimated effect size}
 }
+\value{
+\code{sum weight} sum of the weights for each C
+}
 \description{
 Compute sum of weights for a given value of c, the function of
 LaGrange multiplier

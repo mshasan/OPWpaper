@@ -76,7 +76,7 @@ weight_byEffect_cont <- function(i, alpha, null, m, tail = 1L, delInterval,
     m0 <- ceiling(m*null)
     m1 <- m - m0
     ranksProb <- datByNull[ , i]
-    prob <- ranksProb/sum(ranksProb, na.rm = T)
+    prob <- ranksProb/sum(ranksProb, na.rm = TRUE)
     delta <- seq(0, 1, delInterval)
 
     weightSumVec <- sapply(delta, weight_by_delta, alpha = alpha, et = et, m = m,

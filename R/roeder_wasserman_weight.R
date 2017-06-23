@@ -17,6 +17,8 @@
 #'
 #' @export
 #'
+#' @return \code{sum weight} sum of the weights for each C
+#'
 #' @references Roeder, Kathryn, and Larry Wasserman. "Genome-wide significance
 #' levels and weighted hypothesis testing." Statistical science: a review journal
 #' of the Institute of Mathematical Statistics 24.4 (2009): 398.
@@ -65,7 +67,9 @@ weightSum_by_c <- function(c, m, gamma = .05,  alpha = .05, group = 5L,
 #' @import tibble tibble
 #'
 #' @seealso \code{\link{weight_binary}} \code{\link{weight_continuous}}
+#'
 #' @return \code{weight} normalized weights of the tests
+#'
 #' @references Roeder, Kathryn, and Larry Wasserman. "Genome-wide significance
 #' levels and weighted hypothesis testing." Statistical science: a review journal
 #' of the Institute of Mathematical Statistics 24.4 (2009): 398.

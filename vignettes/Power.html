@@ -10,7 +10,7 @@
 
 <meta name="author" content="Mohamad Shakil Hasan" />
 
-<meta name="date" content="2017-06-10" />
+<meta name="date" content="2017-06-23" />
 
 <title>Power</title>
 
@@ -51,9 +51,9 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="header">
 <h1 class="title">Power</h1>
 <h4 class="author"><em>Mohamad Shakil Hasan</em></h4>
-<h4 class="date"><em>10 June 2017</em></h4>
+<h4 class="date"><em>23 June 2017</em></h4>
 </div>
-<h4 class="package">Package version: <span style="font-weight: normal">OPWpaper 0.99.0</span></h4>
+<h4 class="package">Package version: <span style="font-weight: normal">OPWpaper 0.99.1</span></h4>
 
 <h1>Contents</h1>
 <div id="TOC">
@@ -208,7 +208,7 @@ plot_grid(title_main, p_prop, legend, ncol = 1, rel_heights=c(.1, 1, .1))</code>
 
 # use 2 for 50% and 4 for 90% nulls-----------
 E = FwerPowerFdrPower2e1
-F = FwerPowerFdrPower2f1
+FF = FwerPowerFdrPower2f1
 G = FwerPowerFdrPower2g1
 H = FwerPowerFdrPower2h1
 I = FwerPowerFdrPower2i1
@@ -219,10 +219,10 @@ r = 13                        # row starts for fdr based power
 gplots &lt;- list()
 for(e in 3:8)               # effect size index
 {
-    PRO = c(E[r,e],    F[r,e],    G[r,e],    H[r,e],    I[r,e])
-    BH = c(E[(r+1),e],F[(r+1),e],G[(r+1),e],H[(r+1),e],I[(r+1),e])
-    RDW = c(E[(r+2),e],F[(r+2),e],G[(r+2),e],H[(r+2),e],I[(r+2),e])
-    IHW = c(E[(r+3),e],F[(r+3),e],G[(r+3),e],H[(r+3),e],I[(r+3),e])
+    PRO = c(E[r,e],    FF[r,e],    G[r,e],    H[r,e],    I[r,e])
+    BH = c(E[(r+1),e],FF[(r+1),e],G[(r+1),e],H[(r+1),e],I[(r+1),e])
+    RDW = c(E[(r+2),e],FF[(r+2),e],G[(r+2),e],H[(r+2),e],I[(r+2),e])
+    IHW = c(E[(r+3),e],FF[(r+3),e],G[(r+3),e],H[(r+3),e],I[(r+3),e])
     dat = data.frame(corr, PRO, BH, RDW, IHW)
     dat2 = melt(dat, id.var = &quot;corr&quot;)
     gplots[[e]] &lt;- ggplot(dat2, aes(x = corr, y = value, group = variable,
@@ -250,7 +250,7 @@ plot_grid(title, p, legend_corr, ncol = 1, rel_heights=c(.1, 1, .1))</code></pre
 </p>
 <pre class="r"><code># 90% nulls-----------
 E = FwerPowerFdrPower4e1
-F = FwerPowerFdrPower4f1
+FF = FwerPowerFdrPower4f1
 G = FwerPowerFdrPower4g1
 H = FwerPowerFdrPower4h1
 I = FwerPowerFdrPower4i1
@@ -261,10 +261,10 @@ r = 13                        # row starts for fdr based power
 gplots &lt;- list()
 for(e in 3:8)               # effect size index
 {
-    PRO = c(E[r,e],    F[r,e],    G[r,e],    H[r,e],    I[r,e])
-    BH = c(E[(r+1),e],F[(r+1),e],G[(r+1),e],H[(r+1),e],I[(r+1),e])
-    RDW = c(E[(r+2),e],F[(r+2),e],G[(r+2),e],H[(r+2),e],I[(r+2),e])
-    IHW = c(E[(r+3),e],F[(r+3),e],G[(r+3),e],H[(r+3),e],I[(r+3),e])
+    PRO = c(E[r,e],    FF[r,e],    G[r,e],    H[r,e],    I[r,e])
+    BH = c(E[(r+1),e],FF[(r+1),e],G[(r+1),e],H[(r+1),e],I[(r+1),e])
+    RDW = c(E[(r+2),e],FF[(r+2),e],G[(r+2),e],H[(r+2),e],I[(r+2),e])
+    IHW = c(E[(r+3),e],FF[(r+3),e],G[(r+3),e],H[(r+3),e],I[(r+3),e])
     dat = data.frame(corr, PRO, BH, RDW, IHW)
     dat2 = melt(dat, id.var = &quot;corr&quot;)
     gplots[[e]] &lt;- ggplot(dat2, aes(x = corr, y = value, group = variable,

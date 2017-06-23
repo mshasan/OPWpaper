@@ -11,7 +11,7 @@ Description: To produce the figures and the simulations results, an extensive si
              and the simulations results described in the paper. We also showed 
              real life examples.
 Depends: 
-    R (>= 3.3.0),
+    R (>= 3.4.0),
     OPWeight
 License: Artistic-2.0
 LazyData: true
