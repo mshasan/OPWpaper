@@ -1,37 +1,40 @@
 #' @title Compare rank probabilities
 #'
-#' @description \code{OPWeight} package proposed methods to compute the probabilities
-#' of the rank of test given the effect size. This funciton uses the methods to
-#' compare the rank probabilities from three approahes: 1) simulation,
-#' 2) exact formula, and 3) normal approximation
+#' @description \code{OPWeight} package proposed methods to compute the
+#' ranks probabilities of the filter given the test effect sizes from three
+#' approaches: simualation, exact formula, and normal approximation. This
+#' funciton uses the methods to compare the ranks probabilities from the three
+#' approahes
 #'
-#' @param ey mean filter effect sizevary
-#' @param e.one one test effect that will vary across all tests
-#' @param m0 number of true null tests
-#' @param m1 number of true alternative tests
-#' @param sampleSize total number of sample generated (use sample size at least 100,000)
-#' @param effectType type of effect sizes; c("continuous", "binary")
+#' @param ey Numerics, mean filter effect size
+#' @param e.one Numeric, one test effect which will vary across all tests
+#' @param m0 Integer, number of true null tests
+#' @param m1 Integer, number of true alternative tests
+#' @param sampleSize Integer, total number of sample generated (use sample size
+#' at least 100,000)
+#' @param effectType Character ("continuous" or "binary"), type of effect sizes
 #'
 #' @details
-#' \code{OPWeight} package proposed methods to compute the probabilities
-#' of the rank of test given the effect size. This funciton uses the methods to
-#' compare the rank probabilities from three approahes: 1) simulation,
-#' 2) exact formula, and 3) normal approximation\cr
+#' The \code{OPWeight} package proposed methods to compute the ranks
+#' probabilitiesof the filter given the test effect size. This funciton uses
+#' the methods to compare the rank probabilities from three approahes:
+#' 1) simulation, 2) exact formula, and 3) normal approximation\cr
 #'
-#' rank may generate missing valuse because of the large effcet size,
-#' therefore, to make a matplot equal vectors size are needed. This procedure
-#' will replace the missing value to make equal sized vector
-#' probability of rank of a null test
+#' The lower rank may generate missing values because of the large effcet sizes,
+#' especially true for the simulaiton approach. however, \code{matplot} function
+#' requires equal sized vectors. This procedure will replace the missing values
+#' by NA so that the vectors size become equal.
 #'
-#' @author Mohamad S. Hasan, \email{mshasan@uga.edu}
+#' @author Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 #' @export
 #'
 #' @seealso \code{\link{prob_rank_givenEffect_simu}}
 #' \code{\link{prob_rank_givenEffect_exact}}
 #' \code{\link{prob_rank_givenEffect_approx}}
 #'
-#' @return \code{Data} A data frame containing seven columns; ranks and null and
-#' alternative probabilities of the test from the three approaches
+#' @return \code{Data} A data frame containing the seven columns; the ranks and
+#' the corresponding ranks proability of the true null and alternative
+#' hypothesis for the three approaches.
 #'
 #' @references Hasan and Schliekelman (2017)
 #'
@@ -50,15 +53,6 @@
 #' #               lty = 1:6, col =1:6, lwd = 2)
 #'
 #===============================================================================
-# inpout:----------------
-# ey = effect size
-# e.one = vary one test effect across all tests
-# m0 = number of null tests
-# m1 = number of alternative tests
-# effectType = type of effect size c("binary","continuous")
-# sampleSize = total number of sample generated (use sample size at least 100,000)
-# effectType = type of effect sizes; c("continuous", "binary")
-#
 # internal parameters:-----
 # m = total number of tests
 # ranks = sequesnce of ranks or index numbers
@@ -77,9 +71,6 @@
 #
 # prob0_approx = probability of rank of a null test by normal approximaiton
 # prob1_exact = probability of rank of an alternative test by normal approximaiton
-#
-# output:---------------
-# Data = data frame of the probabilities of the tests
 #
 #===============================================================================
 ranksProb_compare <- function(ey, e.one, m0, m1, sampleSize,

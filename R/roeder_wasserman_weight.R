@@ -1,23 +1,23 @@
-#' @title Find sum of weights for c, function of LaGrange multiplier
+#' @title Find sum of weights for c, function of Langragian multiplier
 #'
 #' @description Compute sum of weights for a given value of c, the function of
 #' LaGrange multiplier
 #'
-#' @param c a constant function of LaGrange multiplier
-#' @param m number of hypothesis tests
-#' @param gamma smooting parameter
-#' @param alpha Significance level
-#' @param group number of groups
-#' @param tail right-tailed or two-tailed hypothesis test. default is right-tailed test
-#' @param effect_hat estimated effect size
+#' @param c Numeric, a constant value (function of Langrangian multiplier)
+#' @param m Integer, number of the hypothesis tests
+#' @param gamma Numeric value of smooting parameter
+#' @param alpha Numeric value of the Significance level
+#' @param group Integer, number of groups
+#' @param tail Integer (1 or 2), right-tailed or two-tailed hypothesis test.
+#' @param effect_hat Numeric, estimated effect size
 #'
 #' @details
 #' NOne
-#' @author Mohamad S. Hasan, \email{mshasan@uga.edu}
+#' @author Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 #'
 #' @export
 #'
-#' @return \code{sum weight} sum of the weights for each C
+#' @return \code{sum weight} Numeric, sum of the weights for each C
 #'
 #' @references Roeder, Kathryn, and Larry Wasserman. "Genome-wide significance
 #' levels and weighted hypothesis testing." Statistical science: a review journal
@@ -49,26 +49,28 @@ weightSum_by_c <- function(c, m, gamma = .05,  alpha = .05, group = 5L,
 
 #' @title Weight from the Roeder and Wasserman (2009) paper
 #'
-#' @description Compute weights by splitting test statistics raked by the filter statistics.
-#'  This method is taken Roeder and Waserman (2009) paper.
-#' @param pvalue a vector of ordered pvalues by the filter statistics
-#' @param gamma smooting parameter
-#' @param alpha Significance level
-#' @param group number of groups
-#' @param tail right-tailed or two-tailed hypothesis test. default is right-tailed test
-#' @param c_interval interval between the \code{c} values of a sequence. Note that,
-#' \code{c} is a function of LaGrange multiplier, necessary to normalize the weight
+#' @description Compute weights by splitting test statistics raked by the
+#' filter statistics. This method is taken from Roeder and Waserman (2009).
+#'
+#' @param pvalue A numeric vector of ordered p-values sorted  by the covariate
+#' @param gamma Numeric value of smooting parameter
+#' @param alpha Numeric value of the Significance level
+#' @param group Integer, number of groups
+#' @param tail Integer (1 or 2), right-tailed or two-tailed hypothesis test.
+#' @param c_interval A nuumeric vector of a sequence of intervals between the
+#' \code{c}. Note that, \code{c} is a function of Langrangian multiplier,
+#' necessary to normalize the weight
 #'
 #' @details
 #' NOne
-#' @author Mohamad S. Hasan, \email{mshasan@uga.edu}
+#' @author Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 #' @export
 #'
 #' @import tibble tibble
 #'
 #' @seealso \code{\link{weight_binary}} \code{\link{weight_continuous}}
 #'
-#' @return \code{weight} normalized weights of the tests
+#' @return \code{weight} A numeric vector of the normalized weights of the tests
 #'
 #' @references Roeder, Kathryn, and Larry Wasserman. "Genome-wide significance
 #' levels and weighted hypothesis testing." Statistical science: a review journal
@@ -85,6 +87,7 @@ weightSum_by_c <- function(c, m, gamma = .05,  alpha = .05, group = 5L,
 #' pvals = 1 - pnorm(tests)                        # pvalue
 #'
 #' # Compute wiehgt
+#' library(tibble)
 #' Data <- tibble(tests, pvals, filters)
 #' OD <- Data[order(Data$filters, decreasing = TRUE), ]
 #'
@@ -100,16 +103,6 @@ weightSum_by_c <- function(c, m, gamma = .05,  alpha = .05, group = 5L,
 #'
 #===============================================================================
 # Function to estiamte weight from data by using Roeder-Waserman algorithm
-
-# Input:-----
-# pvalue = a vector of ordered pvalues by the filter statistics
-# gamma = smooting parameter
-# alpha = Significance level
-# group = number of groups
-# tail = right-tailed or two-tailed hypothesis test. default is right-tailed test
-#m c_interval = interval between the \code{c} values of a sequence. Note that,
-# \code{c} is a function of LaGrange multiplier, necessary to normalize the weight
-
 # internal parameters:-----
 # testGroup = patitioning 'm' tests into groups
 # testMeans = calculate mean of each group
@@ -121,10 +114,7 @@ weightSum_by_c <- function(c, m, gamma = .05,  alpha = .05, group = 5L,
 # wgt_per_grp = calculate weight per group
 # weight.out = final weight
 # sumWeight = sum of the weights
-
-# output:-----
-# norm_wgt = normalized weight
-#-------------------------------------------------------------------------------
+#===============================================================================
 
 roeder_wasserman_weight <- function(pvalue, gamma = .05, alpha = .05,
                                     group = 5L, tail = 1L, c_interval = .01)

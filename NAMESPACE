@@ -12,9 +12,11 @@ export(test_by_block)
 export(weight_byEffect_bin)
 export(weight_byEffect_cont)
 export(weightSum_by_c)
+
 import(ggplot2)
 import(OPWeight)
 import(stats)
+
 importFrom(cowplot, draw_label, get_legend, ggdraw, plot_grid)
 importFrom(IHW, ihw)
 importFrom(IHW, rejections)
@@ -24,6 +26,7 @@ importFrom(mvnfast, rmvn)
 importFrom(qvalue, qvalue)
 importFrom(reshape2, melt)
 importFrom(tibble, tibble)
+importFrom(TTR, SMA)
 
 
 

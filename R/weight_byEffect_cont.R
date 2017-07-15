@@ -1,25 +1,26 @@
-#' @title Weight for different effect sizes in continuous case
+#' @title Weight for the different continuous effect sizes
 #'
-#' @description Compute weight from the probability of the rank given the effect
-#' size for different effect sizes in a continuous effect size situation
+#' @description Compute weight from the the ranks probability given the effect
+#' sizes when the effect sizes are continuous.
 #'
-#' @param i i-th effect size
-#' @param alpha significance level
-#' @param null proportion of true true null tests
-#' @param m total number of hypotheis test
-#' @param tail one-tailed or two-tailed hypothesis test
-#' @param delInterval interval between the \code{delta} values of a sequence.
-#' @param filterEffectVec a vector of filter effect sizes
-#' Note that, \code{delta} is a LaGrange multiplier, necessary to normalize the weight
-#' @param datByNull a matrix of ranks pobabilities each column corresponds to
-#'                    an effect size
+#' @param i Integer, i-th effect size of a vector of effects
+#' @param alpha Numeric, a significance level of the hypothesis tests
+#' @param null Numerics, proportion of true true null tests
+#' @param m Integer, total number of hypotheis tests
+#' @param tail Integer (1 or 2), right-tailed or two-tailed hypothesis test.
+#' @param delInterval Numeric, interval between the \code{delta} values of a
+#' sequence. Note that, \code{delta} is a LaGrange multiplier, necessary to
+#' normalize the weight
+#' @param filterEffectVec A numeric vector of filter effect sizes
+#' @param datByNull A numerics matrix of ranks pobabilities in which each column
+#' corresponds to an effect size
 #'
-#' @details This function compute the weights in a continuous settings by applying
-#' the ranks probabilities for the different effect sizes. It applies the function
-#' function \code{weight_continuous} from the package 'OPWeight' to
-#' comute the weights from a probability matirx.
+#' @details This function compute the weights when the effect sizes are
+#' continuous by applying the ranks probabilities of the different effect sizes.
+#' It applies the function function \code{weight_continuous} from the R package
+#' \code{OPWeight} to comute the weights from a probability matirx.
 #'
-#' @author Mohamad S. Hasan, mshasan@uga.edu
+#' @author Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 #' @export
 #'
 #' @import stats
@@ -27,7 +28,9 @@
 #' @seealso \code{\link{ranksProb_byEffect}}
 #' \code{\link{weight_continuous}}
 #'
-#' @return a matrix of weights each column corresponds to an effect size
+#' @return A numeics matrix of weights in which each column corresponds to an
+#' effect size
+#'
 #' @examples
 #' # vector of effect sizes
 #' filterEffectVec <- c(1, 1.5, 2)
@@ -37,24 +40,14 @@
 #'              null = .9, m = 100, filterEffectVec = filterEffectVec)
 #'
 #' # compute weights
-#'weightByEffect <- sapply(1:length(filterEffectVec), weight_byEffect_cont,
-#'                    alpha = .05, null = .9, m = 100, delInterval = .0001,
+#' weightByEffect <- sapply(1:length(filterEffectVec), weight_byEffect_cont,
+#'                    alpha = .05, null = .9, m = 100, delInterval = .01,
 #'                    filterEffectVec = filterEffectVec,
 #'                    datByNull = ranksProb_byEffect)
 #'
 #===============================================================================
 # function to compute  weight for the continuous case
 #-----------------------------------------------------------------------
-#
-# Input:-----------
-# i = i-th effect
-# alpha = significance level
-# null = proportion of true null test
-# m = test size
-# tail = one-tailed or two-tailed hypothesis test
-# delInterval = increasing rate of the delta (lagrange multiplier)
-# datByNull = P(rank|effect) data generated before will call here
-#
 # internal parameters:-----
 # et = effect of the targeted test for importance sampling
 # m0 = number of true null hypothesis
@@ -65,8 +58,6 @@
 # deltaOut = optimal delta value
 # sumWeight = sum of the weights
 #
-# Output:-----------
-# normWeight = a matrix of weights each column corresponds to an effect size
 #===============================================================================
 
 weight_byEffect_cont <- function(i, alpha, null, m, tail = 1L, delInterval,

@@ -24,12 +24,14 @@ Imports:
     qvalue,
     reshape2,
     stats,
-    tibble
+    tibble,
+    TTR
 Suggests:
     airway,
     BiocStyle,
     DESeq2,
     devtools,
+    dplyr,
     gridExtra,
     knitr,
     Matrix,

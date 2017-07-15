@@ -1,16 +1,18 @@
 #' @title Simulate Family Wise Error Rate (FWER)
 #'
-#' @description This function simulate family wise error rate or test type I error rate
+#' @description This function simulate family wise error rate or test type I
+#' error rate
 #'
-#' @param s number of replication in a simulation
-#' @param m total number of hypothesis test
-#' @param alphaVec a vector of significance levels
+#' @param s Integer, number of replications in a simulation
+#' @param m Integer, total number of hypothesis test
+#' @param alphaVec A numeric vector of significance levels
 #'
 #' @details
-#' This function generate pvalues times form \code{uniform(0, 1)} then applying
-#' OPWeight method to obtain the Familly Wise Error Rate (FWER)
+#' This function generate pvalues from the \code{uniform(0, 1)} and then
+#' apply the function \code{opw} from the R package \code{OPWeight} to obtain
+#' the Familly Wise Error Rate (FWER)
 #'
-#' @author Mohamad S. Hasan, \email{mshasan@uga.edu}
+#' @author Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 #' @export
 #'
 #' @seealso \code{\link{qvalue}}
@@ -19,7 +21,7 @@
 #' \code{\link{weight_continuous}}
 
 #'
-#' @return a matrix of fwer for different methods
+#' @return A numeric matrix of FWER for the different p-vlaue weighting methods
 #'
 #' @references Hasan and Schliekelman (2017)
 #'
@@ -29,11 +31,6 @@
 #' typeIerror_mat = sapply(simVal, simu_fwer, m = 100, alphaVec = alphaVec)
 #'
 #===============================================================================
-# inpout:----------------
-# s = number of replication in a simulation
-# m = total number of hypothesis test
-# alphaVec = a vector of significance levels
-#
 # internal parameters:-----
 # pval = pvalues from null tests
 # pval_filter = filter pvalues from null tests
@@ -50,9 +47,6 @@
 # prob_cont = continuous ranks probability
 # w_bin = binary weight
 # w_cont = continuous weight
-#
-# output:---------------
-# a matrix of fwer for different methods
 #
 #===============================================================================
 

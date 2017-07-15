@@ -12,7 +12,7 @@
 #' To use this function to plot, one needs to load "simu_prob_rank_givenEffect.RDATA"
 #' and apply for different \code{m0}.
 #'
-#' @author Mohamad S. Hasan, \email{mshasan@uga.edu}
+#' @author Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 #' @export
 #'
 #'

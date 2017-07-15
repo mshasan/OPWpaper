@@ -3,27 +3,34 @@
 #' @description \code{OPWpaper} has stored .RDATA from the simulation. This
 #' function will use those simulated data to plots
 #'
-#' @param x_vec a vector of values corresponds to x-axis
-#' @param y_matrix a matrix of values correspond to y-axix for multiple plots
-#' @param fdr determine whether FDR or FWER will be used, default is FDR
-#' @param power determine whether power will be plotted, default is TRUE
-#' @param low_eff_plot deteremine whether power of the low effect sizes will be plotted, default is FALSE
-#' @param null the proportion of the true null if power or FDR/FWER is plotted against the effect sizes
-#' @param cv the value of the coefficient of variation if power is plotted against effect sizes
-#' @param ey the value of the effect size if power is plotted against the proportion of the true null
-#' @param cor the value of the correlation if the figure is for the ranks probability
-#' @param figure types of figure will be plotted c("ranksProb", "nullPropVsPower", "effectVsFPFP", "CV")
+#' @param x_vec A numeric vector corresponds to the x-axis
+#' @param y_matrix A numeric matrix correspond to the y-axix
+#' @param fdr A character vector of ("TRUE" or "FALSE"), determine whether the
+#' FDR or FWER will be used, default is FDR.
+#' @param power A character vector of ("TRUE" or "FALSE"), determine whether the
+#' power will be plotted, default is TRUE
+#' @param low_eff_plot A character vector of ("TRUE" or "FALSE"), deteremine
+#' whether the power of the low effect sizes will be plotted, default is FALSE
+#' @param null Numeric, the proportion of the true null if power or FDR/FWER
+#' is plotted against the effect sizes
+#' @param cv Numeric, coefficient of variation of the test statistics
+#' @param ey Numeric, the value of the effect size if power is plotted against
+#' the proportion of the true null tests.
+#' @param cor Numeric, the correlation coefficient if the figure is for the
+#' ranks probability
+#' @param figure A character vector of c("ranksProb", "nullPropVsPower",
+#' "effectVsFPFP", "CV"), determine the types of figure will be plotted
 #'
 #' @details
-#' \code{OPWeight} package proposed methods to compute the probabilities
-#' of the rank of test given the effect size to obtian the optimal power.
+#' \code{OPWeight} package proposed methods to compute the ranks probabilities
+#' of the filter given the test effect size to obtian the optimal power.
 #' This function is desigend to plot the power curves under different scenerio.
 #' Note that, we alreday simulated power and FDR/FWER for the different scenerios
 #' and stored in the packages *OPWpaper* as .RDATA. This function will only
 #' be able to use those data sets or data with the similar formats.
 #'
 #'
-#' @author Mohamad S. Hasan, \email{mshasan@uga.edu}
+#' @author Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 #' @export
 #'
 #'
@@ -64,18 +71,6 @@
 
 #'
 #===============================================================================
-# inpout:----------------
-# x_vec = a vector of values corresponds to x-axis
-# y_matrix = a matrix of values correspond to y-axix for multiple plots
-# fdr = determine whether FDR or FWER will be used, default is FDR
-# power = determine whether power will be plotted, default is TRUE
-# low_eff_plot = deteremine whether power of the low effect sizes will be plotted, default is FALSE
-# null = the proportion of the true null if power or FDR/FWER is plotted against the effect sizes
-# cv = the value of the coefficient of variation if power is plotted against effect sizes
-# ey = the value of the effect size if power is plotted against the proportion of the true null
-# cor = the value of the correlation if the figure is for the ranks probability
-# figure = types of figure will be plotted c("ranksProb", "nullPropVsPower", "effectVsFPFP", "CV")
-#
 # internal parameters:-----
 # x_axis = variable name of the x-axis
 # x_lab = label of the x-axis
@@ -95,9 +90,6 @@
 #
 # prob0_approx = probability of rank of a null test by normal approximaiton
 # prob1_exact = probability of rank of an alternative test by normal approximaiton
-#
-# output:---------------
-# plots
 #
 #===============================================================================
 # function to generate nice plots------------
