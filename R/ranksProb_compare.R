@@ -1,12 +1,12 @@
 #' @title Compare rank probabilities
 #'
-#' @description \code{OPWeight} package proposed methods to compute the
-#' ranks probabilities of the filter given the test effect sizes from three
+#' @description \code{OPWeight} package proposed a method to compute the
+#' ranks probabilities of the covariate given the test-effect sizes from three
 #' approaches: simualation, exact formula, and normal approximation. This
 #' funciton uses the methods to compare the ranks probabilities from the three
 #' approahes
 #'
-#' @param ey Numerics, mean filter effect size
+#' @param ey Numerics, mean covariate-effect size
 #' @param e.one Numeric, one test effect which will vary across all tests
 #' @param m0 Integer, number of true null tests
 #' @param m1 Integer, number of true alternative tests
@@ -16,14 +16,14 @@
 #'
 #' @details
 #' The \code{OPWeight} package proposed methods to compute the ranks
-#' probabilitiesof the filter given the test effect size. This funciton uses
+#' probabilitiesof the covariate given the test effect size. This funciton uses
 #' the methods to compare the rank probabilities from three approahes:
 #' 1) simulation, 2) exact formula, and 3) normal approximation\cr
 #'
-#' The lower rank may generate missing values because of the large effcet sizes,
-#' especially true for the simulaiton approach. however, \code{matplot} function
-#' requires equal sized vectors. This procedure will replace the missing values
-#' by NA so that the vectors size become equal.
+#' The lower rank may generate missing values because of the large effcet sizes.
+#' This is particularly true for the simulaiton approach. however,
+#' \code{matplot} function requires equal sized vectors. This procedure will
+#' replace the missing values by NA so that the vectors size become equal.
 #'
 #' @author Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 #' @export
@@ -33,17 +33,17 @@
 #' \code{\link{prob_rank_givenEffect_approx}}
 #'
 #' @return \code{Data} A data frame containing the seven columns; the ranks and
-#' the corresponding ranks proability of the true null and alternative
-#' hypothesis for the three approaches.
+#' the corresponding ranks probability of the true null and the true alternative
+#' hypothesis of the three approaches.
 #'
 #' @references Hasan and Schliekelman (2017)
 #'
 #' @examples
 #' # use sample size at least 100,000 for better result
 #' # This is just an example
-#' # sampleSize = 1000
-#' # probData <- ranksProb_compare(ey = 1, e.one = 2, m0 = 90, m1 = 10,
-#' #                         sampleSize = sampleSize, effectType = "binary")
+#' sampleSize = 1000
+#' probData <- ranksProb_compare(ey = 1, e.one = 2, m0 = 5, m1 = 5,
+#'                          sampleSize = sampleSize, effectType = "binary")
 #'
 #' # plots------------
 #' # colnames(probData) <- c("ranks", "SH0","SH1","EH0","EH1","AH0","AH1")

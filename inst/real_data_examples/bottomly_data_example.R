@@ -27,18 +27,18 @@ colnames(bottomly)
 pval = bottomly$pvalue
 test = qnorm(pval/2, lower.tail = FALSE)
 test[which(!is.finite(test))] <- NA
-filter = bottomly$baseMean + .0001
+covariate = bottomly$baseMean + .0001
 
 # Data <- data.frame(pvals, filters)
 # write.csv(Data, "Data.csv")
 
-Data <- tibble(test, pval, filter)	# data of filter covariate and pvlaues
+Data <- tibble(test, pval, covariate)	# data of covariate covariate and pvlaues
 
 # fite box-cox regression
 #--------------------------------
-bc <- boxcox(filter ~ test)
+bc <- boxcox(covariate ~ test)
 trans <- bc$x[which.max(bc$y)]
-model_bot <- lm(filter^trans ~ test)
+model_bot <- lm(covariate^trans ~ test)
 
 
 # summary statistics of the data
@@ -50,17 +50,17 @@ hist_test <- ggplot(Data, aes(x = Data$test)) +
 	  colour = barlines, fill = "#4271AE") +
 		labs(x = "Test statistics")
 
-hist_filter <- ggplot(Data, aes(x = Data$filter)) +
+hist_filter <- ggplot(Data, aes(x = Data$covariate)) +
         geom_histogram(aes(y = ..density..),
 	  colour = barlines, fill = "#4274AE") +
-		labs(x = "Filter statistics")
+		labs(x = "covariate")
 
 hist_pval <- ggplot(Data, aes(x = Data$pval)) +
         geom_histogram(aes(y = ..density..),
 	  colour = barlines, fill = "#4281AE")+
 		labs(x = "P-values")
 
-pval_filter <- ggplot(Data, aes(x = rank(-Data$filter), y = -log10(pval))) +
+pval_filter <- ggplot(Data, aes(x = rank(-Data$covariate), y = -log10(pval))) +
 		geom_point()+
 		labs(x = "Ranks of filters", y = "-log(pvalue)")+
 		scale_x_continuous(limits = c(0, 25000), breaks=seq(0, 25000, 10000))
@@ -85,7 +85,7 @@ qqplot.data <- function (vec) # argument: vector of numbers
   ggplot(d, aes(sample = resids)) + stat_qq() +
 	geom_abline(slope = slope, intercept = int, col="red")+
 	labs(x = "Normal quantiles", y = "Fitted values",
-	title = expression(paste("Model: ", filter^.061, " ~ ", beta[0] + beta[1]*test)))+
+	title = expression(paste("Model: ", covariate^.061, " ~ ", beta[0] + beta[1]*test)))+
 	theme(plot.title = element_text(size = rel(.7)))
 
 }
@@ -108,9 +108,9 @@ for(alphaVal in seq(.05, .1, length = 5))
 {
     set.seed(123)
 
-    res_cont = opw(pvalue = pval, filter = filter, effectType = "continuous",
+    res_cont = opw(pvalue = pval, covariate = covariate, effectType = "continuous",
                    alpha = alphaVal, tail=2, method = "BH")
-    res_bin = opw(pvalue = pval, filter = filter, effectType = "binary",
+    res_bin = opw(pvalue = pval, covariate = covariate, effectType = "binary",
                   alpha = alphaVal, tail=2, method = "BH")
     n_rej_cont <- c(n_rej_cont, res_cont$rejections)
     n_rej_bin <- c(n_rej_bin, res_bin$rejections)

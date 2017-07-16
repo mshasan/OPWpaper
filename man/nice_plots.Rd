@@ -9,47 +9,58 @@ nice_plots(x_vec, y_matrix, fdr = TRUE, power = TRUE,
   figure = c("ranksProb", "nullPropVsPower", "effectVsFPFP", "CV"))
 }
 \arguments{
-\item{x_vec}{a vector of values corresponds to x-axis}
+\item{x_vec}{A numeric vector corresponds to the x-axis}
 
-\item{y_matrix}{a matrix of values correspond to y-axix for multiple plots}
+\item{y_matrix}{A numeric matrix corresponds to the y-axix}
 
-\item{fdr}{determine whether FDR or FWER will be used, default is FDR}
+\item{fdr}{A character vector of ("TRUE" or "FALSE"), determine whether the
+FDR or FWER will be used, default is FDR.}
 
-\item{power}{determine whether power will be plotted, default is TRUE}
+\item{power}{A character vector of ("TRUE" or "FALSE"), determine whether the
+power will be plotted, default is TRUE}
 
-\item{low_eff_plot}{deteremine whether power of the low effect sizes will be plotted, default is FALSE}
+\item{low_eff_plot}{A character vector of ("TRUE" or "FALSE"), deteremine
+whether the power of the low effect sizes will be plotted, default is FALSE}
 
-\item{null}{the proportion of the true null if power or FDR/FWER is plotted against the effect sizes}
+\item{null}{Numeric, proportion of the true null if power or FDR/FWER
+is plotted against the effect sizes}
 
-\item{cv}{the value of the coefficient of variation if power is plotted against effect sizes}
+\item{cv}{Numeric, coefficient of variation of the test statistics}
 
-\item{ey}{the value of the effect size if power is plotted against the proportion of the true null}
+\item{ey}{Numeric, the value of the effect size if power is plotted against
+the proportion of the true null tests.}
 
-\item{cor}{the value of the correlation if the figure is for the ranks probability}
+\item{cor}{Numeric, the correlation coefficient if the figure is for the
+ranks probability}
 
-\item{figure}{types of figure will be plotted c("ranksProb", "nullPropVsPower", "effectVsFPFP", "CV")}
+\item{figure}{A character vector of c("ranksProb", "nullPropVsPower",
+"effectVsFPFP", "CV"), determine the types of figure will be plotted}
 }
 \value{
-\code{Data}
 A plot of multiple curves
 }
 \description{
-\code{OPWpaper} has stored .RDATA from the simulation. This
-function will use those simulated data to plots
+\code{OPWpaper} has stored .RDATA from the simulations. This
+function will use those simulated data to plot
 }
 \details{
-\code{OPWeight} package proposed methods to compute the probabilities
-of the rank of test given the effect size to obtian the optimal power.
-This function is desigend to plot the power curves under different scenerio.
+\code{OPWeight} package proposed methods to compute the ranks probabilities
+of the covariate given the test effect size to obtian the optimal power.
+This function is desigend to plot the power curves under different scenerios.
 Note that, we alreday simulated power and FDR/FWER for the different scenerios
-and stored in the packages *OPWpaper* as .RDATA. This function will only
+and stored in the packages \code{OPWpaper} as .RDATA. This function will only
 be able to use those data sets or data with the similar formats.
 }
 \examples{
-# only just examples from the previously stored .RDATA
+# examples from the previously stored .RDATA
 # plot of power against the effect sizes
-# p_.5_eq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e1,
-#                                null = 50, figure = "effectVsFPFP")
+
+load(system.file("simulations/results", "simu_fwerPowerFdrPower_cont.RDATA",
+                package = "OPWpaper"), envir = environment())
+ey_vec <- c(seq(0, 1, .2), 2, 3, 5, 8)
+p_.5_eq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e1,
+                                null = 50, figure = "effectVsFPFP")
+
 # p_.9_eq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e1,
 #                                null = 90, figure = "effectVsFPFP")
 # p_.99_eq_power<- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower5e1,
@@ -80,5 +91,5 @@ be able to use those data sets or data with the similar formats.
 Hasan and Schliekelman (2017)
 }
 \author{
-Mohamad S. Hasan, \email{mshasan@uga.edu}
+Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 }

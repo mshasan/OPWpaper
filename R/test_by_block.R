@@ -6,11 +6,11 @@
 #' @param r Integer, number of the test groups
 #' @param groupSize Integer, number of test statistics per group
 #' @param eVec A numeric vector of the means
-#' @param Sigma A numeric correlation matrix
+#' @param Sigma A numeric matrix correlations
 #'
-#' @details Generating large number of tests from the multivariate normal
-#' distribution is computionally very slow. Therefore, it is someitme convenient
-#' to genrate parts of tests and then concatenate all tests to obtian the
+#' @details Generating a large number of tests statistics from the multivariate normal
+#' distribution is computionally very expensive. Therefore, it is someitme convenient
+#' to genrate parts of tests and then concatenate all the tests to obtian the
 #' desired number of the tests statistics. This is called block wise generation
 #' of the test statistics.
 #'

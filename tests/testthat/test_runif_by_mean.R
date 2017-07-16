@@ -1,9 +1,3 @@
-#===============================================================================
-
-runif_by_mean <- function(mean, n)
-    {
-        sd = mean/2
-        uni_rv <- mean + sd*scale(runif(n, 0, 1))
-        return(as.vector(uni_rv))
-    }
-
+test_that("both means should be equal", {
+    expect_equal(mean(runif_by_mean(mean = 3.0, n = 100)), 3.0)
+})

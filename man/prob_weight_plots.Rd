@@ -7,46 +7,48 @@
 prob_weight_plots(ey_index, null_index, m, ey, null, prob, weight)
 }
 \arguments{
-\item{ey_index}{column numbers of the null proportions of a specific effect}
+\item{ey_index}{Integer vector, column numbers of the null proportions of a
+specific effect}
 
-\item{null_index}{column numbers of the effects of specific null proportion}
+\item{null_index}{Integer vector, column numbers of the covariate-effects of
+a specific null proportion}
 
-\item{m}{total number of tests}
+\item{m}{Integer, total number of tests}
 
-\item{ey}{mean filter effect size used in \code{ey_index}}
+\item{ey}{Numeric, mean covariate-effect size used in \code{ey_index}}
 
-\item{null}{proportion of the null tests used in \code{null_index}}
+\item{null}{Numeric, proportion of the null tests used in \code{null_index}}
 
-\item{prob}{data of the ranks probability}
+\item{prob}{Numerics data of the ranks probabilities}
 
-\item{weight}{data of the weight}
+\item{weight}{Numeric data of the weights}
 }
 \value{
-figure of four plots
+Figure of four plots
 }
 \description{
-\code{OPWeight} package proposed methods to compute the probabilities
-of the rank of test given the effect size and the corresponding weights.
-This funciton uses the simulation results of the probabilities and the weights to plot.
+\code{OPWeight} package proposed a method to compute the ranks
+probabilities of the covariates and the corresponding weights given the
+test-effect size. This funciton uses the simulation results of the
+probabilities and the weights to plot.
 }
 \details{
-To use this function to plot, one needs to load two data sets generated earlier
+To use this function, one needs to load two data sets generated earlier
 1) ranksProb_byEffect_m10000.csv, and 2) Weight_byEffect_cont_m10000.csv then
-the function.
+use the function.
 }
 \examples{
-# just an example
-# m = 10000
-# ranksProb <- read.csv("ranksProb_byEffect_m10000.csv", h=T)
-# ranksWeight <- read.csv("Weight_byEffect_cont_m10000.csv",h=T)
-# ranksWeight <- t(t(ranksWeight)/colSums(ranksWeight)*m)
-# prob_weight_plots(ey_index = c(7, 17, 27, 37), null_index = c(26, 27, 28),
-#         m = 10000, ey = 2, null = 50, prob = ranksProb, weight = ranksWeight)
+# ranksProb <- read.csv(system.file("simulations/results/ranksProb_byEffect_m10000.csv",
+#                                   package = "OPWpaper"), h = TRUE)
+# ranksWeight_cont <- read.csv(system.file("simulations/results/Weight_byEffect_cont_m10000.csv",
+#                                          package = "OPWpaper"), h = TRUE)
+# prob_weight_plots(ey_index = c(7, 17, 27, 37), null_index = c(14, 17, 19),
+# m = 10000, ey = 2, null = 50, prob = ranksProb, weight = ranksWeight_cont)
 
 }
 \references{
 Hasan and Schliekelman (2017)
 }
 \author{
-Mohamad S. Hasan, \email{mshasan@uga.edu}
+Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 }

@@ -13,12 +13,12 @@ vignette: >
 
 ```{r setup, echo = FALSE}
 knitr::opts_chunk$set(fig.width = 8, fig.height = 8)
-knitr::opts_chunk$set(tidy = FALSE, cache = TRUE, autodep = TRUE)
+knitr::opts_chunk$set(tidy = FALSE, cache = FALSE, autodep = TRUE)
 ```
 
 Below we generate the necessary plots to demonstrate the ranks probability and the corresponding normalized weight for the different effect sizes and the proportion of the true nulls.
 
-Load necessary libraries
+Load the necessary libraries
 
 ```{r loadLib, message=FALSE, warning=FALSE}
 library(OPWeight)       # library for the proposed method
@@ -29,35 +29,33 @@ library(cowplot)        # plot_grid function
 ```
 
 # Ranks probability and weights
-Load data stored in `r Biocpkg("OPWpaper")` 
+Load the data stored in `r Biocpkg("OPWpaper")` 
 
-```{r load_ranks_weight_data}
-ranksProb_dat <- system.file("simulations/results/ranksProb_byEffect_m10000.csv", 
-                         package = "OPWpaper")
-weight_dat <- system.file("simulations/results/Weight_byEffect_cont_m10000.csv", 
-                         package = "OPWpaper")
-m = 10000
-ranksProb <- read.csv(ranksProb_dat, h = TRUE)
-ranksWeight <- read.csv(weight_dat, h = TRUE)
+```{r load_fwerPowerFdrPower_cont_data}
+ranksProb <- read.csv(system.file("simulations/results/ranksProb_byEffect_m10000.csv", 
+                         package = "OPWpaper"), h = TRUE)
+ranksWeight_cont <- read.csv(system.file("simulations/results/Weight_byEffect_cont_m10000.csv", 
+                         package = "OPWpaper"), h = TRUE)
 ```
-The following Figures the ranks probabilities, $P(r_i=k \mid E(\varepsilon_i))$, and the corresponding normalized weights, $w_i$, versus ranks, where the mean filter effect size $E(\varepsilon_i)$ refers to $ey$. For each figure, the first column is for the different proportion of the true null hypothesis when the mean test-effect ($et$) and the mean filter-effect ($ey$) are the same, and the second column is for the different mean effect sizes when the proportion of the true null tests is $90\%$. To generate this plot, we applied the proposed normal approximation method. We assumed that there are $m = 10,000$ hypotheses tests; the test statistics follow normal distributions with mean $0$ and $\varepsilon_i$ under the null and alternative hypothesis, respectively, and standard deviations $1$.  
+
+The following Figures show the ranks probabilities, $P(r_i=k \mid E(\varepsilon_i))$, and the corresponding normalized weights, $w_i$, versus ranks, where the mean covariate effect size $E(\varepsilon_i)$ refers to $ey$. For each figure, the first column is for the different proportion of the true null hypothesis when the mean test-effect ($et$) and the mean covariate-effect ($ey$) are the same ($2$ or $1$), and the second column is for the different mean effect sizes when the proportion of the true null tests is $50\%$ or $90\%$. To generate this plot, we applied the proposed normal approximation method. We assumed that there are $m = 10,000$ hypotheses tests; the test statistics follow the normal distributions with mean $0$ and $\varepsilon_i$ under the null and the alternative hypothesis, respectively, and standard deviations $1$.  
 
 ```{r plots}
 prob_weight_plots(ey_index = c(7, 17, 27, 37), null_index = c(14, 17, 19),
                                 m = 10000, ey = 2, null = 50, prob = ranksProb,
-                                weight = ranksWeight)
+                                weight = ranksWeight_cont)
 
 prob_weight_plots(ey_index = c(7, 17, 27, 37), null_index = c(34, 37, 39),
                                 m = 10000, ey = 2, null = 90, prob = ranksProb,
-                                weight = ranksWeight)
+                                weight = ranksWeight_cont)
 
 prob_weight_plots(ey_index = c(6, 16, 26, 36), null_index = c(14, 17, 19),
                                 m = 10000, ey = 1, null = 50, prob = ranksProb,
-                                weight = ranksWeight)
+                                weight = ranksWeight_cont)
 
 prob_weight_plots(ey_index = c(6, 16, 26, 36), null_index = c(34, 37, 39),
                                 m = 10000, ey = 1, null = 90, prob = ranksProb,
-                                weight = ranksWeight)
+                                weight = ranksWeight_cont)
 ```
 
 

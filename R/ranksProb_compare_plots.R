@@ -22,10 +22,9 @@
 #' @references Hasan and Schliekelman (2017)
 #'
 #' @examples
-#' # just an example
-#' # load("simu_prob_rank_givenEffect.RDATA")
-#' # nullSize <- 90
-#' # lapply(nullSize, ranksProb_compare_plots, effectType = "continuous")
+#' load(system.file("simulations/results", "simu_prob_rank_givenEffect.RDATA",
+#'                              package = "OPWpaper"), envir = environment())
+#' ranksPlots <- ranksProb_compare_plots(m0 = 90, effectType = "continuous")
 #'
 #===============================================================================
 # Function to plots from the parallel computing outputs---------

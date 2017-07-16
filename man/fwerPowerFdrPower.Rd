@@ -5,62 +5,63 @@
 \title{Simulate FWER, POWER, FDR, and POWER}
 \usage{
 fwerPowerFdrPower(i, simu, null, corr = 0, cv = 0, alpha = 0.05,
-  groupSize = 100, effectType = c("continuous", "binary"), filterEffectVec,
-  datWeightByNull)
+  groupSize = 100, effectType = c("continuous", "binary"),
+  covariateEffectVec, datWeightByNull)
 }
 \arguments{
-\item{i}{i-th filter effect}
+\item{i}{Integer, i-th effect size of a vector of effects}
 
-\item{simu}{number of replications}
+\item{simu}{Integer, number of replications}
 
-\item{null}{proportion of the true null hypothesis}
+\item{null}{Numeric, proportion of the true null hypothesis}
 
-\item{corr}{correlation between test statistics}
+\item{corr}{Numeric, correlation between the test statistics}
 
-\item{cv}{determine whether the test mean effect and the filter mean effects are the same}
+\item{cv}{Numeric, coefficient of variation of the test statistics}
 
-\item{alpha}{significance threshold}
+\item{alpha}{Numeric value of the significance threshold}
 
-\item{groupSize}{number of test statistics per group}
+\item{groupSize}{Integer, number of test statistics per group}
 
-\item{effectType}{type of effect sizes, c("continuous", "binary")}
+\item{effectType}{Character ("continuous" or "binary"), type of effect sizes}
 
-\item{filterEffectVec}{a vector of different effect size}
+\item{covariateEffectVec}{A numeric vector of different covariate-effect size}
 
-\item{datWeightByNull}{a matrix of weights, each column corresponds to a effect size}
+\item{datWeightByNull}{A numeric matrix of weights, each column corresponds
+to an covariate-effect size}
 }
 \value{
-a matrix of 16 rows containing information about FWER, POWER, FDR, and
-POWER (4 rows for each)
+A matrix of 16 rows containing information about FWER, POWER, FDR,
+and POWER (4 rows for each item)
 }
 \description{
-This function simulate Family Wise Error Rate (FWER) and corresponding
-Power, and False Discovery Rate (FDR) and the corresponding Power for different
-effect sizes
+This function simulate the Family Wise Error Rate (FWER) and the
+corresponding Power, and the False Discovery Rate (FDR) and the corresponding
+Power for the different effect sizes
 }
 \details{
 This function simulate Family Wise Error Rate (FWER) and corresponding
-Power, and False Discovery Rate (FDR) and the corresponding Power for different
-effect sizes
+Power, and False Discovery Rate (FDR) and the corresponding Power for the
+different effect sizes
 }
 \examples{
-# vector of effect sizes
-filterEffectVec <- c(1, 1.5, 2)
+# vector of covariate-effect sizes
+covariateEffectVec <- c(1, 1.5, 2)
 
 # compute probability matrix
-ranksProb_byEffect <- sapply(1:length(filterEffectVec), ranksProb_byEffect,
-             null = .9, m = 100, filterEffectVec = filterEffectVec)
+ranksProb_byEffect <- sapply(1:length(covariateEffectVec), ranksProb_byEffect,
+             null = .9, m = 100, covariateEffectVec = covariateEffectVec)
 
 # compute weights
-weightByEffect <- sapply(1:length(filterEffectVec), weight_byEffect_cont,
-                   alpha = .05, null = .9, m = 100, delInterval = .0001,
-                   filterEffectVec = filterEffectVec,
+weightByEffect <- sapply(1:length(covariateEffectVec), weight_byEffect_cont,
+                   alpha = .05, null = .9, m = 100, delInterval = .01,
+                   covariateEffectVec = covariateEffectVec,
                    datByNull = ranksProb_byEffect)
 
-simuVal = 3  # in actual case use at least simVal = 1000
-result <- sapply(1:length(filterEffectVec), fwerPowerFdrPower, simu = simuVal,
+simuVal = 3  # in the actual case use at least simVal = 1000
+result <- sapply(1:length(covariateEffectVec), fwerPowerFdrPower, simu = simuVal,
              null = .5, corr = 0, cv = 0, alpha = .05, groupSize = 100,
-             effectType = "continuous", filterEffectVec = filterEffectVec,
+             effectType = "continuous", covariateEffectVec = covariateEffectVec,
              datWeightByNull = weightByEffect)
 
 }
@@ -72,5 +73,5 @@ Hasan and Schliekelman (2017)
 \code{\link{ranksProb_byEffect}}
 }
 \author{
-Mohamad S. Hasan, \email{mshasan@uga.edu}
+Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 }

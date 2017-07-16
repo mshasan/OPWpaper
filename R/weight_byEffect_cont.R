@@ -5,20 +5,20 @@
 #'
 #' @param i Integer, i-th effect size of a vector of effects
 #' @param alpha Numeric, a significance level of the hypothesis tests
-#' @param null Numerics, proportion of true true null tests
+#' @param null Numeric, proportion of true true null tests
 #' @param m Integer, total number of hypotheis tests
 #' @param tail Integer (1 or 2), right-tailed or two-tailed hypothesis test.
 #' @param delInterval Numeric, interval between the \code{delta} values of a
-#' sequence. Note that, \code{delta} is a LaGrange multiplier, necessary to
+#' sequence. Note that, \code{delta} is a Langrangian multiplier, necessary to
 #' normalize the weight
-#' @param filterEffectVec A numeric vector of filter effect sizes
+#' @param covariateEffectVec A numeric vector of covariate effect sizes
 #' @param datByNull A numerics matrix of ranks pobabilities in which each column
 #' corresponds to an effect size
 #'
 #' @details This function compute the weights when the effect sizes are
 #' continuous by applying the ranks probabilities of the different effect sizes.
 #' It applies the function function \code{weight_continuous} from the R package
-#' \code{OPWeight} to comute the weights from a probability matirx.
+#' \code{OPWeight} to compute the weights from a ranks probability matirx.
 #'
 #' @author Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 #' @export
@@ -33,16 +33,16 @@
 #'
 #' @examples
 #' # vector of effect sizes
-#' filterEffectVec <- c(1, 1.5, 2)
+#' covariateEffectVec <- c(1, 1.5, 2)
 #'
 #' # compute probability matrix
-#' ranksProb_byEffect <- sapply(1:length(filterEffectVec), ranksProb_byEffect,
-#'              null = .9, m = 100, filterEffectVec = filterEffectVec)
+#' ranksProb_byEffect <- sapply(1:length(covariateEffectVec), ranksProb_byEffect,
+#'              null = .9, m = 100, covariateEffectVec = covariateEffectVec)
 #'
 #' # compute weights
-#' weightByEffect <- sapply(1:length(filterEffectVec), weight_byEffect_cont,
+#' weightByEffect <- sapply(1:length(covariateEffectVec), weight_byEffect_cont,
 #'                    alpha = .05, null = .9, m = 100, delInterval = .01,
-#'                    filterEffectVec = filterEffectVec,
+#'                    covariateEffectVec = covariateEffectVec,
 #'                    datByNull = ranksProb_byEffect)
 #'
 #===============================================================================
@@ -61,9 +61,9 @@
 #===============================================================================
 
 weight_byEffect_cont <- function(i, alpha, null, m, tail = 1L, delInterval,
-                                 filterEffectVec, datByNull)
+                                 covariateEffectVec, datByNull)
 {					#input:effect index; output: weight
-    et <- filterEffectVec[i]
+    et <- covariateEffectVec[i]
     m0 <- ceiling(m*null)
     m1 <- m - m0
     ranksProb <- datByNull[ , i]

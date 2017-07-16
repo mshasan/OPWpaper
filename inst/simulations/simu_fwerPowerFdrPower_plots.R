@@ -27,7 +27,7 @@ legend <- get_legend(p_99_par + theme(legend.direction = "horizontal",
 
 
 
-# plots of power for mean filter effect(ey) = mean test effect(et)
+# plots of power for mean covariate effect(ey) = mean test effect(et)
 #-------------------------------------------------------------------------------
 p_.5_eq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e1, null = 50, figure = "effectVsFPFP")
 p_.9_eq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e1, null = 90, figure = "effectVsFPFP")
@@ -48,7 +48,7 @@ plot_grid(title, p_eq_power, legend, ncol = 1, rel_heights=c(.1, 1, .1))
 
 
 # plots of power for
-# mean test effect(et) ~ Normal (mean filter effect, mean filter effect/2) (i.e cv = 1/2)
+# mean test effect(et) ~ Normal (mean covariate effect, mean covariate effect/2) (i.e cv = 1/2)
 #-----------------------------------------------------------------------------------------
 p_.5_uneq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e2, null = 50, figure = "effectVsFPFP")
 p_.9_uneq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e2, null = 90, figure = "effectVsFPFP")

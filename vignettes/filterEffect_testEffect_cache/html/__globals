@@ -1,5 +1,0 @@
-loadLib	library
-load_fwerPowerFdrPower_cont_data	load	setwd	system.file
-legend	aes	c	colnames<-	data.frame	element_blank	geom_line	get_legend	ggplot	labs	melt	prob0_ed2	prob1_ed2	prob_test0_cor.2_ed2	prob_test1_cor.2_ed2	theme	value	variable
-rel50_ed2	c	cbind	draw_label	ggdraw	legend_rel	letters	nice_plots	plot_grid	prob0_ed2	prob1_ed2	prob_test0_cor.2_ed2	prob_test0_cor.5_ed2	prob_test0_cor.8_ed2	prob_test1_cor.2_ed2	prob_test1_cor.5_ed2	prob_test1_cor.8_ed2	ranks
-rel90_ed2	c	cbind	draw_label	ggdraw	legend_rel	letters	nice_plots	plot_grid	prob02_ed2	prob12_ed2	prob_test0_cor.22_ed2	prob_test0_cor.52_ed2	prob_test0_cor.82_ed2	prob_test1_cor.22_ed2	prob_test1_cor.52_ed2	prob_test1_cor.82_ed2	ranks

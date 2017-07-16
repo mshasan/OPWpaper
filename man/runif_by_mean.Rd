@@ -7,19 +7,19 @@
 runif_by_mean(mean, n)
 }
 \arguments{
-\item{mean}{mean of the random numbers}
+\item{mean}{Numeric, mean of the uniform random numbers}
 
-\item{n}{number of observations to be generated}
+\item{n}{Integer, number of observations to be generated}
 }
 \value{
-a vector of random numbers
+A numeric vector of uniform random numbers
 }
 \description{
 A function to generate uniform random numbers from a fixed mean
 }
 \details{
 Sometime it is necessary to generate random numbers with a prespecified
-mean from the uniform distribution. This function will fullfill the goal
+mean of the uniform distribution. This function will fullfil the goal
 }
 \examples{
 x = runif_by_mean(mean = 3, n = 100)
@@ -30,5 +30,5 @@ summary(x)
 \code{\link{scale}} \code{\link{runif}}
 }
 \author{
-Mohamad S. Hasan and Paul Schliekelman
+Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 }

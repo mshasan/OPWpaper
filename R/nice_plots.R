@@ -1,17 +1,17 @@
 #' @title Funciton to plot nice plots
 #'
-#' @description \code{OPWpaper} has stored .RDATA from the simulation. This
-#' function will use those simulated data to plots
+#' @description \code{OPWpaper} has stored .RDATA from the simulations. This
+#' function will use those simulated data to plot
 #'
 #' @param x_vec A numeric vector corresponds to the x-axis
-#' @param y_matrix A numeric matrix correspond to the y-axix
+#' @param y_matrix A numeric matrix corresponds to the y-axix
 #' @param fdr A character vector of ("TRUE" or "FALSE"), determine whether the
 #' FDR or FWER will be used, default is FDR.
 #' @param power A character vector of ("TRUE" or "FALSE"), determine whether the
 #' power will be plotted, default is TRUE
 #' @param low_eff_plot A character vector of ("TRUE" or "FALSE"), deteremine
 #' whether the power of the low effect sizes will be plotted, default is FALSE
-#' @param null Numeric, the proportion of the true null if power or FDR/FWER
+#' @param null Numeric, proportion of the true null if power or FDR/FWER
 #' is plotted against the effect sizes
 #' @param cv Numeric, coefficient of variation of the test statistics
 #' @param ey Numeric, the value of the effect size if power is plotted against
@@ -23,10 +23,10 @@
 #'
 #' @details
 #' \code{OPWeight} package proposed methods to compute the ranks probabilities
-#' of the filter given the test effect size to obtian the optimal power.
-#' This function is desigend to plot the power curves under different scenerio.
+#' of the covariate given the test effect size to obtian the optimal power.
+#' This function is desigend to plot the power curves under different scenerios.
 #' Note that, we alreday simulated power and FDR/FWER for the different scenerios
-#' and stored in the packages *OPWpaper* as .RDATA. This function will only
+#' and stored in the packages \code{OPWpaper} as .RDATA. This function will only
 #' be able to use those data sets or data with the similar formats.
 #'
 #'
@@ -34,16 +34,21 @@
 #' @export
 #'
 #'
-#' @return \code{Data}
+#' @return
 #' A plot of multiple curves
 #'
 #' @references Hasan and Schliekelman (2017)
 #'
 #' @examples
-#' # only just examples from the previously stored .RDATA
+#' # examples from the previously stored .RDATA
 #' # plot of power against the effect sizes
-#' # p_.5_eq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e1,
-#' #                                null = 50, figure = "effectVsFPFP")
+#'
+#' load(system.file("simulations/results", "simu_fwerPowerFdrPower_cont.RDATA",
+#'                 package = "OPWpaper"), envir = environment())
+#' ey_vec <- c(seq(0, 1, .2), 2, 3, 5, 8)
+#' p_.5_eq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e1,
+#'                                 null = 50, figure = "effectVsFPFP")
+#'
 #' # p_.9_eq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e1,
 #' #                                null = 90, figure = "effectVsFPFP")
 #' # p_.99_eq_power<- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower5e1,
@@ -94,9 +99,9 @@
 #===============================================================================
 # function to generate nice plots------------
 
-nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE, low_eff_plot = FALSE,
-                       null = NULL, cv = NULL, ey = NULL, cor = NULL,
-                       figure = c("ranksProb", "nullPropVsPower", "effectVsFPFP", "CV"))
+nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE,
+            low_eff_plot = FALSE, null = NULL, cv = NULL, ey = NULL, cor = NULL,
+            figure = c("ranksProb", "nullPropVsPower", "effectVsFPFP", "CV"))
     {
         # configure data sets-------------
         if(figure == "ranksProb"){
@@ -130,7 +135,7 @@ nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE, low_eff_plot =
             }
 
             x_axis <- "effectSize"
-            x_lab = "Mean filter effect (ey)"
+            x_lab = "Mean covariate effect (ey)"
             dat <- data.frame(x_vec, t(y_matrix[row_indx, ]))
 
        }
@@ -138,24 +143,24 @@ nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE, low_eff_plot =
 
         # label the columns--------
         if(figure == "ranksProb"){
-            colnames(dat) <- c(x_axis, "FH0","FH1","TH0","TH1")
+            colnames(dat) <- c(x_axis, "CH0","CH1","TH0","TH1")
         } else {
-            colnames(dat) <- c(x_axis, "PRO", "BH", "RDW", "IHW")
+            colnames(dat) <- c(x_axis, "CRW", "BH", "RDW", "IHW")
         }
 
 
         # initial plot with melted data-------------
         if(low_eff_plot == FALSE){
             dat_melt <- melt(dat, id.var = x_axis)
-            plt <- ggplot(dat_melt, aes_string(x = names(dat_melt)[[1]], y = "value",
-                                        group = "variable", col = "variable"))
+            plt <- ggplot(dat_melt, aes_string(x = names(dat_melt)[[1]],
+                             y = "value", group = "variable", col = "variable"))
         } else {
             y_lab <- "log(power)"
             dat <- dat[1:6, ]
             dat[,2:5] <- log(dat[,2:5])
             dat_melt <- melt(dat, id.var = x_axis)
-            plt <- ggplot(dat_melt, aes_string(x = names(dat_melt)[[1]], y = "value",
-                                        group = "variable", col = "variable"))
+            plt <- ggplot(dat_melt, aes_string(x = names(dat_melt)[[1]],
+                             y = "value", group = "variable", col = "variable"))
         }
 
 
@@ -173,7 +178,7 @@ nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE, low_eff_plot =
 
         # final plot with titles and labels----------
         plt = plt + geom_line(aes_string(linetype = "variable"), size = 1.5) +
-            labs(x = x_lab, y = y_lab, title = if(low_eff_plot == FALSE){titl}) +
+           labs(x = x_lab, y = y_lab, title = if(low_eff_plot == FALSE){titl}) +
             theme(legend.position = "none",
                   axis.title.x = element_text(size = rel(.8)),
                   axis.title.y = element_text(size = rel(.8)))

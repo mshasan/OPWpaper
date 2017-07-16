@@ -2,35 +2,35 @@
 % Please edit documentation in R/roeder_wasserman_weight.R
 \name{weightSum_by_c}
 \alias{weightSum_by_c}
-\title{Find sum of weights for c, function of LaGrange multiplier}
+\title{Find sum of weights for c, function of Langragian multiplier}
 \usage{
 weightSum_by_c(c, m, gamma = 0.05, alpha = 0.05, group = 5L, tail = 1L,
   effect_hat)
 }
 \arguments{
-\item{c}{a constant function of LaGrange multiplier}
+\item{c}{Numeric, a constant value (function of Langrangian multiplier)}
 
-\item{m}{number of hypothesis tests}
+\item{m}{Integer, number of the hypothesis tests}
 
-\item{gamma}{smooting parameter}
+\item{gamma}{Numeric value of smoothing parameter}
 
-\item{alpha}{Significance level}
+\item{alpha}{Numeric value of the Significance level}
 
-\item{group}{number of groups}
+\item{group}{Integer, number of groups}
 
-\item{tail}{right-tailed or two-tailed hypothesis test. default is right-tailed test}
+\item{tail}{Integer (1 or 2), right-tailed or two-tailed hypothesis test.}
 
-\item{effect_hat}{estimated effect size}
+\item{effect_hat}{Numeric, estimated effect sizes}
 }
 \value{
-\code{sum weight} sum of the weights for each C
+\code{sum weight} Numeric, sum of the weights for each C
 }
 \description{
 Compute sum of weights for a given value of c, the function of
-LaGrange multiplier
+Langrangian multiplier
 }
 \details{
-NOne
+None
 }
 \examples{
 cc = seq(-10, 10, .05)
@@ -45,5 +45,5 @@ of the Institute of Mathematical Statistics 24.4 (2009): 398.
 \url{www.stat.cmu.edu/~roeder/publications/statsci.pdf}
 }
 \author{
-Mohamad S. Hasan, \email{mshasan@uga.edu}
+Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 }

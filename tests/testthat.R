@@ -1,3 +1,4 @@
-library("testthat")
-library("OPWpaper")
+library(testthat)
+library(OPWpaper)
+
 test_check("OPWpaper")

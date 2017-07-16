@@ -7,24 +7,26 @@
 simu_fwer(s, m, alphaVec)
 }
 \arguments{
-\item{s}{number of replication in a simulation}
+\item{s}{Integer, number of replications in a simulation}
 
-\item{m}{total number of hypothesis test}
+\item{m}{Integer, total number of hypothesis test}
 
-\item{alphaVec}{a vector of significance levels}
+\item{alphaVec}{A numeric vector of the significance levels}
 }
 \value{
-a matrix of fwer for different methods
+A numeric matrix of FWER for the different p-value weighting methods
 }
 \description{
-This function simulate family wise error rate or test type I error rate
+This function simulate family wise error rate or test type I
+error rate
 }
 \details{
-This function generate pvalues times form \code{uniform(0, 1)} then applying
-OPWeight method to obtain the Familly Wise Error Rate (FWER)
+This function generate pvalues from the \code{uniform(0, 1)} and then
+apply the function \code{opw} from the R package \code{OPWeight} to obtain
+the Familly Wise Error Rate (FWER)
 }
 \examples{
-alphaVec = seq(.01, .1, .02)
+alphaVec = .05
 simVal = 1:3  # in actual case use at least simVal = 1000
 typeIerror_mat = sapply(simVal, simu_fwer, m = 100, alphaVec = alphaVec)
 
@@ -39,5 +41,5 @@ Hasan and Schliekelman (2017)
 \code{\link{weight_continuous}}
 }
 \author{
-Mohamad S. Hasan, \email{mshasan@uga.edu}
+Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 }

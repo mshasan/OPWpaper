@@ -1,6 +1,6 @@
 export(fwerPowerFdrPower)
 export(nice_plots)
-export(probRel_filterVstest_effect)
+export(probRel_CovVsTest_effect)
 export(prob_weight_plots)
 export(ranksProb_compare)
 export(roeder_wasserman_weight)

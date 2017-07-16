@@ -1,7 +1,0 @@
-loadLib	
-bot_data	bottomly	Data	alpha	barlines	bc	bottomly_count_table	bottomly_file	bottomly_phenodata	condition	countData	dds	filter	hist_filter	hist_pval	hist_test	model_bot	n_rej_bin	n_rej_cont	p_bot	p_ecdf	p_fdr_bot	panel_a_data	pval	pval_filter	qqplot	qqplot.data	rej_mat_bot_FDR	rej_mat_bot_FDR2	res_bin	res_cont	rnaseq_data	test	tests	title_bot	trans
-summary_bot	p_bot	title_bot
-result_bot	alpha	bottomly_file	p_fdr_bot	panel_a_data	rej_mat_bot_FDR	rej_mat_bot_FDR2	rnaseq_data
-prot_data	proteomics	bc2	model_prot	p_fdr_prot	p_prot	panel_c_data	proteomics_data	proteomics_df	proteomics_file	rej_mat_prot_FDR	rej_mat_prot_FDR2	title_prot	trans2
-summary_prot	p_prot	title_prot
-result_prot	alpha	p_fdr_prot	panel_c_data	proteomics_data	proteomics_file	rej_mat_prot_FDR	rej_mat_prot_FDR2

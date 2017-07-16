@@ -1,16 +1,16 @@
-#' @title Ranks probability of the tests given the effect size
+#' @title Ranks probability of the covariate given the test-effect size
 #'
-#' @description Comnpute the probability of the ranks for different effect sizes
+#' @description Comnpute the ranks probability for different test-effect sizes
 #'
-#' @param i Integer, i-th effect size
-#' @param null Numeric,proportion of the true null hypothesis
+#' @param i i Integer, i-th effect size of a vector of effects
+#' @param null Numeric, proportion of the true null hypothesis
 #' @param m Integer, total number of hypothesis test
 #' @param nrep Integer, number of replications for the importance sampling
-#' @param filterEffectVec A numeric vector of filter effect sizes
+#' @param covariateEffectVec A numeric vector of the covariate-effect sizes
 #'
 #' @details This function compute ranks probabilities for the different effect
 #' sizes. It apply the function \code{prob_ranks_givenEffect} from the
-#' \code{OPWeight} package and comute the probabilities.
+#' \code{OPWeight} package and compute the probabilities.
 #'
 #' @author Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 #' @export
@@ -22,24 +22,24 @@
 #'
 #' @examples
 #' # vector of effect sizes
-#' filterEffectVec <- c(1, 1.5, 2)
+#' covariateEffectVec <- c(1, 1.5, 2)
 #'
 #' # compute ranks probability matrix
-#' ranksProb_byEffect <- sapply(1:length(filterEffectVec), ranksProb_byEffect,
-#'              null = .9, m = 100, filterEffectVec = filterEffectVec)
+#' ranksProb_byEffect <- sapply(1:length(covariateEffectVec), ranksProb_byEffect,
+#'              null = .9, m = 100, covariateEffectVec = covariateEffectVec)
 #'
 #===============================================================================
 # internal parameters:----------
 # et = effect of the targeted test for importance sampling
-# ey = mean filter efffect from external information
+# ey = mean covariate efffect from external information
 # m0 = number of true null hypothesis
 # m1 = number of true alternative hypothesis
 #
 #===============================================================================
 
-ranksProb_byEffect <- function(i, null, m, nrep = 10000, filterEffectVec)
+ranksProb_byEffect <- function(i, null, m, nrep = 10000, covariateEffectVec)
 {
-    ey <- filterEffectVec[i]
+    ey <- covariateEffectVec[i]
     et <- ey
     m0 <- ceiling(m*null)
     m1 <- m - m0

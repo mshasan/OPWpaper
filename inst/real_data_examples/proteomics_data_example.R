@@ -24,15 +24,15 @@ names(proteomics_df)
 pval = proteomics_df$pvalue
 test = qnorm(pval, lower.tail = FALSE)
 test[which(!is.finite(test))] <- NA
-filter = proteomics_df$X..peptides
+covariate = proteomics_df$X..peptides
 
 
-Data <- tibble(test, pval, filter)	# data of filter covariate and pvlaues
+Data <- tibble(test, pval, covariate)	# data of covariate covariate and pvlaues
 
 
-bc2 <- boxcox(filter ~ test)
+bc2 <- boxcox(covariate ~ test)
 trans2 <- bc2$x[which.max(bc2$y)]
-model_prot <- lm(filter^trans2 ~ test)
+model_prot <- lm(covariate^trans2 ~ test)
 
 
 # summary statistics of the data
@@ -44,19 +44,19 @@ hist_test <- ggplot(Data, aes(x = Data$test)) +
 	  colour = barlines, fill = "#4271AE") +
 		labs(x = "Test statistics")
 
-hist_filter <- ggplot(Data, aes(x = Data$filter)) +
+hist_covariate <- ggplot(Data, aes(x = Data$covariate)) +
         geom_histogram(aes(y = ..density..),
 	  colour = barlines, fill = "#4274AE") +
-		labs(x = "Filter statistics")
+		labs(x = "covariate")
 
 hist_pval <- ggplot(Data, aes(x = Data$pval)) +
         geom_histogram(aes(y = ..density..),
 	  colour = barlines, fill = "#4281AE")+
 		labs(x = "P-values")
 
-pval_filter <- ggplot(Data, aes(x = rank(-Data$filter), y = -log10(pval))) +
+pval_covariate <- ggplot(Data, aes(x = rank(-Data$covariate), y = -log10(pval))) +
 		geom_point()+
-		labs(x = "Ranks of filters", y = "-log(pvalue)")
+		labs(x = "Ranks of covariates", y = "-log(pvalue)")
 
 p_ecdf <- ggplot(Data, aes(x = pval)) +
 			stat_ecdf(geom = "step")+
@@ -78,14 +78,14 @@ qqplot.data <- function (vec) # argument: vector of numbers
   ggplot(d, aes(sample = resids)) + stat_qq() +
 	geom_abline(slope = slope, intercept = int, col="red")+
 	labs(x = "Normal quantiles", y = "Fitted values",
-	title = expression(paste("Model: ", filter^(-1.414), " ~ ", beta[0] + beta[1]*test)))+
+	title = expression(paste("Model: ", covariate^(-1.414), " ~ ", beta[0] + beta[1]*test)))+
 	theme(plot.title = element_text(size = rel(.7)))
 
 }
 
 qqplot <- qqplot.data(model_prot$fit)
 
-p_prot = plot_grid(hist_test, hist_filter, hist_pval, pval_filter, p_ecdf, qqplot,
+p_prot = plot_grid(hist_test, hist_covariate, hist_pval, pval_covariate, p_ecdf, qqplot,
                   ncol = 3, labels = letters[1:6], align = 'hv')
 title_prot <- ggdraw() + draw_label("Proteomics: data summary")
 plot_grid(title_prot, p_prot, ncol = 1, rel_heights=c(.1, 1))
@@ -99,9 +99,9 @@ n_rej_bin <- NULL
 for(alphaVal in seq(.05, .1, length = 5))
     {
     set.seed(123)
-    res_cont = opw(pvalue = pval, filter = filter, effectType = "continuous",
+    res_cont = opw(pvalue = pval, covariate = covariate, effectType = "continuous",
                     alpha = alphaVal, method = "BH")
-    res_bin = opw(pvalue = pval, filter = filter, effectType = "binary",
+    res_bin = opw(pvalue = pval, covariate = covariate, effectType = "binary",
               alpha = alphaVal, method = "BH")
     n_rej_cont <- c(n_rej_cont, res_cont$rejections)
     n_rej_bin <- c(n_rej_bin, res_bin$rejections)

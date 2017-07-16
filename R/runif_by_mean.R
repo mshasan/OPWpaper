@@ -2,11 +2,11 @@
 #'
 #' @description A function to generate uniform random numbers from a fixed mean
 #'
+#' @param mean Numeric, mean of the uniform random numbers
 #' @param n Integer, number of observations to be generated
-#' @param mean Numeric, mean of the random numbers
 #'
 #' @details Sometime it is necessary to generate random numbers with a prespecified
-#' mean from the uniform distribution. This function will fullfill the goal
+#' mean of the uniform distribution. This function will fullfil the goal
 #'
 #' @author Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 #' @export

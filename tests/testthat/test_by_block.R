@@ -1,6 +1,3 @@
-
-#===============================================================================
-
 test_by_block <- function(r, eVec, groupSize, Sigma)
     {
         eSub <- eVec[(groupSize*r + 1 - groupSize):(groupSize*r)]

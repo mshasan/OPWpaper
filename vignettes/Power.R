@@ -1,6 +1,6 @@
 ## ----setup, echo = FALSE-------------------------------------------------
 knitr::opts_chunk$set(fig.width = 8.5, fig.height = 8)
-knitr::opts_chunk$set(tidy = FALSE, cache = TRUE, autodep = TRUE)
+knitr::opts_chunk$set(tidy = FALSE, cache = FALSE, autodep = TRUE)
 
 ## ----loadLib, message=FALSE, warning=FALSE-------------------------------
 library(OPWeight)       # library for the proposed method
@@ -10,16 +10,15 @@ library(reshape2)       # library for the melt function
 library(cowplot)        # plot_grid function
 
 ## ----load_fwerPowerFdrPower_cont_data------------------------------------
-power_byEffect_cont <- system.file("simulations/results", package = "OPWpaper")
-setwd(power_byEffect_cont)
-load("simu_fwerPowerFdrPower_cont.RDATA")
+load(system.file("simulations/results", "simu_fwerPowerFdrPower_cont.RDATA",
+                 package = "OPWpaper"), envir = environment())
 
 ## ----legend--------------------------------------------------------------
 # this part is for the legend-------------------------------------------------
 ey_vec <- c(seq(0, 1, .2), 2, 3, 5, 8)
 
 dat_99 <- data.frame(ey_vec, t(FwerPowerFdrPower5e1[13:16,]))
-colnames(dat_99) <- c("effectSize", "PRO", "BH", "RDW", "IHW")
+colnames(dat_99) <- c("effectSize", "CRW", "BH", "RDW", "IHW")
 dat_99_par <- melt(dat_99[1:6,], id.var = "effectSize")
 
 p_99_par <- ggplot(dat_99_par, aes(x = effectSize, y = value,group = variable, col=variable)) +
@@ -29,7 +28,7 @@ p_99_par <- ggplot(dat_99_par, aes(x = effectSize, y = value,group = variable, c
 legend <- get_legend(p_99_par + theme(legend.direction = "horizontal", legend.position = "bottom"))
 
 ## ----power_effect_ey_equals_et-------------------------------------------
-# plots of power for mean filter effect(ey) = mean test effect(et)
+# plots of power for the mean covariate-effect(ey) = mean test-effect(et)
 #-------------------------------------------------------------------------------
 p_.5_eq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e1, null = 50, figure = "effectVsFPFP")
 p_.9_eq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e1, null = 90, figure = "effectVsFPFP")
@@ -47,7 +46,7 @@ plot_grid(title, p_eq_power, legend, ncol = 1, rel_heights=c(.1, 1, .1))
 
 ## ----power_effect_ey_unequals_et-----------------------------------------
 # plots of power for
-# mean test effect(et) ~ Normal (mean filter effect, mean filter effect/2) (i.e cv = 1/2)
+# mean test-effect(et) ~ Normal (mean covariate-effect, mean covariate- effect/2) (i.e cv = 1/2)
 #-----------------------------------------------------------------------------------------
 p_.5_uneq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e2, null = 50, figure = "effectVsFPFP")
 p_.9_uneq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e2, null = 90, figure = "effectVsFPFP")
@@ -66,9 +65,7 @@ plot_grid(title, p_uneq_power, legend, ncol = 1, rel_heights=c(.1, 1, .1))
 ## ----power_nullProp------------------------------------------------------
 # see the influence of the null proportion
 #------------------------------------------------
-# this code is to load saved workspace from parallel computing
-load("U:/Documents/My Research (UGA)/Multiple Hypoetheses/Article-1/simu_fwerPowerFdrPower_cont.RDATA")
-
+# this code is to load the saved workspace from parallel computing
 nullProp <- c(20, 50, 75, 90, 99)
 
 # corr = .3-------------
@@ -127,7 +124,7 @@ title_main <- ggdraw() + draw_label("Continuous: Power vs. prop. of null")
 plot_grid(title_main, p_prop, legend, ncol = 1, rel_heights=c(.1, 1, .1))
 
 ## ----corr_50-------------------------------------------------------------
-filterEffectVec <- c(seq(0,1,.2),2,3,5,8)
+covariateEffectVec <- c(seq(0,1,.2),2,3,5,8)
 
 # use 2 for 50% and 4 for 90% nulls-----------
 E = FwerPowerFdrPower2e1
@@ -142,16 +139,16 @@ r = 13                        # row starts for fdr based power
 gplots <- list()
 for(e in 3:8)				# effect size index
 {
-    PRO = c(E[r,e],    FF[r,e],    G[r,e],    H[r,e],    I[r,e])
+    CRW = c(E[r,e],    FF[r,e],    G[r,e],    H[r,e],    I[r,e])
     BH = c(E[(r+1),e],FF[(r+1),e],G[(r+1),e],H[(r+1),e],I[(r+1),e])
     RDW = c(E[(r+2),e],FF[(r+2),e],G[(r+2),e],H[(r+2),e],I[(r+2),e])
     IHW = c(E[(r+3),e],FF[(r+3),e],G[(r+3),e],H[(r+3),e],I[(r+3),e])
-    dat = data.frame(corr, PRO, BH, RDW, IHW)
+    dat = data.frame(corr, CRW, BH, RDW, IHW)
     dat2 = melt(dat, id.var = "corr")
     gplots[[e]] <- ggplot(dat2, aes(x = corr, y = value, group = variable,
                                     col = variable)) +
         geom_line(aes(linetype = variable), size = 1.5) +
-        labs(x = "corr", y = "power", title = paste("et = ", filterEffectVec[e])) +
+        labs(x = "corr", y = "power", title = paste("et = ", covariateEffectVec[e])) +
         #theme(legend.title = element_blank())
         theme(legend.position="none")
 }
@@ -182,16 +179,16 @@ r = 13                        # row starts for fdr based power
 gplots <- list()
 for(e in 3:8)				# effect size index
 {
-    PRO = c(E[r,e],    FF[r,e],    G[r,e],    H[r,e],    I[r,e])
+    CRW = c(E[r,e],    FF[r,e],    G[r,e],    H[r,e],    I[r,e])
     BH = c(E[(r+1),e],FF[(r+1),e],G[(r+1),e],H[(r+1),e],I[(r+1),e])
     RDW = c(E[(r+2),e],FF[(r+2),e],G[(r+2),e],H[(r+2),e],I[(r+2),e])
     IHW = c(E[(r+3),e],FF[(r+3),e],G[(r+3),e],H[(r+3),e],I[(r+3),e])
-    dat = data.frame(corr, PRO, BH, RDW, IHW)
+    dat = data.frame(corr, CRW, BH, RDW, IHW)
     dat2 = melt(dat, id.var = "corr")
     gplots[[e]] <- ggplot(dat2, aes(x = corr, y = value, group = variable,
                                     col = variable)) +
         geom_line(aes(linetype = variable), size = 1.5) +
-        labs(x = "corr", y = "power", title = paste("et = ", filterEffectVec[e])) +
+        labs(x = "corr", y = "power", title = paste("et = ", covariateEffectVec[e])) +
         #theme(legend.title = element_blank())
         theme(legend.position="none")
 }
@@ -209,9 +206,8 @@ title <- ggdraw() + draw_label("Continuous: null = 90%, et = ey")
 plot_grid(title, p, legend_corr, ncol = 1, rel_heights=c(.1, 1, .1))
 
 ## ----load_fwerPowerFdrPower_missVar_cont_data----------------------------
-power_byEffect_missVar_cont <- system.file("simulations/results", package = "OPWpaper")
-setwd(power_byEffect_missVar_cont)
-load("simu_fwerPowerFdrPower_missVar_cont.RDATA")
+load(system.file("simulations/results", "simu_fwerPowerFdrPower_missVar_cont.RDATA",
+                 package = "OPWpaper"), envir = environment())
 
 ## ----cv_50---------------------------------------------------------------
 # plots of power for miss variance of the test effect size; et ~ normal(ey, CV*ey)

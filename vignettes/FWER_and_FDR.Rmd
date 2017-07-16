@@ -13,12 +13,12 @@ vignette: >
 
 ```{r setup, echo = FALSE}
 knitr::opts_chunk$set(fig.width = 8.5, fig.height = 4)
-knitr::opts_chunk$set(tidy = FALSE, cache = TRUE, autodep = TRUE)
+knitr::opts_chunk$set(tidy = FALSE, cache = FALSE, autodep = TRUE)
 ```
 
-Below we generate the necessary plots to demonstrate that the proposed method controls the Family Wise Error Rate (FWER) and the False Discovery Rate (FDR).
+Below we generate the necessary plots to demonstrate that the Covariate Rank Weighting (CRW) method controls the Family Wise Error Rate (FWER) and the False Discovery Rate (FDR).
 
-Load necessary libraries
+Load the necessary libraries
 
 ```{r loadLib, message=FALSE, warning=FALSE}
 library(OPWeight)       # library for the proposed method
@@ -28,12 +28,11 @@ library(reshape2)       # library for the melt function
 library(cowplot)        # plot_grid function
 ```
 
-Load data stored in `r Biocpkg("OPWpaper")` 
+Load the data stored in `r Biocpkg("OPWpaper")` 
 
 ```{r load_fwer_data}
-fwer_dat <- system.file("simulations/results", package = "OPWpaper")
-setwd(fwer_dat)
-load("simu_fwer.RDATA")
+load(system.file("simulations/results", "simu_fwer.RDATA",
+                 package = "OPWpaper"), envir = environment())
 ```
 
 # FWER when all tests are from the true null models
@@ -44,7 +43,7 @@ fwer_by_alpha <- matrix(apply(fwer_mat, 1, mean), nrow = 4, byrow = FALSE)
 
 alphaVal = seq(.01, .1, .02)
 datError <- data.frame(alphaVal, t(fwer_by_alpha))
-colnames(datError) <- c("alpha","BON","PRO_bin","PRO_cont", "IHW")
+colnames(datError) <- c("alpha","BON","CRW_bin","CRW_cont", "IHW")
 datError2 <- melt(datError, id.var="alpha")
 
 ggplot(datError2, aes(x = alpha, y = value, col=variable)) +
@@ -58,17 +57,16 @@ ggplot(datError2, aes(x = alpha, y = value, col=variable)) +
     theme(axis.title = element_text(face="bold"))+
     theme(panel.background = element_rect(fill = 'white', colour = 'black'))
 ```
-**Figure 1:** The FWER for the different significance levels of $\alpha$. In the legend, the representation is: BON = bonferroni, PRO_bin = proposed binary, PRO_cont = proposed continuous, and IHW = Independent Hypothesis Weighting [@ignatiadis2016natmeth]. 
+**Figure 1:** The FWER for the different significance levels of $\alpha$. In the legend, the representation is: BON = bonferroni, CRW_bin = CRW binary, CRW_cont = CRW continuous, and IHW = Independent Hypothesis Weighting [@ignatiadis2016natmeth]. 
 
 # Continuous effects
-This part show the FWER and FDR control when the effect sizes are continuous. We only show the results for the continuous effect sizes. For the binary effects, one just needs to load $.Rdata$ for the binary effects and the apply the same R-code.
+This part show the FWER and FDR control when the effect sizes are continuous. We only show the results for the continuous effect sizes. For the binary effects, one just needs to load $.Rdata$ for the binary effects and then apply the same R-code.
 
 Load data stored in `r Biocpkg("OPWpaper")`
 
 ```{r load_fwerPowerFdrPower_cont_data}
-fwer_fdr_byEffect_cont <- system.file("simulations/results", package = "OPWpaper")
-setwd(fwer_fdr_byEffect_cont)
-load("simu_fwerPowerFdrPower_cont.RDATA")
+load(system.file("simulations/results", "simu_fwerPowerFdrPower_cont.RDATA",
+                 package = "OPWpaper"), envir = environment())
 ```
 
 Extract legend to use for the following plots
@@ -78,7 +76,7 @@ Extract legend to use for the following plots
 ey_vec <- c(seq(0, 1, .2), 2, 3, 5, 8)
 
 dat_99 <- data.frame(ey_vec, t(FwerPowerFdrPower5e1[13:16,]))
-colnames(dat_99) <- c("effectSize", "PRO", "BH", "RDW", "IHW")
+colnames(dat_99) <- c("effectSize", "CRW", "BH", "RDW", "IHW")
 dat_99_par <- melt(dat_99[1:6,], id.var = "effectSize")
 
 p_99_par <- ggplot(dat_99_par, aes(x = effectSize, y = value,group = variable, col=variable)) +
@@ -90,7 +88,7 @@ legend <- get_legend(p_99_par + theme(legend.direction = "horizontal", legend.po
 ```
 
 ## FWER for the different effect sizes
-This simulation is conducted to see the FWER control for the different effect sizes. The simulation procedures are divided into three groups based on the proportion of the true null hypothesis. Three groups are composed of $50\%,90\%,$ and $99\%$ true null tests. For each group of simulations, we considered mean effect sizes =$\{et=ey$ or $et \sim Normal(ey,CV.ey)\}$, where $et,ey,$ and $CV$ refers to the mean test-effect, mean filter-effect, and coefficient of variations. For the mean effects we considered a vector of $\{.2,.4,.6,.8,1,2,3,5,8\}$ and $CV = 1/2$. We compare the proposed method (PRO) with three other methods which are Bonferroni (BON), Roeder and Wasserman (RDW)[@roeder2009genome], and Independent Hypotheis Weighting (IHW).  
+This simulation is conducted to see the FWER control for the different effect sizes. The simulation procedures are divided into three groups based on the proportion of the true null hypothesis. Three groups are composed of $50\%,90\%,$ and $99\%$ true null tests. For each group of simulations, we considered mean effect sizes $\{et=ey$ or $et \sim Normal(ey,CV.ey)\}$, where $et,ey,$ and $CV$ refers to the mean test-effect, mean covariate-effect, and coefficient of variations. For the mean effects we considered a vector of $\{.2,.4,.6,.8,1,2,3,5,8\}$ and $CV = 1/2$. We compare the Covariate Rank Weighting (CRW) method with three other methods which are Bonferroni (BON), Roeder and Wasserman (RDW) [@roeder2009genome], and Independent Hypotheis Weighting (IHW).  
 
 Plot to observe the Family Wise Error Rate (FWER) for the different effect sizes
 
@@ -106,7 +104,7 @@ title <- ggdraw() + draw_label(expression(paste("FWER: et = ey, ", alpha, " = .0
 plot_grid(title, p_eq_fwer, legend, ncol = 1, rel_heights=c(.1, .5, .1))
 ```
 
-**Figure 2:** The FWER of four methods for the different mean effects when the mean test-effect ($et$) is equal to mean filter-effect ($ey$). Three columns are based on three groups composed of $50\%,90\%$, and $99\%$ true null hypothesis. 
+**Figure 2:** The FWER of four methods for the different mean effects when the mean test-effect ($et$) is equal to mean covariate-effect ($ey$). Three columns are based on three groups composed of $50\%,90\%$, and $99\%$ true null hypothesis. 
 
 
 ```{r fwer_ey_notequals_et}
@@ -121,11 +119,11 @@ title <- ggdraw() + draw_label(expression(paste("FWER: et ~ Normal(ey, ey/2), ",
 plot_grid(title, p_uneq_fwer, legend, ncol = 1, rel_heights=c(.1, .5, .1))
 ```
 
-**Figure 3:** The FWER when the mean test effect ($et$) is not equal to mean filter effect ($ey$); rather $et \sim Normal(ey, CV.ey )$, where $CV =1/2$.  
+**Figure 3:** The FWER when the mean test effect ($et$) is not equal to mean covariate effect ($ey$); rather $et \sim Normal(ey, CV.ey )$, where $CV =1/2$.  
 
 
 ## FDR for the different effect sizes
-Plot to observe the False Discovery Rate (FDR) for the different effect sizes. For this simulation, we kept the same set-up described in the FWER section. We compare the proposed method (PRO) with three other methods which are Benjamini and Hochberg (BH) [@benjamini1997false], Roeder and Wasserman (RDW), and Independent Hypotheis Weighting (IHW).
+Plot to observe the False Discovery Rate (FDR) for the different effect sizes. For this simulation, we kept the same set-up described in the FWER section. We compare the CRW method with the three other methods which are Benjamini and Hochberg (BH) [@benjamini1997false], Roeder and Wasserman (RDW), and Independent Hypotheis Weighting (IHW).
 
 ```{r fdr_ey_equals_et}
 # plots FDR et = ey (i.e cv =0)
@@ -139,7 +137,9 @@ title <- ggdraw() + draw_label(expression(paste("FDR: et = ey, ", alpha, " = .05
 plot_grid(title, p_eq_fdr, legend, ncol = 1, rel_heights=c(.1, .5, .1))
 ```
 
-**Figure 4:** The FDR when the mean test effect ($et$) is equal to mean filter effect ($ey$)$.  
+<p style = "text-align: center;"> 
+**Figure 4:** The FDR when the mean test effect ($et$) is equal to mean covariate effect ($ey$)$.
+</p>
 
 
 ```{r fdr_ey_notequals_et}
@@ -154,7 +154,7 @@ title <- ggdraw() + draw_label(expression(paste("FDR: et ~ Normal(ey, ey/2), ", 
 plot_grid(title, p_uneq_fdr, legend, ncol = 1, rel_heights=c(.1, .5, .1))
 ```
 
-**Figure 5:** The FDR when the mean test effect ($et$) is not equal to mean filter effect ($ey$); rather $et \sim Normal(ey, CV.ey )$, where $CV =1/2$.  
+**Figure 5:** The FDR when the mean test effect ($et$) is not equal to mean covariate effect ($ey$); rather $et \sim Normal(ey, CV.ey )$, where $CV =1/2$.  
 
 
 # References

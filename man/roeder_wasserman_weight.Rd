@@ -8,42 +8,44 @@ roeder_wasserman_weight(pvalue, gamma = 0.05, alpha = 0.05, group = 5L,
   tail = 1L, c_interval = 0.01)
 }
 \arguments{
-\item{pvalue}{a vector of ordered pvalues by the filter statistics}
+\item{pvalue}{A numeric vector of ordered p-values sorted  by the covariate}
 
-\item{gamma}{smooting parameter}
+\item{gamma}{Numeric value of the smoothing parameter}
 
-\item{alpha}{Significance level}
+\item{alpha}{Numeric value of the Significance level}
 
-\item{group}{number of groups}
+\item{group}{Integer, number of groups}
 
-\item{tail}{right-tailed or two-tailed hypothesis test. default is right-tailed test}
+\item{tail}{Integer (1 or 2), right-tailed or two-tailed hypothesis test.}
 
-\item{c_interval}{interval between the \code{c} values of a sequence. Note that,
-\code{c} is a function of LaGrange multiplier, necessary to normalize the weight}
+\item{c_interval}{A nuumeric vector of a sequence of intervals between the
+\code{c}. Note that, \code{c} is a function of Langrangian multiplier,
+necessary to normalize the weight}
 }
 \value{
-\code{weight} normalized weights of the tests
+\code{weight} A numeric vector of the normalized weights
 }
 \description{
-Compute weights by splitting test statistics raked by the filter statistics.
- This method is taken Roeder and Waserman (2009) paper.
+Compute weights by splitting the test statistics raked by the
+covariate. This method is taken from Roeder and Waserman (2009).
 }
 \details{
-NOne
+None
 }
 \examples{
 
-#generate pvalues and filter statistics
+#generate pvalues and covariate
 m = 10000
 set.seed(123)
-filters = runif(m, min = 0, max = 2.5)          # filter statistics
+covariates = runif(m, min = 0, max = 2.5)       # covariate
 H = rbinom(m, size = 1, prob = 0.1)             # hypothesis true or false
-tests = rnorm(m, mean = H * filters)            # Z-score
+tests = rnorm(m, mean = H * covariates)         # Z-score
 pvals = 1 - pnorm(tests)                        # pvalue
 
 # Compute wiehgt
-Data <- tibble(tests, pvals, filters)
-OD <- Data[order(Data$filters, decreasing = TRUE), ]
+library(tibble)
+Data <- tibble(tests, pvals, covariates)
+OD <- Data[order(Data$covariates, decreasing = TRUE), ]
 
 weight = roeder_wasserman_weight(pvalue = OD$pvals)
 
@@ -66,5 +68,5 @@ of the Institute of Mathematical Statistics 24.4 (2009): 398.
 \code{\link{weight_binary}} \code{\link{weight_continuous}}
 }
 \author{
-Mohamad S. Hasan, \email{mshasan@uga.edu}
+Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 }

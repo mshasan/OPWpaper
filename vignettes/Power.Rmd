@@ -13,10 +13,10 @@ vignette: >
 
 ```{r setup, echo = FALSE}
 knitr::opts_chunk$set(fig.width = 8.5, fig.height = 8)
-knitr::opts_chunk$set(tidy = FALSE, cache = TRUE, autodep = TRUE)
+knitr::opts_chunk$set(tidy = FALSE, cache = FALSE, autodep = TRUE)
 ```
 
-Below we generate the necessary plots to demonstrate the behavior of the Power of the proposed as well as the other methods under different circumstances.
+Below we generate the necessary plots to demonstrate the behavior of the Power of the Covariate Rank Weighting (CRW) method as well as the other methods under the different circumstances.
 
 Load the necessary libraries
 
@@ -30,14 +30,13 @@ library(cowplot)        # plot_grid function
 
 
 # Continuous effects
-This part show the power when the effect sizes are continuous. We only show the results for the continuous effect sizes. For the binary effects, one just needs to load $.Rdata$ for the binary effects and the apply the same R-code.
+This part show the power when the effect sizes are continuous. We only show the results for the continuous effect sizes. For the binary effects, one just needs to load $.Rdata$ for the binary effects and then apply the same R-code.
 
-Load data stored in `r Biocpkg("OPWpaper")` 
+Load the data stored in `r Biocpkg("OPWpaper")` 
 
 ```{r load_fwerPowerFdrPower_cont_data}
-power_byEffect_cont <- system.file("simulations/results", package = "OPWpaper")
-setwd(power_byEffect_cont)
-load("simu_fwerPowerFdrPower_cont.RDATA")
+load(system.file("simulations/results", "simu_fwerPowerFdrPower_cont.RDATA",
+                 package = "OPWpaper"), envir = environment())
 ```
 
 Extract legend to use for the following plots
@@ -47,7 +46,7 @@ Extract legend to use for the following plots
 ey_vec <- c(seq(0, 1, .2), 2, 3, 5, 8)
 
 dat_99 <- data.frame(ey_vec, t(FwerPowerFdrPower5e1[13:16,]))
-colnames(dat_99) <- c("effectSize", "PRO", "BH", "RDW", "IHW")
+colnames(dat_99) <- c("effectSize", "CRW", "BH", "RDW", "IHW")
 dat_99_par <- melt(dat_99[1:6,], id.var = "effectSize")
 
 p_99_par <- ggplot(dat_99_par, aes(x = effectSize, y = value,group = variable, col=variable)) +
@@ -58,10 +57,10 @@ legend <- get_legend(p_99_par + theme(legend.direction = "horizontal", legend.po
 ```
 
 ## Power vs. effect size
-The simulation procedures for the power is divided into three groups based on the proportion of the true null hypothesis. Three groups composed of $50\%, 90\%,$ and $99\%$ true null tests. For each group of simulations, we considered the effect sizes $\{et=ey,$ or $et \sim N(ey,CV.ey)\}$, where $et,ey,$ and $CV$ refers to the mean test-effect, mean filter-effect, and coefficient of variations. For the mean effect sizes we considered a vector of $\{.2, .4, .6, .8, 1, 2, 3, 5, 8\}$ and $CV = 1/2$. We compared the results to that of using the BH [@benjamini1997false], RDW [@roeder2009genome], and IHW [@ignatiadis2016natmeth] methods.
+The simulation procedures for the power is divided into three groups based on the proportion of the true null hypothesis. Three groups composed of $50\%, 90\%,$ and $99\%$ true null tests. For each group of simulations, we considered the effect sizes $\{et=ey,$ or $et \sim N(ey,CV.ey)\}$, where $et,ey,$ and $CV$ refers to the mean test-effect, mean covariate-effect, and coefficient of variations. For the mean effect sizes we considered a vector of $\{.2, .4, .6, .8, 1, 2, 3, 5, 8\}$ and $CV = 1/2$. We compared the results to that of using the BH [@benjamini1997false], RDW [@roeder2009genome], and IHW [@ignatiadis2016natmeth] methods.
 
 ```{r power_effect_ey_equals_et}
-# plots of power for mean filter effect(ey) = mean test effect(et)
+# plots of power for the mean covariate-effect(ey) = mean test-effect(et)
 #-------------------------------------------------------------------------------
 p_.5_eq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e1, null = 50, figure = "effectVsFPFP")
 p_.9_eq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e1, null = 90, figure = "effectVsFPFP")
@@ -77,13 +76,13 @@ p_eq_power = plot_grid(p_.5_eq_power, p_.9_eq_power, p_.99_eq_power,
 title <- ggdraw() + draw_label("Power: et = ey")
 plot_grid(title, p_eq_power, legend, ncol = 1, rel_heights=c(.1, 1, .1))
 ```
-**Figure 1:** The Power of four methods when the mean test-effect ($et$) is equal to mean filter-effect ($ey$). Each plot consists of four curves of PRO, BH, RDW, and IHW methods. The first row shows the power for the low to high effect sizes, and the second row shows $log(power)$ for the low effect sizes. Three columns represent three groups of $50\%, 90\%$, and $99\%$ true null hypothesis. 
+**Figure 1:** The Power of the four methods when the mean test-effect ($et$) is equal to mean covariate-effect ($ey$). Each plot consists of the four curves of CRW, BH, RDW, and IHW methods. The first row shows the power for the low to high effect sizes, and the second row shows $log(power)$ for the low effect sizes. Three columns represent three groups of $50\%, 90\%$, and $99\%$ true null hypothesis. 
 
 
 
 ```{r power_effect_ey_unequals_et}
 # plots of power for
-# mean test effect(et) ~ Normal (mean filter effect, mean filter effect/2) (i.e cv = 1/2)
+# mean test-effect(et) ~ Normal (mean covariate-effect, mean covariate- effect/2) (i.e cv = 1/2)
 #-----------------------------------------------------------------------------------------
 p_.5_uneq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower2e2, null = 50, figure = "effectVsFPFP")
 p_.9_uneq_power <- nice_plots(x_vec = ey_vec, y_matrix = FwerPowerFdrPower4e2, null = 90, figure = "effectVsFPFP")
@@ -99,19 +98,17 @@ p_uneq_power = plot_grid(p_.5_uneq_power, p_.9_uneq_power, p_.99_uneq_power,
 title <- ggdraw() + draw_label("Power: et ~ Normal(ey, ey/2)")
 plot_grid(title, p_uneq_power, legend, ncol = 1, rel_heights=c(.1, 1, .1))
 ```
-**Figure 2:** The power for the same parameters described in Figure 1 except the mean test-effect ($et$) is not equal to the mean filter-effect ($ey$); rather $et \sim Normal(ey,   ey/2)$, where $CV=1/2$.
+**Figure 2:** The power for the same parameters described in Figure 1 except the mean test-effect ($et$) is not equal to the mean covariate-effect ($ey$); rather $et \sim Normal(ey,   ey/2)$, where $CV=1/2$.
 
 
 
 ## Power vs. proportion of the true null hypothesis
-This section shows the impact of the proportion of the true null hypothesis tests for the various mean filter-effects and the correlations. For the simulation procedures, we kept the similar set-up described in the Power vs. effect size section except here we considered five groups of true null hypothesis composed of $20\%, 50\%, 75\%, 90\%,$ and $99\%$ true null tests. 
+This section shows the impact of the proportion of the true null hypothesis tests for the various mean covariate-effects and the correlations. For the simulation procedures, we kept the similar set-up described in the Power vs. effect size section except here we considered five groups of true null hypothesis composed of $20\%, 50\%, 75\%, 90\%,$ and $99\%$ true null tests. 
 
 ```{r power_nullProp}
 # see the influence of the null proportion
 #------------------------------------------------
-# this code is to load saved workspace from parallel computing
-load("U:/Documents/My Research (UGA)/Multiple Hypoetheses/Article-1/simu_fwerPowerFdrPower_cont.RDATA")
-
+# this code is to load the saved workspace from parallel computing
 nullProp <- c(20, 50, 75, 90, 99)
 
 # corr = .3-------------
@@ -180,7 +177,7 @@ plot_grid(title_main, p_prop, legend, ncol = 1, rel_heights=c(.1, 1, .1))
 This section shows the impact of the correlations between the test statistics for the various mean effect sizes. We considered the combination of correlations $\times$ effect sizes = $\{0, .3, .5, .7, .9\} \times \{.2, .4, .6, .8, 1, 2, 3, 5, 8\}$. 
 
 ```{r corr_50}
-filterEffectVec <- c(seq(0,1,.2),2,3,5,8)
+covariateEffectVec <- c(seq(0,1,.2),2,3,5,8)
 
 # use 2 for 50% and 4 for 90% nulls-----------
 E = FwerPowerFdrPower2e1
@@ -195,16 +192,16 @@ r = 13                        # row starts for fdr based power
 gplots <- list()
 for(e in 3:8)				# effect size index
 {
-    PRO = c(E[r,e],    FF[r,e],    G[r,e],    H[r,e],    I[r,e])
+    CRW = c(E[r,e],    FF[r,e],    G[r,e],    H[r,e],    I[r,e])
     BH = c(E[(r+1),e],FF[(r+1),e],G[(r+1),e],H[(r+1),e],I[(r+1),e])
     RDW = c(E[(r+2),e],FF[(r+2),e],G[(r+2),e],H[(r+2),e],I[(r+2),e])
     IHW = c(E[(r+3),e],FF[(r+3),e],G[(r+3),e],H[(r+3),e],I[(r+3),e])
-    dat = data.frame(corr, PRO, BH, RDW, IHW)
+    dat = data.frame(corr, CRW, BH, RDW, IHW)
     dat2 = melt(dat, id.var = "corr")
     gplots[[e]] <- ggplot(dat2, aes(x = corr, y = value, group = variable,
                                     col = variable)) +
         geom_line(aes(linetype = variable), size = 1.5) +
-        labs(x = "corr", y = "power", title = paste("et = ", filterEffectVec[e])) +
+        labs(x = "corr", y = "power", title = paste("et = ", covariateEffectVec[e])) +
         #theme(legend.title = element_blank())
         theme(legend.position="none")
 }
@@ -243,16 +240,16 @@ r = 13                        # row starts for fdr based power
 gplots <- list()
 for(e in 3:8)				# effect size index
 {
-    PRO = c(E[r,e],    FF[r,e],    G[r,e],    H[r,e],    I[r,e])
+    CRW = c(E[r,e],    FF[r,e],    G[r,e],    H[r,e],    I[r,e])
     BH = c(E[(r+1),e],FF[(r+1),e],G[(r+1),e],H[(r+1),e],I[(r+1),e])
     RDW = c(E[(r+2),e],FF[(r+2),e],G[(r+2),e],H[(r+2),e],I[(r+2),e])
     IHW = c(E[(r+3),e],FF[(r+3),e],G[(r+3),e],H[(r+3),e],I[(r+3),e])
-    dat = data.frame(corr, PRO, BH, RDW, IHW)
+    dat = data.frame(corr, CRW, BH, RDW, IHW)
     dat2 = melt(dat, id.var = "corr")
     gplots[[e]] <- ggplot(dat2, aes(x = corr, y = value, group = variable,
                                     col = variable)) +
         geom_line(aes(linetype = variable), size = 1.5) +
-        labs(x = "corr", y = "power", title = paste("et = ", filterEffectVec[e])) +
+        labs(x = "corr", y = "power", title = paste("et = ", covariateEffectVec[e])) +
         #theme(legend.title = element_blank())
         theme(legend.position="none")
 }
@@ -276,12 +273,11 @@ plot_grid(title, p, legend_corr, ncol = 1, rel_heights=c(.1, 1, .1))
 
 
 ## Power vs. variance of the test effect
-This section shows the impact of the variance of the mean test-effect size ($et$) for the different mean filter-effect sizes ($ey$) via simulation. For the simulation procedures, we kept the similar set-up described in the Power vs. effect size section except here we considered one group of the true null proportion at a time for the different coefficient of variations ($CV$). That is, we considered that the mean test-effect sizes is $et \sim N(ey, CV.ey)$ and $CV=\{1,3,10\}$.
+This section shows the impact of the variation of the mean test-effect ($et$) for the different mean covariate-effect ($ey$) via simulation. For the simulation procedures, we kept the similar set-up described in the Power vs. effect size section except here we considered one group of the true null proportion at a time for the different coefficient of variations ($CV$). That is, we considered that the mean test-effect $et \sim N(ey, CV.ey)$ and $CV=\{1,3,10\}$.
 
 ```{r load_fwerPowerFdrPower_missVar_cont_data}
-power_byEffect_missVar_cont <- system.file("simulations/results", package = "OPWpaper")
-setwd(power_byEffect_missVar_cont)
-load("simu_fwerPowerFdrPower_missVar_cont.RDATA")
+load(system.file("simulations/results", "simu_fwerPowerFdrPower_missVar_cont.RDATA",
+                 package = "OPWpaper"), envir = environment())
 ```
 
 ```{r cv_50}
@@ -302,7 +298,7 @@ p_cv_power_50 = plot_grid(p_cv1, p_cv3, p_cv10, p_cv1_low_ef, p_cv3_low_ef, p_cv
 title <- ggdraw() + draw_label("Power: et ~ Normal(ey, CV*ey), null = 50%")
 plot_grid(title, p_cv_power_50, legend, ncol = 1, rel_heights=c(.1, 1, .1))
 ```
-**Figure 6:** The power when the test effect ($et$) of the true alternative hypothesis is not equal to mean filter effect ($ey$); rather $et \sim Normal(ey, CV.ey)$ if $50\%$ tests are from the true null models. The first row shows the power for low to high effect sizes, and the second row shows power for the low effect sizes. Three columns are based on three groups composed of $CV = 1,3,$ or $10$. 
+**Figure 6:** The power when the test effect ($et$) of the true alternative hypothesis is not equal to mean covariate effect ($ey$); rather $et \sim Normal(ey, CV.ey)$ if $50\%$ tests are from the true null models. The first row shows the power for low to high effect sizes, and the second row shows power for the low effect sizes. Three columns are based on three groups composed of $CV = 1,3,$ or $10$. 
 
 
 

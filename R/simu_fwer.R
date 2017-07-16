@@ -5,7 +5,7 @@
 #'
 #' @param s Integer, number of replications in a simulation
 #' @param m Integer, total number of hypothesis test
-#' @param alphaVec A numeric vector of significance levels
+#' @param alphaVec A numeric vector of the significance levels
 #'
 #' @details
 #' This function generate pvalues from the \code{uniform(0, 1)} and then
@@ -21,24 +21,24 @@
 #' \code{\link{weight_continuous}}
 
 #'
-#' @return A numeric matrix of FWER for the different p-vlaue weighting methods
+#' @return A numeric matrix of FWER for the different p-value weighting methods
 #'
 #' @references Hasan and Schliekelman (2017)
 #'
 #' @examples
-#' alphaVec = seq(.01, .1, .02)
+#' alphaVec = .05
 #' simVal = 1:3  # in actual case use at least simVal = 1000
 #' typeIerror_mat = sapply(simVal, simu_fwer, m = 100, alphaVec = alphaVec)
 #'
 #===============================================================================
 # internal parameters:-----
 # pval = pvalues from null tests
-# pval_filter = filter pvalues from null tests
+# pval_covariate = covariate pvalues from null tests
 # test = test statistics
-# filter = filter test statistics
+# covariate = covariate test statistics
 # dat = a data frame
-# OD = ordered data by filter statistics
-# odered.pvalue = ordered pvalue by filter statistics
+# OD = ordered data by covariate
+# odered.pvalue = ordered pvalue by covariate
 # nullprop = prportion of null
 # m0 = true null test size
 # m1 = true alternative test size
@@ -55,20 +55,20 @@ simu_fwer <- function(s, m, alphaVec)
     fwer_per_rep <- function(alpha)
         {
             pval <- runif(m)
-            pval_filter <- runif(m)
+            pval_covariate <- runif(m)
             test = qnorm(pval, lower.tail = FALSE)
-            filter = qnorm(pval_filter, lower.tail = FALSE)
+            covariate = qnorm(pval_covariate, lower.tail = FALSE)
 
-            dat = tibble(test, pval, filter)
+            dat = tibble(test, pval, covariate)
 
-            OD = dat[order(dat$filter, decreasing=TRUE), ]
+            OD = dat[order(dat$covariate, decreasing=TRUE), ]
             odered.pvalue = OD$pval
 
             nullprop = qvalue(pval)$pi0
             m0 = ceiling(m*nullprop)
             m1 = m - m0
 
-            model = lm(filter ~ test)
+            model = lm(covariate ~ test)
 
             test_effect <- if(m1 == 0) {0
                            } else {sort(test, decreasing = TRUE)[1:m1]}
@@ -89,15 +89,15 @@ simu_fwer <- function(s, m, alphaVec)
             w_cont = weight_continuous(alpha = alpha, et = et_cont, m = m,
                             tail = 1, delInterval = .0001 , ranksProb = prob_cont)
 
-            ihw_fwer <- ihw(dat$pval, dat$filter, alpha = alpha,
+            ihw_fwer <- ihw(dat$pval, dat$covariate, alpha = alpha,
                                             adjustment_type = "bonferroni")
 
             bon = sum(pval <= alpha/m, na.rm = TRUE)
-            pro_bin = sum(odered.pvalue <= alpha*w_bin/m, na.rm = TRUE)
-            pro_cont = sum(odered.pvalue <= alpha*w_cont/m, na.rm = TRUE)
+            CRW_bin = sum(odered.pvalue <= alpha*w_bin/m, na.rm = TRUE)
+            CRW_cont = sum(odered.pvalue <= alpha*w_cont/m, na.rm = TRUE)
             IHW <- rejections(ihw_fwer)
 
-            return(c(bon, pro_bin, pro_cont, IHW))
+            return(c(bon, CRW_bin, CRW_cont, IHW))
         }
 
         fwer_per_rep_mat = sapply(alphaVec, fwer_per_rep)

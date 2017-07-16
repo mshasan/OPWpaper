@@ -2,44 +2,45 @@
 % Please edit documentation in R/ranksProb_byEffect.R
 \name{ranksProb_byEffect}
 \alias{ranksProb_byEffect}
-\title{Probability of rank of test given effect size}
+\title{Ranks probability of the covariate given the test-effect size}
 \usage{
-ranksProb_byEffect(i, null, m, nrep = 10000, filterEffectVec)
+ranksProb_byEffect(i, null, m, nrep = 10000, covariateEffectVec)
 }
 \arguments{
-\item{i}{i-th effect size}
+\item{i}{i Integer, i-th effect size of a vector of effects}
 
-\item{null}{proportion of the true null hypothesis}
+\item{null}{Numeric, proportion of the true null hypothesis}
 
-\item{m}{total number of hypothesis test}
+\item{m}{Integer, total number of hypothesis test}
 
-\item{nrep}{number of replication for importance sampling}
+\item{nrep}{Integer, number of replications for the importance sampling}
 
-\item{filterEffectVec}{a vector of filter effect sizes}
+\item{covariateEffectVec}{A numeric vector of the covariate-effect sizes}
 }
 \value{
-a matrix of ranks pobabilities each column corresponds to an effect size
+A numeric matrix of the ranks pobabilities in which each column
+corresponds to an effect size
 }
 \description{
-Comnpute the probability of the ranks for different effect sizes
+Comnpute the ranks probability for different test-effect sizes
 }
 \details{
-This function compute ranks probabilities for different effect sizes.
-It apply the function \code{prob_ranks_givenEffect} from the \code{OPWeight}
-package and comute the probabilities.
+This function compute ranks probabilities for the different effect
+sizes. It apply the function \code{prob_ranks_givenEffect} from the
+\code{OPWeight} package and compute the probabilities.
 }
 \examples{
 # vector of effect sizes
-filterEffectVec <- c(1, 1.5, 2)
+covariateEffectVec <- c(1, 1.5, 2)
 
-# compute probability matrix
-ranksProb_byEffect <- sapply(1:length(filterEffectVec), ranksProb_byEffect,
-             null = .9, m = 100, filterEffectVec = filterEffectVec)
+# compute ranks probability matrix
+ranksProb_byEffect <- sapply(1:length(covariateEffectVec), ranksProb_byEffect,
+             null = .9, m = 100, covariateEffectVec = covariateEffectVec)
 
 }
 \seealso{
 \code{\link{prob_rank_givenEffect}}
 }
 \author{
-Mohamad S. Hasan and Paul Schliekelman
+Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 }

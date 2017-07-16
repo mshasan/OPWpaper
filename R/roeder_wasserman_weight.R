@@ -1,18 +1,18 @@
 #' @title Find sum of weights for c, function of Langragian multiplier
 #'
 #' @description Compute sum of weights for a given value of c, the function of
-#' LaGrange multiplier
+#' Langrangian multiplier
 #'
 #' @param c Numeric, a constant value (function of Langrangian multiplier)
 #' @param m Integer, number of the hypothesis tests
-#' @param gamma Numeric value of smooting parameter
+#' @param gamma Numeric value of smoothing parameter
 #' @param alpha Numeric value of the Significance level
 #' @param group Integer, number of groups
 #' @param tail Integer (1 or 2), right-tailed or two-tailed hypothesis test.
-#' @param effect_hat Numeric, estimated effect size
+#' @param effect_hat Numeric, estimated effect sizes
 #'
 #' @details
-#' NOne
+#' None
 #' @author Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 #'
 #' @export
@@ -49,11 +49,11 @@ weightSum_by_c <- function(c, m, gamma = .05,  alpha = .05, group = 5L,
 
 #' @title Weight from the Roeder and Wasserman (2009) paper
 #'
-#' @description Compute weights by splitting test statistics raked by the
-#' filter statistics. This method is taken from Roeder and Waserman (2009).
+#' @description Compute weights by splitting the test statistics raked by the
+#' covariate. This method is taken from Roeder and Waserman (2009).
 #'
 #' @param pvalue A numeric vector of ordered p-values sorted  by the covariate
-#' @param gamma Numeric value of smooting parameter
+#' @param gamma Numeric value of the smoothing parameter
 #' @param alpha Numeric value of the Significance level
 #' @param group Integer, number of groups
 #' @param tail Integer (1 or 2), right-tailed or two-tailed hypothesis test.
@@ -62,7 +62,7 @@ weightSum_by_c <- function(c, m, gamma = .05,  alpha = .05, group = 5L,
 #' necessary to normalize the weight
 #'
 #' @details
-#' NOne
+#' None
 #' @author Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 #' @export
 #'
@@ -70,7 +70,7 @@ weightSum_by_c <- function(c, m, gamma = .05,  alpha = .05, group = 5L,
 #'
 #' @seealso \code{\link{weight_binary}} \code{\link{weight_continuous}}
 #'
-#' @return \code{weight} A numeric vector of the normalized weights of the tests
+#' @return \code{weight} A numeric vector of the normalized weights
 #'
 #' @references Roeder, Kathryn, and Larry Wasserman. "Genome-wide significance
 #' levels and weighted hypothesis testing." Statistical science: a review journal
@@ -78,18 +78,18 @@ weightSum_by_c <- function(c, m, gamma = .05,  alpha = .05, group = 5L,
 #' \url{www.stat.cmu.edu/~roeder/publications/statsci.pdf}
 #' @examples
 #'
-#' #generate pvalues and filter statistics
+#' #generate pvalues and covariate
 #' m = 10000
 #' set.seed(123)
-#' filters = runif(m, min = 0, max = 2.5)          # filter statistics
+#' covariates = runif(m, min = 0, max = 2.5)       # covariate
 #' H = rbinom(m, size = 1, prob = 0.1)             # hypothesis true or false
-#' tests = rnorm(m, mean = H * filters)            # Z-score
+#' tests = rnorm(m, mean = H * covariates)         # Z-score
 #' pvals = 1 - pnorm(tests)                        # pvalue
 #'
 #' # Compute wiehgt
 #' library(tibble)
-#' Data <- tibble(tests, pvals, filters)
-#' OD <- Data[order(Data$filters, decreasing = TRUE), ]
+#' Data <- tibble(tests, pvals, covariates)
+#' OD <- Data[order(Data$covariates, decreasing = TRUE), ]
 #'
 #' weight = roeder_wasserman_weight(pvalue = OD$pvals)
 #'

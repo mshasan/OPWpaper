@@ -1,6 +1,6 @@
 ## ----setup, echo = FALSE-------------------------------------------------
 knitr::opts_chunk$set(fig.width = 8.5, fig.height = 7)
-knitr::opts_chunk$set(tidy = FALSE, cache = TRUE, autodep = TRUE)
+knitr::opts_chunk$set(tidy = FALSE, cache = FALSE, autodep = TRUE)
 
 ## ----loadLib, message=FALSE, warning=FALSE-------------------------------
 library(OPWeight)       # library for the proposed method
@@ -11,9 +11,8 @@ library(cowplot)        # plot_grid function
 library(dplyr)          # for %>%
 
 ## ----bot_data------------------------------------------------------------
-bottomly <- system.file("real_data_examples/results", package = "OPWpaper")
-setwd(bottomly)
-load("bottomly_data_example.RDATA")
+load(system.file("real_data_examples/results", "bottomly_data_example.RDATA",
+                 package = "OPWpaper"), envir = environment())
 
 ## ----summary_bot---------------------------------------------------------
 # summary statistics of the data
@@ -33,7 +32,7 @@ panel_a_data <- group_by(rnaseq_data$alpha_df, alpha) %>% summarize(BH = max(bh_
 
 # rejected test from different methods-------------
 rej_mat_bot_FDR <- data.frame(n_rej_bin, n_rej_cont, panel_a_data)
-colnames(rej_mat_bot_FDR) <- c("PRO_bin","PRO_cont", "alpha", "BH","IHW")
+colnames(rej_mat_bot_FDR) <- c("CRW_bin","CRW_cont", "alpha", "BH","IHW")
 rej_mat_bot_FDR2 <- melt(rej_mat_bot_FDR, id.var = "alpha")
 
 p_fdr_bot <- ggplot(rej_mat_bot_FDR2, aes(x = alpha, y = value, group = variable,
@@ -46,9 +45,8 @@ p_fdr_bot <- ggplot(rej_mat_bot_FDR2, aes(x = alpha, y = value, group = variable
 p_fdr_bot
 
 ## ----prot_data-----------------------------------------------------------
-proteomics <- system.file("real_data_examples/results", package = "OPWpaper")
-setwd(proteomics)
-load("proteomics_data_example.RDATA")
+load(system.file("real_data_examples/results", "proteomics_data_example.RDATA",
+                 package = "OPWpaper"), envir = environment())
 
 ## ----summary_prot--------------------------------------------------------
 # summary statistics of the data

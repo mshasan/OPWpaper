@@ -2,55 +2,57 @@
 % Please edit documentation in R/weight_byEffect_cont.R
 \name{weight_byEffect_cont}
 \alias{weight_byEffect_cont}
-\title{Weight for different effect sizes in continuous case}
+\title{Weight for the different continuous effect sizes}
 \usage{
 weight_byEffect_cont(i, alpha, null, m, tail = 1L, delInterval,
-  filterEffectVec, datByNull)
+  covariateEffectVec, datByNull)
 }
 \arguments{
-\item{i}{i-th effect size}
+\item{i}{Integer, i-th effect size of a vector of effects}
 
-\item{alpha}{significance level}
+\item{alpha}{Numeric, a significance level of the hypothesis tests}
 
-\item{null}{proportion of true true null tests}
+\item{null}{Numeric, proportion of true true null tests}
 
-\item{m}{total number of hypotheis test}
+\item{m}{Integer, total number of hypotheis tests}
 
-\item{tail}{one-tailed or two-tailed hypothesis test}
+\item{tail}{Integer (1 or 2), right-tailed or two-tailed hypothesis test.}
 
-\item{delInterval}{interval between the \code{delta} values of a sequence.}
+\item{delInterval}{Numeric, interval between the \code{delta} values of a
+sequence. Note that, \code{delta} is a Langrangian multiplier, necessary to
+normalize the weight}
 
-\item{filterEffectVec}{a vector of filter effect sizes
-Note that, \code{delta} is a LaGrange multiplier, necessary to normalize the weight}
+\item{covariateEffectVec}{A numeric vector of covariate effect sizes}
 
-\item{datByNull}{a matrix of ranks pobabilities each column corresponds to
-an effect size}
+\item{datByNull}{A numerics matrix of ranks pobabilities in which each column
+corresponds to an effect size}
 }
 \value{
-a matrix of weights each column corresponds to an effect size
+A numeics matrix of weights in which each column corresponds to an
+effect size
 }
 \description{
-Compute weight from the probability of the rank given the effect
-size for different effect sizes in a continuous effect size situation
+Compute weight from the the ranks probability given the effect
+sizes when the effect sizes are continuous.
 }
 \details{
-This function compute the weights in a continuous settings by applying
-the ranks probabilities for the different effect sizes. It applies the function
-function \code{weight_continuous} from the package 'OPWeight' to
-comute the weights from a probability matirx.
+This function compute the weights when the effect sizes are
+continuous by applying the ranks probabilities of the different effect sizes.
+It applies the function function \code{weight_continuous} from the R package
+\code{OPWeight} to compute the weights from a ranks probability matirx.
 }
 \examples{
 # vector of effect sizes
-filterEffectVec <- c(1, 1.5, 2)
+covariateEffectVec <- c(1, 1.5, 2)
 
 # compute probability matrix
-ranksProb_byEffect <- sapply(1:length(filterEffectVec), ranksProb_byEffect,
-             null = .9, m = 100, filterEffectVec = filterEffectVec)
+ranksProb_byEffect <- sapply(1:length(covariateEffectVec), ranksProb_byEffect,
+             null = .9, m = 100, covariateEffectVec = covariateEffectVec)
 
 # compute weights
-weightByEffect <- sapply(1:length(filterEffectVec), weight_byEffect_cont,
-                   alpha = .05, null = .9, m = 100, delInterval = .0001,
-                   filterEffectVec = filterEffectVec,
+weightByEffect <- sapply(1:length(covariateEffectVec), weight_byEffect_cont,
+                   alpha = .05, null = .9, m = 100, delInterval = .01,
+                   covariateEffectVec = covariateEffectVec,
                    datByNull = ranksProb_byEffect)
 
 }
@@ -59,5 +61,5 @@ weightByEffect <- sapply(1:length(filterEffectVec), weight_byEffect_cont,
 \code{\link{weight_continuous}}
 }
 \author{
-Mohamad S. Hasan, mshasan@uga.edu
+Mohamad S. Hasan, \email{shakilmohamad7@gmail.com}
 }
