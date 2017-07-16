@@ -3,7 +3,6 @@ knitr::opts_chunk$set(fig.width = 8, fig.height = 8)
 knitr::opts_chunk$set(tidy = FALSE, cache = FALSE, autodep = TRUE)
 
 ## ----loadLib, message=FALSE, warning=FALSE-------------------------------
-library(OPWeight)       # library for the proposed method
 library(OPWpaper)       
 library(ggplot2)
 library(reshape2)       # library for the melt function

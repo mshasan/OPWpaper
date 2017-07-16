@@ -1,8 +1,8 @@
 {
-    "path" : "C:/Users/mshasan/Dropbox/My R packages/OPWpaper/R",
+    "path" : "C:/Users/mshasan/Dropbox/My R packages/OPWpaper/vignettes",
     "sortOrder" : [
         {
-            "ascending" : true,
+            "ascending" : false,
             "columnIndex" : 3
         },
         {

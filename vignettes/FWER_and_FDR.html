@@ -69,8 +69,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <p>Below we generate the necessary plots to demonstrate that the Covariate Rank Weighting (CRW) method controls the Family Wise Error Rate (FWER) and the False Discovery Rate (FDR).</p>
 <p>Load the necessary libraries</p>
-<pre class="r"><code>library(OPWeight)       # library for the proposed method
-library(OPWpaper)       
+<pre class="r"><code>library(OPWpaper)       
 library(ggplot2)
 library(reshape2)       # library for the melt function
 library(cowplot)        # plot_grid function</code></pre>
@@ -80,7 +79,7 @@ library(cowplot)        # plot_grid function</code></pre>
 <div id="fwer-when-all-tests-are-from-the-true-null-models" class="section level1">
 <h1><span class="header-section-number">1</span> FWER when all tests are from the true null models</h1>
 <p>This simulation is conducted to verify that the proposed method controls the Family Wise Error Rate (FWER). To conduct this simulation, we assumed that all test statistics are from the true null models.</p>
-<pre class="r"><code>fwer_by_alpha &lt;- matrix(apply(fwer_mat, 1, mean), nrow = 4, byrow = FALSE)
+<pre class="r"><code>fwer_by_alpha &lt;- matrix(rowMeans(fwer_mat, na.rm = TRUE), nrow = 4, byrow = FALSE)
 
 alphaVal = seq(.01, .1, .02)
 datError &lt;- data.frame(alphaVal, t(fwer_by_alpha))

@@ -3,7 +3,6 @@ knitr::opts_chunk$set(fig.width = 8.5, fig.height = 4)
 knitr::opts_chunk$set(tidy = FALSE, cache = FALSE, autodep = TRUE)
 
 ## ----loadLib, message=FALSE, warning=FALSE-------------------------------
-library(OPWeight)       # library for the proposed method
 library(OPWpaper)       
 library(ggplot2)
 library(reshape2)       # library for the melt function
@@ -14,7 +13,7 @@ load(system.file("simulations/results", "simu_fwer.RDATA",
                  package = "OPWpaper"), envir = environment())
 
 ## ----fwer----------------------------------------------------------------
-fwer_by_alpha <- matrix(apply(fwer_mat, 1, mean), nrow = 4, byrow = FALSE)
+fwer_by_alpha <- matrix(rowMeans(fwer_mat, na.rm = TRUE), nrow = 4, byrow = FALSE)
 
 alphaVal = seq(.01, .1, .02)
 datError <- data.frame(alphaVal, t(fwer_by_alpha))

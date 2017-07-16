@@ -69,8 +69,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <p>We observed the relationship via simulations. For the simulation, we assumed that <span class="math inline">\(\varepsilon_y, \varepsilon_t \sim BVN(0, 0, 1, 1, \rho)\)</span> and <span class="math inline">\(\varepsilon_y \sim N(0,1)\)</span> and <span class="math inline">\(\varepsilon_t \sim N(0,1)\)</span>, where the correlation coefficient, <span class="math inline">\(\rho\)</span>, is chosen arbitrarily. Consequently, the conditional distribution of <span class="math inline">\(\varepsilon_y\)</span> given <span class="math inline">\(\varepsilon_t\)</span> is <span class="math inline">\(\varepsilon_y \mid \varepsilon_t \sim Normal(\rho \varepsilon_t, 1-\rho^2 )\)</span>. Our goal is to observe the change of the relationship between the covariate and the test effects with the change of <span class="math inline">\(\rho\)</span>. We would expect that the probability plots computed from test effects are similar to the probability plots compute from the covariate effects if the correlation between the effects are strong.</p>
 <p>Below we generate the necessary plots to demonstrate the relationship between the covariate-effect and the test-effect sizes.</p>
 <p>Load the necessary libraries</p>
-<pre class="r"><code>library(OPWeight)       # library for the proposed method
-library(OPWpaper)       
+<pre class="r"><code>library(OPWpaper)       
 library(ggplot2)
 library(reshape2)       # library for the melt function
 library(cowplot)        # plot_grid function</code></pre>
