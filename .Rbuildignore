@@ -2,3 +2,15 @@
 ^\.Rproj\.user$
 ^\.travis\.yml$
 
+^ranks_probability\.html$
+^Power\.html$
+^ranksProb_weight\.html$
+^FWER_and_FDR\.html$
+^probRel_CovVsTest_effect\.html$
+^real_data_examples\.html$
+^ranks_probability\.R$
+^Power\.R$
+^ranksProb_weight\.R$
+^FWER_and_FDR\.R$
+^probRel_CovVsTest_effect\.R$
+^real_data_examples\.R$
