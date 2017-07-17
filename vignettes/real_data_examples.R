@@ -3,7 +3,8 @@ knitr::opts_chunk$set(fig.width = 8.5, fig.height = 7)
 knitr::opts_chunk$set(tidy = FALSE, cache = FALSE, autodep = TRUE)
 
 ## ----loadLib, message=FALSE, warning=FALSE-------------------------------
-library(OPWpaper)       
+library(OPWpaper)
+library(IHWpaper)
 library(ggplot2)
 library(reshape2)       # library for the melt function
 library(cowplot)        # plot_grid function

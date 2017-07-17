@@ -9,8 +9,11 @@ library(reshape2)       # library for the melt function
 library(cowplot)        # plot_grid function
 
 ## ----load_fwer_data------------------------------------------------------
-load(system.file("simulations/results", "simu_fwer.RDATA",
-                 package = "OPWpaper"), envir = environment())
+fwer_dat <- system.file("simulations/results", package = "OPWpaper")
+setwd(fwer_dat)
+load("simu_fwer.RDATA")
+#load(system.file("simulations/results", "simu_fwer.RDATA",
+#                 package = "OPWpaper"), envir = environment())
 
 ## ----fwer----------------------------------------------------------------
 fwer_by_alpha <- matrix(rowMeans(fwer_mat, na.rm = TRUE), nrow = 4, byrow = FALSE)

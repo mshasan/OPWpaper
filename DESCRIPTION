@@ -33,6 +33,7 @@ Suggests:
     devtools,
     dplyr,
     gridExtra,
+    IHWpaper,
     knitr,
     Matrix,
     rmarkdown,

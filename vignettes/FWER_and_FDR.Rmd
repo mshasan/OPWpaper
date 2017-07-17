@@ -30,8 +30,11 @@ library(cowplot)        # plot_grid function
 Load the data stored in `r Biocpkg("OPWpaper")` 
 
 ```{r load_fwer_data}
-load(system.file("simulations/results", "simu_fwer.RDATA",
-                 package = "OPWpaper"), envir = environment())
+fwer_dat <- system.file("simulations/results", package = "OPWpaper")
+setwd(fwer_dat)
+load("simu_fwer.RDATA")
+#load(system.file("simulations/results", "simu_fwer.RDATA",
+#                 package = "OPWpaper"), envir = environment())
 ```
 
 # FWER when all tests are from the true null models
