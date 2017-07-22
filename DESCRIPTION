@@ -21,6 +21,7 @@ Imports:
     IHW,
     MASS,
     mvnfast,
+    pweight,
     qvalue,
     reshape2,
     stats,

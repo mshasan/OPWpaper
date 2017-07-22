@@ -23,10 +23,12 @@ importFrom(IHW, rejections)
 importFrom(IHW, adj_pvalues)
 importFrom(MASS, boxcox)
 importFrom(mvnfast, rmvn)
+importFrom(pweight, bayes_weights)
 importFrom(qvalue, qvalue)
 importFrom(reshape2, melt)
 importFrom(tibble, tibble)
 importFrom(TTR, SMA)
+
 
 
 
