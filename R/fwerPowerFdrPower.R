@@ -72,12 +72,13 @@
 # covariate = actual test stat
 # pval = covariate test pvalues
 # CRW = proposed, bon = bonferroni, rdw = roeder and wasserman,
+# dbn = dorbiban's mehtod
 # IHW=  independent Hyp. Weight
 #===============================================================================
 
 fwerPowerFdrPower <- function(i, simu, null, corr = 0, cv = 0, alpha = .05,
-                        groupSize = 100, effectType = c("continuous", "binary"),
-                        covariateEffectVec, datWeightByNull)
+                              groupSize = 100, effectType = c("continuous", "binary"),
+                              covariateEffectVec, datWeightByNull)
 {
     W = datWeightByNull[ , i]
     m = length(W)
@@ -117,12 +118,15 @@ fwerPowerFdrPower <- function(i, simu, null, corr = 0, cv = 0, alpha = .05,
         OD = dat[order(dat$covariate, decreasing = TRUE), ]
 
         weight_rdw <- roeder_wasserman_weight(pvalue = OD$pval, alpha = alpha)
+        dbn_wgt <- bayes_weights(mu = -OD$covariate, sigma = rep(1, m), q = alpha/m)$w
+
         ihw_fwer <- ihw(OD$pval, OD$covariate, alpha = alpha, adjustment_type = "bonferroni")
         ihw_fdr <-  ihw(OD$pval, OD$covariate, alpha = alpha, adjustment_type = "BH")
 
         rej_CRW <- OD$pval <= alpha*weight_CRW/m
         rej_bon <- OD$pval <= alpha/m
         rej_rdw <- OD$pval <= alpha*weight_rdw/m
+        rej_dbn <- OD$pval <= alpha*dbn_wgt/m
         rej_ihwFwer <- adj_pvalues(ihw_fwer) <= alpha
 
         n_null <- max(1, sum(OD$et == 0, na.rm = TRUE))
@@ -131,32 +135,37 @@ fwerPowerFdrPower <- function(i, simu, null, corr = 0, cv = 0, alpha = .05,
         FWER_CRW <- sum(rej_CRW[OD$et == 0])
         FWER_bon <- sum(rej_bon[OD$et == 0])
         FWER_rdw <- sum(rej_rdw[OD$et == 0])
+        FWER_dbn <- sum(rej_dbn[OD$et == 0])
         FWER_ihw <- sum(rej_ihwFwer[OD$et == 0])
 
         POWER_CRW <- sum(rej_CRW[OD$et != 0])/n_alt
         POWER_bon <- sum(rej_bon[OD$et != 0])/n_alt
         POWER_rdw <- sum(rej_rdw[OD$et != 0])/n_alt
+        POWER_dbn <- sum(rej_dbn[OD$et != 0])/n_alt
         POWER_ihw <- sum(rej_ihwFwer[OD$et != 0])/n_alt
 
         adjPval_CRW <- p.adjust(OD$pval/weight_CRW, method="BH")
         adjPval_bon <- p.adjust(OD$pval, method="BH")
         adjPval_rdw <- p.adjust(OD$pval/weight_rdw, method="BH")
+        adjPval_dbn <- p.adjust(OD$pval/dbn_wgt, method="BH")
         adjPval_ihw <- adj_pvalues(ihw_fdr)
 
         FDR_CRW <- sum(adjPval_CRW[OD$et == 0] <= alpha)/max(1, sum(adjPval_CRW <= alpha))
         FDR_bh  <- sum(adjPval_bon[OD$et == 0] <= alpha)/max(1, sum(adjPval_bon <= alpha))
         FDR_rdw <- sum(adjPval_rdw[OD$et == 0] <= alpha)/max(1, sum(adjPval_rdw <= alpha))
+        FDR_dbn <- sum(adjPval_dbn[OD$et == 0] <= alpha)/max(1, sum(adjPval_dbn <= alpha))
         FDR_ihw <- sum(adjPval_ihw[OD$et == 0] <= alpha)/max(1, rejections(ihw_fdr))
 
         FDR_POWER_CRW <- sum(adjPval_CRW[OD$et != 0] <= alpha)/n_alt
         FDR_POWER_bh  <- sum(adjPval_bon[OD$et != 0] <= alpha)/n_alt
         FDR_POWER_rdw <- sum(adjPval_rdw[OD$et != 0] <= alpha)/n_alt
+        FDR_POWER_dbn <- sum(adjPval_dbn[OD$et != 0] <= alpha)/n_alt
         FDR_POWER_ihw <- sum(adjPval_ihw[OD$et != 0] <= alpha)/n_alt
 
-        return(c(FWER_CRW, FWER_bon, FWER_rdw, FWER_ihw,
-                 POWER_CRW, POWER_bon, POWER_rdw, POWER_ihw,
-                 FDR_CRW, FDR_bh, FDR_rdw, FDR_ihw, FDR_POWER_CRW,
-                 FDR_POWER_bh, FDR_POWER_rdw, FDR_POWER_ihw))
+        return(c(FWER_CRW, FWER_bon, FWER_rdw, FWER_dbn, FWER_ihw,
+                 POWER_CRW, POWER_bon, POWER_rdw, POWER_dbn, POWER_ihw,
+                 FDR_CRW, FDR_bh, FDR_rdw, FDR_dbn, FDR_ihw,
+                 FDR_POWER_CRW, FDR_POWER_bh, FDR_POWER_rdw, FDR_POWER_dbn, FDR_POWER_ihw))
     }
 
     fwerPowerFdrPower_bysimu <- sapply(1:simu, fwerPowerFdrPower_simu)
@@ -165,7 +174,6 @@ fwerPowerFdrPower <- function(i, simu, null, corr = 0, cv = 0, alpha = .05,
     return(fwerPowerFdrPower)
 
 }
-
 
 
 
