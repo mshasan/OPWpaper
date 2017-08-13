@@ -38,6 +38,7 @@
 #'
 #==============================================================================
 
+
 prob_weight_plots <- function(ey_index, null_index, m, ey, null, prob, weight)
 {
     ranks = 1:m
@@ -52,10 +53,10 @@ prob_weight_plots <- function(ey_index, null_index, m, ey, null, prob, weight)
     prob_by_null_melt <- melt(prob_by_null, id.var = "ranks",
                               variable.name = "nullprop")
     prob_plot = ggplot(prob_by_null_melt, aes_string(x = "ranks", y = "value",
-                                group = "nullprop", colour = "nullprop")) +
+                                                     group = "nullprop", colour = "nullprop")) +
         geom_line(aes(linetype = "nullprop"), size = 1.5) +
         labs(x = "Ranks", y = "p(rank | effect)",
-             title = paste0("et = ey = ", ey)) +
+             title = bquote(E(epsilon[i]) ~ " = " ~ E(tau[i])~ "" == .(ey)))+
         theme(legend.position = "none")
 
 
@@ -68,11 +69,11 @@ prob_weight_plots <- function(ey_index, null_index, m, ey, null, prob, weight)
     prob_by_effect_melt <- melt(prob_by_effect, id.var = "ranks",
                                 variable.name = "effectSize")
     prob_plot_by_effect = ggplot(prob_by_effect_melt, aes_string(x = "ranks",
-                                y = "value", group = "effectSize",
-                                             colour = "effectSize")) +
+                                                                 y = "value", group = "effectSize",
+                                                                 colour = "effectSize")) +
         geom_line(aes(linetype = "effectSize"), size = 1.5) +
         labs(x = "Ranks", y = "p(rank | effect)",
-             title = paste0("null = ", null, "%")) +
+             title = bquote(pi[0] == .(null)*"%"))+
         theme(legend.position = "none")
 
 
@@ -88,7 +89,7 @@ prob_weight_plots <- function(ey_index, null_index, m, ey, null, prob, weight)
     weight_plot = ggplot(weight_by_null_melt, aes_string(x = "ranks",
                         y = "value", group = "nullprop", colour = "nullprop")) +
         geom_line(size = 1.5) +
-        labs(x = "Ranks", y = "Weight", color = "nullprop") +
+        labs(x = "Ranks", y = "Weight", color = expression(pi[0])) +
         theme(legend.direction = "horizontal", legend.position = "bottom")
 
 
@@ -101,10 +102,10 @@ prob_weight_plots <- function(ey_index, null_index, m, ey, null, prob, weight)
     weight_by_effect_melt <- melt(weight_by_effect, id.var = "ranks",
                                   variable.name = "effectSize")
     weight_plot_by_effect = ggplot(weight_by_effect_melt, aes_string(x = "ranks",
-                                   y = "value", group = "effectSize",
-                                                colour = "effectSize")) +
+                                                                     y = "value", group = "effectSize",
+                                                                     colour = "effectSize")) +
         geom_line(size = 1.5) +
-        labs(x = "Ranks", y = "Weight", color = "effectSize (ey)") +
+        labs(x = "Ranks", y = "Weight", color = expression(E(tau[i]))) +
         theme(legend.direction = "horizontal", legend.position = "bottom")
 
 
@@ -117,6 +118,7 @@ prob_weight_plots <- function(ey_index, null_index, m, ey, null, prob, weight)
     return(plots)
 
 }
+
 
 
 

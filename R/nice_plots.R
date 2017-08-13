@@ -114,7 +114,7 @@ nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE,
         } else if(figure == "nullPropVsPower"){
 
             x_axis <- "nullProp"
-            x_lab = "Prop. of null"
+            x_lab = bquote(pi[0])
             y_lab <- "Power"
             dat <- data.frame(x_vec, y_matrix)
 
@@ -135,7 +135,7 @@ nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE,
             }
 
             x_axis <- "effectSize"
-            x_lab = "Mean covariate effect (ey)"
+            x_lab = expression(E(tau[i]))
             dat <- data.frame(x_vec, t(y_matrix[row_indx, ]))
 
        }
@@ -155,9 +155,9 @@ nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE,
             plt <- ggplot(dat_melt, aes_string(x = names(dat_melt)[[1]],
                              y = "value", group = "variable", col = "variable"))
         } else {
-            y_lab <- "log(power)"
+            y_lab <- "log10(power)"
             dat <- dat[1:6, ]
-            dat[,2:5] <- log(dat[,2:5])
+            dat[,2:5] <- log10(dat[,2:5])
             dat_melt <- melt(dat, id.var = x_axis)
             plt <- ggplot(dat_melt, aes_string(x = names(dat_melt)[[1]],
                              y = "value", group = "variable", col = "variable"))
@@ -166,11 +166,11 @@ nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE,
 
         # fixed the tilte of the plot---------------
         if(figure == "ranksProb"){
-            titl <- paste0("cor = ", cor)
+            titl <- bquote(rho == .(cor))
         } else if(figure == "nullPropVsPower"){
-            titl <- paste0("ey = ", ey)
+            titl <- bquote(tau[y]==.(ey))
         } else if(figure == "effectVsFPFP"){
-            titl <- paste0("null = ", null, "%")
+            titl <- bquote(pi[0] == .(null)*"%")
         } else {
             titl <- paste0("cv = ", cv)
         }
@@ -180,8 +180,8 @@ nice_plots <- function(x_vec, y_matrix, fdr = TRUE, power = TRUE,
         plt = plt + geom_line(aes_string(linetype = "variable"), size = 1.5) +
            labs(x = x_lab, y = y_lab, title = if(low_eff_plot == FALSE){titl}) +
             theme(legend.position = "none",
-                  axis.title.x = element_text(size = rel(.8)),
-                  axis.title.y = element_text(size = rel(.8)))
-
+                  axis.title.x = element_text(size = rel(1)),
+                  axis.title.y = element_text(size = rel(1)))
         return(plt)
     }
+
