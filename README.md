@@ -1,5 +1,4 @@
 
-[![Travis-CI Build Status](https://travis-ci.org/mshasan/OPWpaper.svg?branch=master)](https://travis-ci.org/mshasan/OPWpaper)
 [![codecov.io](https://codecov.io/github/mshasan/OPWpaper/coverage.svg?branch=master)](https://codecov.io/github/mshasan/OPWpaper?branch=master)
 
 # OPWpaper
